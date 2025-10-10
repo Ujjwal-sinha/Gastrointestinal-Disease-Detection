@@ -256,14 +256,12 @@
                         AgentAnalysis --> Classification[Polyp Classification<br/>2 Polyp Types]
                         Classification --> Visualizations[Generate Visualizations]
                         
-                        Visualizations --> BoundingBoxes[Red Bounding Box<br/>Polyp Localization]
                         Visualizations --> ConfidenceMap[Confidence Mapping<br/>Detection Quality]
                         Visualizations --> EdgeDetection[Enhanced Edge Detection<br/>Polyp Boundary Highlighting]
                         Visualizations --> QualityAssess[Quality Assessment<br/>Detection Reliability]
                         Visualizations --> ExplainableAI[Explainable AI<br/>LIME, SHAP, Grad-CAM]
                         
-                        BoundingBoxes --> Report[Generate Report]
-                        ConfidenceMap --> Report
+                        ConfidenceMap --> Report[Generate Report]
                         EdgeDetection --> Report
                         QualityAssess --> Report
                         ExplainableAI --> Report
@@ -288,7 +286,7 @@
                         class Upload,Preprocess,Visualizations,Report,Display process
                         class ModelLoad,Detection,Classification model
                         class AgentAnalysis agent
-                        class BoundingBoxes,ConfidenceMap,EdgeDetection,QualityAssess,ExplainableAI viz
+                        class ConfidenceMap,EdgeDetection,QualityAssess,ExplainableAI viz
                         class Dataset,PatientData,ClinicalContext data
                 </div>
             </div>
@@ -379,8 +377,8 @@
                         CV --> QA
                         
                         %% Styling
-                        classDef evaluationAgent fill:#9b59b6,stroke:#8e44ad,stroke-width:2px,color:#000
-                        class EAA,MA,CV,QA,RM,PM,CR evaluationAgent
+                        classDef evaluationAgent fill:#dda0dd,stroke:#9370db,stroke-width:2px,color:#000
+                        class EAA,MA,CV,QA evaluationAgent
                 </div>
             </div>
 
@@ -410,7 +408,6 @@
                         subgraph Detection["🎯 Polyp Region Detection"]
                             TD["Polyp Detection Engine"]
                             CT["Contour Detection<br/>Multi-strategy approach"]
-                            BB["Bounding Box<br/>Red square annotation"]
                             FB["Fallback Detection<br/>Center region estimation"]
                             VF["Verification<br/>Detection validation"]
                         end
@@ -444,7 +441,6 @@
                         
                         YOLO_Output --> TD
                         TD --> CT
-                        TD --> BB
                         TD --> FB
                         TD --> VF
                         
@@ -461,7 +457,7 @@
                         
                         class YOLO,YOLO_Input,YOLO_Output,YOLO_Features,YOLO_FT yoloModel
                         class IE,BF,CL,ED,MO,SH,NM enhancement
-                        class TD,CT,BB,FB,VF detection
+                        class TD,CT,FB,VF detection
                         class MV,PT,QA,CF validation
                 </div>
             </div>
