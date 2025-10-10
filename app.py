@@ -500,20 +500,20 @@ if 'results' not in st.session_state:
 if 'agent_instance' not in st.session_state:
     st.session_state.agent_instance = None
 
-# Dataset validation
-dataset_dir = "Dataset"
-classes = ['Glioma', 'Meningioma', 'No Tumor', 'Pituitary']
+# Dataset validation for Kvasir-SEG
+dataset_dir = "/Users/ujjwalsinha/Gastrointestinal-Disease-Detection/dataset"
+classes = ['Polyp', 'No Polyp']  # Correct polyp classes
 total_images = 0
-training_dir = os.path.join(dataset_dir, "Training")
-testing_dir = os.path.join(dataset_dir, "Testing")
 
-if os.path.exists(training_dir) and os.path.exists(testing_dir):
-    for base_dir in [training_dir, testing_dir]:
-        for class_name in os.listdir(base_dir):
-            class_path = os.path.join(base_dir, class_name)
-            if os.path.isdir(class_path):
-                images = [f for f in os.listdir(class_path) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
-                total_images += len(images)
+# Check Kvasir-SEG dataset
+kvasir_seg_dir = os.path.join(dataset_dir, "kvasir-seg")
+if os.path.exists(kvasir_seg_dir):
+    images_dir = os.path.join(kvasir_seg_dir, "images")
+    masks_dir = os.path.join(kvasir_seg_dir, "masks")
+    
+    if os.path.exists(images_dir):
+        images = [f for f in os.listdir(images_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+        total_images += len(images)
 
 # Initialize AI Agent with verbose logging
 if GROQ_API_KEY:
@@ -521,7 +521,7 @@ if GROQ_API_KEY:
         try:
             with st.spinner("🤖 Initializing AI Agent..."):
                 # Initialize with verbose=True
-                st.session_state.agent_instance = BrainTumorAIAgent(GROQ_API_KEY, verbose=True)
+                st.session_state.agent_instance = GastrointestinalPolypAIAgent(GROQ_API_KEY, verbose=True)
                 if st.session_state.agent_instance:
                     st.success("✅ AI Agent initialized successfully!")
         except Exception as e:
@@ -549,7 +549,7 @@ with st.sidebar:
     st.markdown(f"**AI Agent:** {agent_status}")
 
     st.markdown("---")
-    st.markdown("#### 🎯 Detectable Polyps")
+    st.markdown("#### 🎯 Detectable Conditions")
     for polyp_class in classes:
         st.markdown(f"• {polyp_class}")
 
@@ -729,10 +729,10 @@ if not st.session_state.analysis_complete:
                         
                         recommendations = get_agent_recommendations(predicted_class, {"age": "N/A", "history": "N/A"})
                         
-                        # Detect tumor region and create annotated image
+                        # Detect polyp region and create annotated image
                         try:
-                            st.info("🔍 Detecting tumor region...")
-                            annotated_image = detect_tumor_region(image, predicted_class)
+                            st.info("🔍 Detecting polyp region...")
+                            annotated_image = detect_polyp_region(image, predicted_class)
                             
                             # Verify annotation was applied
                             if isinstance(annotated_image, Image.Image) and isinstance(image, Image.Image):
@@ -741,10 +741,10 @@ if not st.session_state.analysis_complete:
                                 if np.array_equal(orig_array, annot_array):
                                     st.warning("⚠️ Detection function returned same image - no box drawn")
                                 else:
-                                    st.success("✅ Tumor region detected and annotated!")
+                                    st.success("✅ Polyp region detected and annotated!")
                             
                         except Exception as e:
-                            st.error(f"❌ Could not annotate tumor region: {str(e)}")
+                            st.error(f"❌ Could not annotate polyp region: {str(e)}")
                             import traceback
                             st.code(traceback.format_exc())
                             annotated_image = image

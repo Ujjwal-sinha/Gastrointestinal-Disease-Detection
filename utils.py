@@ -26,17 +26,17 @@ import glob
 from langchain_groq import ChatGroq
 from langchain_core.messages import HumanMessage, AIMessage
 
-def detect_tumor_region(image, predicted_class):
+def detect_polyp_region(image, predicted_class):
     """
-    Detect and highlight tumor region in brain MRI with prominent red bounding box
-    Uses multiple detection strategies and ALWAYS draws a box for tumor cases
+    Detect and highlight polyp region in endoscopic image with prominent red bounding box
+    Uses multiple detection strategies and ALWAYS draws a box for polyp cases
     
     Args:
         image: PIL Image object
-        predicted_class: Predicted tumor class
+        predicted_class: Predicted polyp class
     
     Returns:
-        PIL Image with red bounding box drawn on tumor region
+        PIL Image with red bounding box drawn on polyp region
     """
     try:
         # Convert PIL to numpy array

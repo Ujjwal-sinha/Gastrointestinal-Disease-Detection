@@ -918,40 +918,40 @@ def evaluate_model(model, test_loader, classes, device='cpu'):
 
 def plot_training_history(history):
     """
-    Plot training history for skin disease model
+    Plot training history for polyp model
     """
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 5))
     
     # Plot losses
     ax1.plot(history['train_losses'], label='Train Loss', color='blue')
     ax1.plot(history['val_losses'], label='Validation Loss', color='red')
-    ax1.set_title('Training and Validation Loss')
+    ax1.set_title('Polyp Model - Training and Validation Loss')
     ax1.set_xlabel('Epoch')
     ax1.set_ylabel('Loss')
     ax1.legend()
     ax1.grid(True)
-    
+
     # Plot accuracies
     ax2.plot(history['train_accuracies'], label='Train Accuracy', color='blue')
     ax2.plot(history['val_accuracies'], label='Validation Accuracy', color='red')
-    ax2.set_title('Training and Validation Accuracy')
+    ax2.set_title('Polyp Model - Training and Validation Accuracy')
     ax2.set_xlabel('Epoch')
     ax2.set_ylabel('Accuracy (%)')
     ax2.legend()
     ax2.grid(True)
     
     plt.tight_layout()
-    plt.savefig('skin_disease_training_history.png', dpi=300, bbox_inches='tight')
+    plt.savefig('polyp_training_history.png', dpi=300, bbox_inches='tight')
     plt.close()
 
-def plot_confusion_matrix(conf_matrix, classes, save_path='skin_disease_confusion_matrix.png'):
+def plot_confusion_matrix(conf_matrix, classes, save_path='polyp_confusion_matrix.png'):
     """
-    Plot confusion matrix for skin disease classification
+    Plot confusion matrix for polyp classification
     """
     plt.figure(figsize=(12, 10))
     sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues',
                 xticklabels=classes, yticklabels=classes)
-    plt.title('Skin Disease Classification Confusion Matrix')
+    plt.title('Polyp Classification Confusion Matrix')
     plt.xlabel('Predicted')
     plt.ylabel('Actual')
     plt.xticks(rotation=45)
@@ -960,9 +960,9 @@ def plot_confusion_matrix(conf_matrix, classes, save_path='skin_disease_confusio
     plt.savefig(save_path, dpi=300, bbox_inches='tight')
     plt.close()
 
-def predict_skin_disease(model, image, classes, device='cpu'):
+def predict_polyp(model, image, classes, device='cpu'):
     """
-    Predict skin disease for a single image
+    Predict polyp for a single image
     """
     model.eval()
     
@@ -990,7 +990,7 @@ def predict_skin_disease(model, image, classes, device='cpu'):
 
 def force_retrain_model(data_dir, num_epochs=15, learning_rate=0.001, batch_size=32):
     """
-    Force retrain the skin disease model from scratch
+    Force retrain the polyp model from scratch
     """
     # Set device
     device = torch.device('cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu')
@@ -1013,8 +1013,8 @@ def force_retrain_model(data_dir, num_epochs=15, learning_rate=0.001, batch_size
     ])
     
     # Create datasets
-    train_dataset = SkinDataset(os.path.join(data_dir, 'train'), transform=train_transform)
-    val_dataset = SkinDataset(os.path.join(data_dir, 'val'), transform=val_transform)
+    train_dataset = PolypSegmentationDataset(os.path.join(data_dir, 'train'), transform=train_transform)
+    val_dataset = PolypSegmentationDataset(os.path.join(data_dir, 'val'), transform=val_transform)
     
     # Create data loaders
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
