@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brain Tumor Detection - Workflow Diagrams</title>
+    <title>Gastrointestinal Polyp Detection - Workflow Diagrams</title>
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #20b2aa 0%, #008b8b 100%);
             color: #333;
         }
         .container {
@@ -22,7 +22,7 @@
             overflow: hidden;
         }
         .header {
-            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+            background: linear-gradient(135deg, #20b2aa 0%, #008b8b 100%);
             color: white;
             padding: 30px;
             text-align: center;
@@ -45,10 +45,10 @@
             padding: 30px;
             border-radius: 15px;
             background: #f8f9fa;
-            border-left: 8px solid #e53e3e;
+            border-left: 8px solid #20b2aa;
         }
         .diagram-title {
-            color: #e53e3e;
+            color: #20b2aa;
             margin: 0 0 20px 0;
             font-size: 2em;
             text-align: center;
@@ -77,7 +77,7 @@
             border-radius: 10px;
         }
         .download-btn {
-            background: #e53e3e;
+            background: #20b2aa;
             color: white;
             padding: 12px 24px;
             border: none;
@@ -89,7 +89,7 @@
             display: inline-block;
         }
         .download-btn:hover {
-            background: #c53030;
+            background: #008b8b;
         }
         .feature-list {
             display: grid;
@@ -102,10 +102,10 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border-left: 4px solid #e53e3e;
+            border-left: 4px solid #20b2aa;
         }
         .feature-card h4 {
-            color: #e53e3e;
+            color: #20b2aa;
             margin: 0 0 10px 0;
         }
     </style>
@@ -113,72 +113,72 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🧠 Brain Tumor Detection System</h1>
-            <p>AI-Powered Brain Tumor Classification Workflow with CNN Deep Learning</p>
+            <h1>🩺 Gastrointestinal Polyp Detection System</h1>
+            <p>AI-Powered Gastrointestinal Polyp Classification Workflow with YOLO Deep Learning</p>
         </div>
         
         <div class="content">
-            <!-- Phase 1: MRI Image Upload & Quality Validation -->
+            <!-- Phase 1: Endoscopic Image Upload & Quality Validation -->
             <div class="diagram-section">
-                <h2 class="diagram-title">Phase 1: MRI Image Upload & Quality Validation</h2>
+                <h2 class="diagram-title">Phase 1: Endoscopic Image Upload & Quality Validation</h2>
                 <p class="diagram-description">
-                    Initial phase where the user uploads a brain MRI image, followed by quality validation and preprocessing.
-                    This includes format validation, quality scoring, and MRI-specific image optimization for accurate tumor detection.
+                    Initial phase where the user uploads a gastrointestinal endoscopic image, followed by quality validation and preprocessing.
+                    This includes format validation, quality scoring, and endoscopic-specific image optimization for accurate polyp detection.
                 </p>
                 <div class="mermaid">
                     sequenceDiagram
                         participant User
                         participant StreamApp
                         participant ImageValidator
-                        participant MRIProcessor
+                        participant EndoscopicProcessor
                         participant ValidatedImage
 
-                        Note over User, ValidatedImage: Phase 1: MRI Image Upload & Quality Validation
+                        Note over User, ValidatedImage: Phase 1: Endoscopic Image Upload & Quality Validation
 
-                        User->>StreamApp: Upload Brain MRI Image
+                        User->>StreamApp: Upload Endoscopic Image
                         StreamApp->>StreamApp: Validate File Format (PNG/JPG/JPEG)
                         StreamApp->>ImageValidator: Check Image Quality
                         ImageValidator->>ImageValidator: Quality Score Calculation (0-1 scale)
-                        ImageValidator->>MRIProcessor: Quality Validated Image
-                        MRIProcessor->>MRIProcessor: MRI Image Normalization
-                        MRIProcessor->>MRIProcessor: Contrast Enhancement
-                        MRIProcessor->>MRIProcessor: Resolution Standardization (224x224)
-                        MRIProcessor->>ValidatedImage: Processed MRI Image
+                        ImageValidator->>EndoscopicProcessor: Quality Validated Image
+                        EndoscopicProcessor->>EndoscopicProcessor: Endoscopic Image Normalization
+                        EndoscopicProcessor->>EndoscopicProcessor: Contrast Enhancement (CLAHE)
+                        EndoscopicProcessor->>EndoscopicProcessor: Resolution Standardization (640x640)
+                        EndoscopicProcessor->>ValidatedImage: Processed Endoscopic Image
 
-                        Note over User, ValidatedImage: MRI preprocessing completed, ready for tumor classification
+                        Note over User, ValidatedImage: Endoscopic preprocessing completed, ready for polyp classification
                 </div>
             </div>
 
-            <!-- Phase 2: CNN Tumor Classification -->
+            <!-- Phase 2: YOLO Polyp Classification -->
             <div class="diagram-section">
-                <h2 class="diagram-title">Phase 2: CNN Tumor Classification</h2>
+                <h2 class="diagram-title">Phase 2: YOLO Polyp Classification</h2>
                 <p class="diagram-description">
-                    Advanced AI classification phase where CNN analyzes the MRI image for brain tumor detection with
-                    multi-class classification, confidence scoring, and tumor type identification using deep learning.
+                    Advanced AI classification phase where YOLO11m analyzes the endoscopic image for gastrointestinal polyp detection with
+                    real-time object detection, confidence scoring, and polyp type identification using deep learning.
                 </p>
                 <div class="mermaid">
                     sequenceDiagram
                         participant ValidatedImage
-                        participant CNNModel
+                        participant YOLOModel
                         participant FeatureExtractor
-                        participant ClassificationHead
-                        participant TumorClassifier
+                        participant DetectionHead
+                        participant PolypClassifier
                         participant ConfidenceScorer
 
-                        Note over ValidatedImage, ConfidenceScorer: Phase 2: CNN Tumor Classification
+                        Note over ValidatedImage, ConfidenceScorer: Phase 2: YOLO Polyp Classification
 
-                        ValidatedImage->>CNNModel: Send Processed MRI Image (224x224)
-                        CNNModel->>FeatureExtractor: Deep Feature Extraction (Conv Layers)
+                        ValidatedImage->>YOLOModel: Send Processed Endoscopic Image (640x640)
+                        YOLOModel->>FeatureExtractor: Deep Feature Extraction (Conv Layers)
                         FeatureExtractor->>FeatureExtractor: Multi-layer Convolution & Pooling
-                        FeatureExtractor->>ClassificationHead: Extracted Feature Maps
-                        ClassificationHead->>ClassificationHead: Fully Connected Layers
-                        ClassificationHead->>TumorClassifier: Raw Classification Scores
-                        TumorClassifier->>TumorClassifier: Multi-class Tumor Classification
-                        TumorClassifier->>ConfidenceScorer: Tumor Type Prediction
+                        FeatureExtractor->>DetectionHead: Extracted Feature Maps
+                        DetectionHead->>DetectionHead: Object Detection Layers
+                        DetectionHead->>PolypClassifier: Raw Detection Scores
+                        PolypClassifier->>PolypClassifier: Multi-class Polyp Classification
+                        PolypClassifier->>ConfidenceScorer: Polyp Type Prediction
                         ConfidenceScorer->>ConfidenceScorer: Confidence Score Calculation
                         ConfidenceScorer->>ConfidenceScorer: Probability Calibration (90%+ threshold)
 
-                        Note over ValidatedImage, ConfidenceScorer: Tumor classification completed with high confidence scoring
+                        Note over ValidatedImage, ConfidenceScorer: Polyp classification completed with high confidence scoring
                 </div>
             </div>
 
@@ -186,20 +186,20 @@
             <div class="diagram-section">
                 <h2 class="diagram-title">Phase 3: AI Agent Medical Analysis</h2>
                 <p class="diagram-description">
-                    AI-powered medical analysis using BrainTumorAIAgent for tumor assessment and treatment recommendations.
+                    AI-powered medical analysis using GastrointestinalPolypAIAgent for polyp assessment and treatment recommendations.
                 </p>
                 <div class="mermaid">
                     sequenceDiagram
                         participant ConfidenceScorer
-                        participant BrainTumorAgent
+                        participant GastrointestinalPolypAgent
                         participant TreatmentAdvisor
                         participant Report
 
                         Note over ConfidenceScorer, Report: Phase 3: AI Medical Analysis
 
-                        ConfidenceScorer->>BrainTumorAgent: Classification Results
-                        BrainTumorAgent->>BrainTumorAgent: Medical Analysis
-                        BrainTumorAgent->>TreatmentAdvisor: Tumor Assessment
+                        ConfidenceScorer->>GastrointestinalPolypAgent: Classification Results
+                        GastrointestinalPolypAgent->>GastrointestinalPolypAgent: Medical Analysis
+                        GastrointestinalPolypAgent->>TreatmentAdvisor: Polyp Assessment
                         TreatmentAdvisor->>TreatmentAdvisor: Generate Recommendations
                         TreatmentAdvisor->>Report: Complete Analysis
 
@@ -207,11 +207,11 @@
                 </div>
             </div>
 
-            <!-- Phase 4: Tumor Region Detection & Reporting -->
+            <!-- Phase 4: Polyp Region Detection & Reporting -->
             <div class="diagram-section">
-                <h2 class="diagram-title">Phase 4: Tumor Region Detection & Reporting</h2>
+                <h2 class="diagram-title">Phase 4: Polyp Region Detection & Reporting</h2>
                 <p class="diagram-description">
-                    Tumor region detection, visualization generation, and PDF report creation for clinical documentation.
+                    Polyp region detection, visualization generation, and PDF report creation for clinical documentation.
                 </p>
                 <div class="mermaid">
                     sequenceDiagram
@@ -224,7 +224,7 @@
                         Note over Analysis, User: Phase 4: Detection & Reporting
 
                         Analysis->>Detector: Classification Results
-                        Detector->>Detector: Tumor Region Detection
+                        Detector->>Detector: Polyp Region Detection
                         Detector->>Visualizer: Annotated Image
                         Visualizer->>Visualizer: Generate Explanations
                         Visualizer->>Report: Visualizations & Findings
@@ -238,27 +238,27 @@
             <!-- System Features -->
             <div class="download-section">
                 <h3>📊 System Features & Capabilities</h3>
-                <p style="margin-bottom: 20px;">Advanced brain tumor detection system with comprehensive AI-powered analysis</p>
+                <p style="margin-bottom: 20px;">Advanced gastrointestinal polyp detection system with comprehensive AI-powered analysis</p>
 
                 <div class="feature-list">
                     <div class="feature-card">
-                        <h4>🧠 Brain Tumor Detection</h4>
-                        <p>4 tumor categories: Glioma (malignant), Meningioma (benign), Pituitary (benign), No Tumor (healthy)</p>
+                        <h4>🩺 Gastrointestinal Polyp Detection</h4>
+                        <p>2 polyp categories: Polyp (abnormal growth), No Polyp (healthy tissue)</p>
                     </div>
 
                     <div class="feature-card">
-                        <h4>🔍 CNN Classification</h4>
-                        <p>Deep learning CNN model with 224x224 input, multi-class classification, and high confidence scoring</p>
+                        <h4>🎯 YOLO Classification</h4>
+                        <p>Real-time YOLO11m model with 640x640 input, object detection, and high confidence scoring</p>
                     </div>
 
                     <div class="feature-card">
-                        <h4>🖼️ MRI Image Processing</h4>
-                        <p>Image quality validation, contrast enhancement, normalization, and resolution standardization</p>
+                        <h4>🖼️ Endoscopic Image Processing</h4>
+                        <p>Image quality validation, contrast enhancement (CLAHE), normalization, and resolution standardization</p>
                     </div>
 
                     <div class="feature-card">
                         <h4>🤖 AI Agents</h4>
-                        <p>BrainTumorAIAgent with LangChain integration, medical analysis, and clinical recommendations</p>
+                        <p>GastrointestinalPolypAIAgent with LangChain integration, medical analysis, and clinical recommendations</p>
                     </div>
 
                     <div class="feature-card">
@@ -268,12 +268,12 @@
 
                     <div class="feature-card">
                         <h4>📋 Medical Reports</h4>
-                        <p>Comprehensive PDF reports with tumor findings, classifications, treatment recommendations, and visualizations</p>
+                        <p>Comprehensive PDF reports with polyp findings, classifications, treatment recommendations, and visualizations</p>
                     </div>
 
                     <div class="feature-card">
                         <h4>⚕️ Clinical Support</h4>
-                        <p>Treatment protocols, surgical recommendations, prognosis assessment, and follow-up planning</p>
+                        <p>Treatment protocols, endoscopic recommendations, prognosis assessment, and follow-up planning</p>
                     </div>
 
                     <div class="feature-card">
@@ -283,9 +283,9 @@
                 </div>
 
                 <div style="margin-top: 30px;">
-                    <p><strong>Classification Accuracy:</strong> High accuracy CNN model with 90%+ confidence threshold</p>
-                    <p><strong>Tumor Types:</strong> Glioma (Malignant), Meningioma (Benign), Pituitary (Benign), No Tumor (Healthy)</p>
-                    <p><strong>Technology Stack:</strong> CNN, PyTorch, Streamlit, LangChain, GROQ API, OpenCV, LIME, SHAP</p>
+                    <p><strong>Classification Accuracy:</strong> High accuracy YOLO11m model with 90%+ confidence threshold</p>
+                    <p><strong>Polyp Types:</strong> Polyp (Abnormal Growth), No Polyp (Healthy Tissue)</p>
+                    <p><strong>Technology Stack:</strong> YOLO11m, PyTorch, Streamlit, LangChain, GROQ API, OpenCV, LIME, SHAP</p>
                 </div>
             </div>
 
@@ -293,18 +293,18 @@
             <div class="diagram-section">
                 <h2 class="diagram-title">Complete System Workflow</h2>
                 <p class="diagram-description">
-                    End-to-end workflow showing all four phases integrated for comprehensive brain tumor detection and analysis
+                    End-to-end workflow showing all four phases integrated for comprehensive gastrointestinal polyp detection and analysis
                 </p>
                 <div class="mermaid">
                     flowchart TB
-                        A[🧠 Upload Brain MRI] --> B[📊 Quality Validation]
-                        B --> C[🔍 MRI Image Processing]
-                        C --> D[🖼️ Normalization (224x224)]
-                        D --> E[✨ Contrast Enhancement]
-                        E --> F[🤖 CNN Tumor Classification]
+                        A[🩺 Upload Endoscopic Image] --> B[📊 Quality Validation]
+                        B --> C[🔍 Endoscopic Image Processing]
+                        C --> D[🖼️ Normalization (640x640)]
+                        D --> E[✨ Contrast Enhancement (CLAHE)]
+                        E --> F[🎯 YOLO Polyp Classification]
                         F --> G[🔍 Feature Extraction]
                         G --> H[✅ Confidence Scoring]
-                        H --> I[🎯 Tumor Region Detection]
+                        H --> I[🎯 Polyp Region Detection]
                         I --> J[🏥 AI Agent Medical Analysis]
                         J --> K[⚠️ Risk Assessment]
                         K --> L[💊 Treatment Recommendations]
@@ -314,11 +314,99 @@
                         O --> P[📄 Generate PDF]
                         P --> Q[📥 Download Complete Report]
 
-                        style A fill:#fed7d7,stroke:#e53e3e,stroke-width:3px
+                        style A fill:#fed7d7,stroke:#20b2aa,stroke-width:3px
                         style F fill:#dcfce7,stroke:#48bb78,stroke-width:3px
                         style J fill:#fef5e7,stroke:#ed8936,stroke-width:3px
                         style O fill:#e6fffa,stroke:#38b2ac,stroke-width:3px
-                        style Q fill:#667eea,stroke:#764ba2,stroke-width:3px,color:#ffffff
+                        style Q fill:#20b2aa,stroke:#008b8b,stroke-width:3px,color:#ffffff
+                </div>
+            </div>
+
+            <!-- Multi-Agent Workflow -->
+            <div class="diagram-section">
+                <h2 class="diagram-title">Multi-Agent Workflow</h2>
+                <p class="diagram-description">
+                    Detailed workflow showing the three specialized AI agents working together for comprehensive polyp analysis
+                </p>
+                <div class="mermaid">
+                    sequenceDiagram
+                        participant Image
+                        participant DataPreprocessingAgent
+                        participant ModelTrainingAgent
+                        participant EvaluationAgent
+                        participant Orchestrator
+                        participant FinalReport
+
+                        Note over Image, FinalReport: Multi-Agent Polyp Analysis Workflow
+
+                        Image->>DataPreprocessingAgent: Raw Endoscopic Image
+                        DataPreprocessingAgent->>DataPreprocessingAgent: Image Enhancement
+                        DataPreprocessingAgent->>DataPreprocessingAgent: Quality Assessment
+                        DataPreprocessingAgent->>Orchestrator: Enhanced Image + Quality Score
+
+                        Orchestrator->>ModelTrainingAgent: Enhanced Image
+                        ModelTrainingAgent->>ModelTrainingAgent: YOLO Model Optimization
+                        ModelTrainingAgent->>ModelTrainingAgent: Performance Monitoring
+                        ModelTrainingAgent->>Orchestrator: Optimized Model + Metrics
+
+                        Orchestrator->>EvaluationAgent: Model Results + Image
+                        EvaluationAgent->>EvaluationAgent: Clinical Validation
+                        EvaluationAgent->>EvaluationAgent: Risk Assessment
+                        EvaluationAgent->>EvaluationAgent: Quality Assurance
+                        EvaluationAgent->>FinalReport: Comprehensive Analysis
+
+                        Note over Image, FinalReport: Multi-agent analysis completed
+                </div>
+            </div>
+
+            <!-- Dataset Information -->
+            <div class="diagram-section">
+                <h2 class="diagram-title">Dataset Integration</h2>
+                <p class="diagram-description">
+                    Integration of Kvasir-SEG and Kvasir-Sessile datasets for comprehensive polyp detection training
+                </p>
+                <div class="mermaid">
+                    graph TB
+                        subgraph DatasetInfo["📊 Dataset Information"]
+                            KS["Kvasir-SEG Dataset<br/>1,000 polyp images<br/>Pixel-wise segmentation masks"]
+                            KSS["Kvasir-Sessile Dataset<br/>196 polyp images<br/>Additional polyp variations"]
+                            TC["Total Combined<br/>1,196 endoscopic images<br/>2 polyp classes"]
+                        end
+                        
+                        subgraph DatasetFeatures["🔍 Dataset Features"]
+                            IM["Image Formats<br/>JPEG images<br/>PNG masks"]
+                            RS["Resolution Range<br/>332×487 to 1920×1072<br/>Optimized to 640×640"]
+                            AN["Annotations<br/>Manual annotation<br/>Expert verification"]
+                            BB["Bounding Boxes<br/>JSON format<br/>Precise localization"]
+                        end
+                        
+                        subgraph DatasetUsage["🎯 Dataset Usage"]
+                            TR["Training<br/>Model training<br/>Feature learning"]
+                            VA["Validation<br/>Model validation<br/>Performance testing"]
+                            TE["Testing<br/>Final evaluation<br/>Clinical validation"]
+                        end
+                        
+                        %% Connections
+                        KS --> TC
+                        KSS --> TC
+                        TC --> IM
+                        TC --> RS
+                        TC --> AN
+                        TC --> BB
+                        
+                        IM --> TR
+                        RS --> VA
+                        AN --> TE
+                        BB --> TR
+                        
+                        %% Styling
+                        classDef dataset fill:#20b2aa,stroke:#008b8b,stroke-width:2px,color:#000
+                        classDef features fill:#2ecc71,stroke:#27ae60,stroke-width:2px,color:#000
+                        classDef usage fill:#f39c12,stroke:#e67e22,stroke-width:2px,color:#000
+                        
+                        class KS,KSS,TC dataset
+                        class IM,RS,AN,BB features
+                        class TR,VA,TE usage
                 </div>
             </div>
 
@@ -326,7 +414,7 @@
             <div class="download-section">
                 <h3>📄 Research Paper Ready Diagrams</h3>
                 <p>These workflow diagrams are optimized for research paper presentation with clear 4-phase separation and comprehensive medical workflows.</p>
-                <p style="margin-top: 15px;"><strong>Citation:</strong> Enhanced Bone Fracture Detection using Deep Learning with Multi-Scale YOLO Detection and AI-Powered Medical Analysis</p>
+                <p style="margin-top: 15px;"><strong>Citation:</strong> Enhanced Gastrointestinal Polyp Detection using Deep Learning with Multi-Scale YOLO Detection and AI-Powered Medical Analysis</p>
             </div>
         </div>
     </div>
@@ -362,11 +450,11 @@
                 padding: 20
             },
             themeVariables: {
-                primaryColor: '#e53e3e',
+                primaryColor: '#20b2aa',
                 primaryTextColor: '#fff',
-                primaryBorderColor: '#c53030',
+                primaryBorderColor: '#008b8b',
                 lineColor: '#2c3e50',
-                secondaryColor: '#667eea',
+                secondaryColor: '#20b2aa',
                 tertiaryColor: '#ed8936',
                 noteBkgColor: '#fef5e7',
                 noteTextColor: '#2d3748',

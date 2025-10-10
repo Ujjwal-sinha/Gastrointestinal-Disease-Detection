@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BrainTumorAI - System Architecture</title>
+    <title>GastrointestinalPolypAI - System Architecture</title>
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #20b2aa 0%, #008b8b 100%);
             color: #333;
         }
         .container {
@@ -22,8 +22,8 @@
             overflow: hidden;
         }
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: black;
+            background: linear-gradient(135deg, #20b2aa 0%, #008b8b 100%);
+            color: white;
             padding: 30px;
             text-align: center;
         }
@@ -45,15 +45,15 @@
             padding: 20px;
             border-radius: 10px;
             background: #f8f9fa;
-            border-left: 5px solid #667eea;
+            border-left: 5px solid #20b2aa;
         }
         .section h2 {
-            color: #667eea;
+            color: #20b2aa;
             margin-top: 0;
             font-size: 1.8em;
         }
         .section h3 {
-            color: #764ba2;
+            color: #008b8b;
             margin-top: 25px;
             font-size: 1.4em;
         }
@@ -76,10 +76,10 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #20b2aa;
         }
         .tech-card h4 {
-            color: #667eea;
+            color: #20b2aa;
             margin-top: 0;
         }
         .feature-list {
@@ -112,7 +112,7 @@
         .metric-value {
             font-size: 2em;
             font-weight: bold;
-            color: #667eea;
+            color: #20b2aa;
         }
         .metric-label {
             color: #666;
@@ -123,23 +123,23 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🧠 BrainTumorAI</h1>
-            <p>Advanced CNN-based AI System with Multi-Agent Intelligence for Brain Tumor Detection and MRI Analysis</p>
+            <h1>🩺 GastrointestinalPolypAI</h1>
+            <p>Advanced YOLO-based AI System with Multi-Agent Intelligence for Gastrointestinal Polyp Detection and Endoscopic Analysis</p>
         </div>
         
         <div class="content">
             <!-- System Overview -->
             <div class="section">
                 <h2>📋 System Overview</h2>
-                <p>BrainTumorAI is a comprehensive AI-powered medical imaging analysis platform that combines Convolutional Neural Networks (CNN) with multi-agent intelligence, advanced image processing, and enhanced MRI analysis to provide accurate brain tumor identification and classification across 4 tumor types.</p>
+                <p>GastrointestinalPolypAI is a comprehensive AI-powered endoscopic imaging analysis platform that combines YOLO object detection with CNN classification, multi-agent intelligence, advanced image processing, and enhanced endoscopic analysis to provide accurate gastrointestinal polyp identification and classification across 2 primary classes using the Kvasir-SEG dataset.</p>
                 
                 <div class="metrics">
                     <div class="metric-card">
-                        <div class="metric-value">4</div>
-                        <div class="metric-label">Tumor Types</div>
+                        <div class="metric-value">2</div>
+                        <div class="metric-label">Polyp Classes</div>
                     </div>
                     <div class="metric-card">
-                        <div class="metric-value">7,023</div>
+                        <div class="metric-value">1,196</div>
                         <div class="metric-label">Training Images</div>
                     </div>
                     <div class="metric-card">
@@ -155,42 +155,42 @@
 
             <!-- Main Architecture Diagram -->
             <div class="section">
-                <h2> System Architecture</h2>
+                <h2>🏗️ System Architecture</h2>
                 <div class="mermaid">
                     graph TB
                         %% Step 1: Data Input
-                        DS["MRI Dataset<br/>Brain Tumor Images<br/>4 Tumor Classes"]
-                        PR["Patient Records<br/>Medical History<br/>Symptoms"]
-                        CC["Clinical Context<br/>Neurological History<br/>Risk Factors"]
+                        DS["Kvasir-SEG Dataset<br/>Gastrointestinal Polyp Images<br/>2 Polyp Classes"]
+                        PR["Patient Records<br/>Medical History<br/>GI Symptoms"]
+                        CC["Clinical Context<br/>Endoscopic History<br/>Risk Factors"]
                         
                         %% Step 2: Frontend Interface
                         ST["Streamlit Web App<br/>Main Interface"]
-                        IU["Image Upload<br/>Drag & Drop MRI"]
+                        IU["Image Upload<br/>Drag & Drop Endoscopic Images"]
                         
                         %% Step 3: Backend Processing
-                        ML["Model Loader<br/>CNN Model Loading"]
-                        IP["Image Preprocessor<br/>MRI Enhancement"]
+                        ML["Model Loader<br/>YOLO11m + CNN Model Loading"]
+                        IP["Image Preprocessor<br/>Endoscopic Enhancement"]
                         
                         %% Step 4: AI Models
-                        CNN_MODEL["CNN Classification Model<br/>Tumor Detection<br/>Multi-class Classification"]
-                        BLIP[" Model<br/>Image Description<br/>Visual Understanding"]
+                        YOLO_MODEL["YOLO11m Model<br/>Polyp Detection<br/>Real-time Object Detection"]
+                        CNN_MODEL["CNN Classification Model<br/>Polyp Classification<br/>Fallback Classification"]
                         
                         %% Step 5: Multi-Agent System
                         AO["Agent Orchestrator<br/>Multi-Agent Coordination"]
-                        MA["Medical Analysis Agent<br/>Tumor Assessment<br/>Treatment Recommendations"]
-                        DA["Risk Assessment Agent<br/>Complication Analysis<br/>Prognosis Evaluation"]
-                        RA["Treatment Advisor Agent<br/>Evidence-based Protocols<br/>Recovery Planning"]
+                        MA["Data Preprocessing Agent<br/>Image Enhancement<br/>Quality Assessment"]
+                        TA["Model Training Agent<br/>Model Optimization<br/>Performance Monitoring"]
+                        EA["Evaluation Agent<br/>Metrics Analysis<br/>Clinical Validation"]
                         
                         %% Step 6: Image Enhancement & Detection
-                        IE["Visualization Engine<br/>Tumor Region Detection"]
-                        ED["Edge Detection<br/>Tumor Boundary Enhancement"]
+                        IE["Visualization Engine<br/>Polyp Region Detection"]
+                        ED["Edge Detection<br/>Polyp Boundary Enhancement"]
                         BF["Grad-CAM<br/>Heatmap Overlay"]
                         CL["SHAP Analysis<br/>Feature Importance"]
                         MO["LIME<br/>Local Explanation"]
                         BB["Bounding Box<br/>Red Square Detection"]
                         
                         %% Step 7: Results & Reports
-                        RD["Results Display<br/>Tumor Type<br/>Confidence Score"]
+                        RD["Results Display<br/>Polyp Type<br/>Confidence Score"]
                         QA["Quality Assessment<br/>Detection Reliability"]
                         MC["Model Validation<br/>Performance Metrics"]
                         PDF["PDF Report<br/>Comprehensive Analysis"]
@@ -202,16 +202,16 @@
                         ST --> IU
                         IU --> ML
                         ML --> IP
+                        IP --> YOLO_MODEL
                         IP --> CNN_MODEL
-                        IP --> BLIP
+                        YOLO_MODEL --> AO
                         CNN_MODEL --> AO
-                        BLIP --> AO
                         AO --> MA
-                        AO --> DA
-                        AO --> RA
+                        AO --> TA
+                        AO --> EA
                         MA --> IE
-                        DA --> IE
-                        RA --> IE
+                        TA --> IE
+                        EA --> IE
                         IE --> ED
                         IE --> BF
                         IE --> CL
@@ -237,9 +237,9 @@
                         
                         class DS,PR,CC dataLayer
                         class ST,IU frontendLayer
-                        class BE,DM,ML,IP backendLayer
-                        class CNN_MODEL,BLIP modelsLayer
-                        class AO,MA,DA,RA agentsLayer
+                        class ML,IP backendLayer
+                        class YOLO_MODEL,CNN_MODEL modelsLayer
+                        class AO,MA,TA,EA agentsLayer
                         class IE,ED,BF,CL,MO,BB vizLayer
                         class RD,QA,MC,PDF resultsLayer
                 </div>
@@ -247,21 +247,21 @@
 
             <!-- Detailed Workflow -->
             <div class="section">
-                <h2> Detailed Workflow</h2>
+                <h2>🔄 Detailed Workflow</h2>
                 <div class="mermaid">
                     flowchart TD
-                        Start([Start]) --> Upload[Upload MRI Image]
+                        Start([Start]) --> Upload[Upload Endoscopic Image]
                         Upload --> Preprocess[Image Preprocessing<br/>Enhancement & Normalization]
-                        Preprocess --> ModelLoad[Load CNN Model<br/>Model Validation]
-                        ModelLoad --> Enhancement[MRI Enhancement<br/>CLAHE, Bilateral Filter, Edge Detection]
-                        Enhancement --> Detection[Tumor Detection<br/>CNN Classification]
-                        Detection --> AgentAnalysis[Multi-Agent Analysis<br/>Medical Assessment & Risk Evaluation]
-                        AgentAnalysis --> Classification[Tumor Classification<br/>4 Tumor Types]
+                        Preprocess --> ModelLoad[Load YOLO11m Model<br/>Model Validation]
+                        ModelLoad --> Enhancement[Endoscopic Enhancement<br/>CLAHE, Bilateral Filter, Edge Detection]
+                        Enhancement --> Detection[Polyp Detection<br/>YOLO Classification]
+                        Detection --> AgentAnalysis[Multi-Agent Analysis<br/>Data Processing & Model Training]
+                        AgentAnalysis --> Classification[Polyp Classification<br/>2 Polyp Types]
                         Classification --> Visualizations[Generate Visualizations]
                         
-                        Visualizations --> BoundingBoxes[Red Bounding Box<br/>Tumor Localization]
+                        Visualizations --> BoundingBoxes[Red Bounding Box<br/>Polyp Localization]
                         Visualizations --> ConfidenceMap[Confidence Mapping<br/>Detection Quality]
-                        Visualizations --> EdgeDetection[Enhanced Edge Detection<br/>Tumor Boundary Highlighting]
+                        Visualizations --> EdgeDetection[Enhanced Edge Detection<br/>Polyp Boundary Highlighting]
                         Visualizations --> QualityAssess[Quality Assessment<br/>Detection Reliability]
                         Visualizations --> ExplainableAI[Explainable AI<br/>LIME, SHAP, Grad-CAM]
                         
@@ -275,9 +275,9 @@
                         Display --> End([End])
                         
                         %% Data Sources
-                        Dataset[MRI Dataset<br/>7,023 Images] --> Preprocess
+                        Dataset[Kvasir-SEG Dataset<br/>1,196 Images] --> Preprocess
                         PatientData[Patient Records<br/>Medical History] --> AgentAnalysis
-                        ClinicalContext[Clinical Context<br/>Symptoms] --> AgentAnalysis
+                        ClinicalContext[Clinical Context<br/>GI Symptoms] --> AgentAnalysis
                         
                         %% Styling
                         classDef startEnd fill:#2ecc71,stroke:#27ae60,stroke-width:3px,color:#000
@@ -298,149 +298,147 @@
 
             <!-- Multi-Agent Architecture -->
             <div class="section">
-                <h2> Multi-Agent Architecture</h2>
+                <h2>🤖 Multi-Agent Architecture</h2>
                 
                 <!-- Agent Orchestrator Overview -->
                 <div class="mermaid">
                     graph TB
                         AO[Agent Orchestrator<br/>Multi-Agent Coordination]
-                        MA[Medical Analysis Agent]
-                        DA[Risk Assessment Agent]
-                        RA[Treatment Advisor Agent]
+                        MA[Data Preprocessing Agent]
+                        TA[Model Training Agent]
+                        EA[Evaluation Agent]
 
                         AO --> MA
-                        AO --> DA
-                        AO --> RA
+                        AO --> TA
+                        AO --> EA
 
                         %% Styling
-                        classDef orchestrator fill:#667eea,stroke:#5a6fd8,stroke-width:3px,color:#000
-                        class AO,MA,DA,RA orchestrator
+                        classDef orchestrator fill:#20b2aa,stroke:#008b8b,stroke-width:3px,color:#000
+                        class AO,MA,TA,EA orchestrator
                 </div>
                 
-                <!-- Medical Analysis Agent -->
+                <!-- Data Preprocessing Agent -->
                 <div class="mermaid">
                     graph TB
-                        subgraph MedicalAgent[" Medical Analysis Agent - Clinical Expertise"]
-                            MA[Medical Analysis Agent<br/>LangChain + Groq LLM]
-                            TA[Tumor Assessment<br/>Type Classification & Severity Analysis]
-                            RA[Risk Assessment<br/>Complication probability calculation<br/>Risk stratification]
-                            DD[Differential Diagnosis<br/>Multiple possible diagnoses<br/>Clinical reasoning]
-                            MK[Medical Knowledge Integration<br/>Neurology guidelines<br/>Evidence-based medicine]
-                            CS[Confidence Scoring<br/>Uncertainty quantification<br/>Reliability metrics]
-                            CL[Clinical Language Processing<br/>Medical terminology<br/>Clinical context understanding]
+                        subgraph PreprocessingAgent["🔧 Data Preprocessing Agent - Image Enhancement"]
+                            MA[Data Preprocessing Agent<br/>LangChain + Groq LLM]
+                            IE[Image Enhancement<br/>CLAHE, Bilateral Filter, Edge Detection]
+                            QA[Quality Assessment<br/>Image quality scoring<br/>Enhancement validation]
+                            NM[Normalization<br/>Resolution standardization<br/>Intensity normalization]
+                            VP[Validation Pipeline<br/>Format validation<br/>Quality checks]
+                            EP[Enhancement Pipeline<br/>Multi-strategy enhancement<br/>Polyp boundary detection]
+                            CP[Context Processing<br/>Endoscopic context<br/>Clinical relevance]
                         end
                         
-                        %% Medical Agent Flow
-                        MA --> TA
-                        MA --> RA
-                        MA --> DD
-                        MA --> MK
-                        MA --> CS
-                        MA --> CL
+                        %% Preprocessing Agent Flow
+                        MA --> IE
+                        MA --> QA
+                        MA --> NM
+                        MA --> VP
+                        MA --> EP
+                        MA --> CP
                         
-                        TA --> RA
-                        RA --> DD
-                        DD --> CS
-                        MK --> TA
-                        MK --> RA
-                        CL --> DD
+                        IE --> QA
+                        QA --> NM
+                        NM --> VP
+                        VP --> EP
+                        EP --> CP
                         
                         %% Styling
-                        classDef medicalAgent fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#000
-                        class MA,TA,RA,DD,MK,CS,CL medicalAgent
+                        classDef preprocessingAgent fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#000
+                        class MA,IE,QA,NM,VP,EP,CP preprocessingAgent
                 </div>
                 
-                <!-- Risk Assessment Agent -->
+                <!-- Model Training Agent -->
                 <div class="mermaid">
                     graph TB
-                        subgraph RiskAgent[" Risk Assessment Agent -"]
-                            RAA[Risk Assessment Agent<br/>Complication Analysis & Prediction]
-                            CF[Complication Forecasting<br/>Treatment complications prediction<br/>Risk modeling]
-                            PF[Prognostic Factors<br/>Recovery timeline estimation<br/>Outcome prediction]
-                            RF[Risk Factors Analysis<br/>Patient-specific risk assessment<br/>Comorbidity evaluation]
-                            MS[Monitoring Strategy<br/>Follow-up scheduling<br/>Alert systems]
-                            RM[Risk Mitigation<br/>Prevention strategies<br/>Intervention recommendations]
-                            PS[Patient Stratification<br/>Risk-based categorization<br/>Priority assignment]
+                        subgraph TrainingAgent["🎯 Model Training Agent - Optimization"]
+                            TAA[Model Training Agent<br/>YOLO + CNN Optimization]
+                            MO[Model Optimization<br/>Hyperparameter tuning<br/>Performance enhancement]
+                            PM[Performance Monitoring<br/>Training metrics<br/>Validation accuracy]
+                            CV[Cross Validation<br/>Model validation<br/>Overfitting prevention]
+                            RT[Retraining Logic<br/>Model updates<br/>Continuous learning]
+                            OM[Optimization Metrics<br/>Loss optimization<br/>Accuracy improvement]
+                            CM[Configuration Management<br/>Model settings<br/>Parameter management]
                         end
                         
-                        %% Risk Agent Flow
-                        RAA --> CF
-                        RAA --> PF
-                        RAA --> RF
-                        RAA --> MS
-                        RAA --> RM
-                        RAA --> PS
+                        %% Training Agent Flow
+                        TAA --> MO
+                        TAA --> PM
+                        TAA --> CV
+                        TAA --> RT
+                        TAA --> OM
+                        TAA --> CM
                         
-                        CF --> PF
-                        RF --> CF
-                        PF --> MS
-                        MS --> RM
-                        RF --> PS
+                        MO --> PM
+                        PM --> CV
+                        CV --> RT
+                        RT --> OM
+                        OM --> CM
                         
                         %% Styling
-                        classDef riskAgent fill:#f39c12,stroke:#e67e22,stroke-width:2px,color:#000
-                        class RAA,CF,PF,RF,MS,RM,PS riskAgent
+                        classDef trainingAgent fill:#f39c12,stroke:#e67e22,stroke-width:2px,color:#000
+                        class TAA,MO,PM,CV,RT,OM,CM trainingAgent
                 </div>
                 
-                <!-- Treatment Advisor Agent -->
+                <!-- Evaluation Agent -->
                 <div class="mermaid">
                     graph TB
-                        subgraph TreatmentAgent[" Treatment Advisor Agent - "]
-                            TAA[Treatment Advisor Agent<br/>Evidence-based Treatment Planning]
-                            TP[Treatment Protocols<br/>Standard of care guidelines<br/>Best practice recommendations]
-                            SP[Surgical Planning<br/>Surgical indication assessment<br/>Procedure recommendations]
-                            RP[Recovery Planning<br/>Rehabilitation protocols<br/>Recovery timelines]
-                            MP[Medication Protocols<br/>Symptom management<br/>Therapeutic interventions]
-                            FU[Follow-up Planning<br/>Monitoring schedules<br/>Assessment protocols]
-                            EBM[Evidence-Based Medicine<br/>Literature integration<br/>Clinical guidelines]
+                        subgraph EvaluationAgent["📊 Evaluation Agent - Clinical Validation"]
+                            EAA[Evaluation Agent<br/>Clinical Metrics & Validation]
+                            MA[Metrics Analysis<br/>Dice coefficient, IoU<br/>Clinical accuracy]
+                            CV[Clinical Validation<br/>Medical accuracy<br/>Clinical relevance]
+                            QA[Quality Assurance<br/>Detection reliability<br/>Confidence validation]
+                            RM[Risk Management<br/>False positive/negative<br/>Clinical safety]
+                            PM[Performance Metrics<br/>Model performance<br/>Accuracy tracking]
+                            CR[Clinical Reporting<br/>Medical reports<br/>Clinical documentation]
                         end
                         
-                        %% Treatment Agent Flow
-                        TAA --> TP
-                        TAA --> SP
-                        TAA --> RP
-                        TAA --> MP
-                        TAA --> FU
-                        TAA --> EBM
+                        %% Evaluation Agent Flow
+                        EAA --> MA
+                        EAA --> CV
+                        EAA --> QA
+                        EAA --> RM
+                        EAA --> PM
+                        EAA --> CR
                         
-                        TP --> SP
-                        SP --> RP
-                        RP --> FU
-                        EBM --> TP
-                        EBM --> SP
-                        MP --> RP
+                        MA --> CV
+                        CV --> QA
+                        QA --> RM
+                        RM --> PM
+                        PM --> CR
                         
                         %% Styling
-                        classDef treatmentAgent fill:#9b59b6,stroke:#8e44ad,stroke-width:2px,color:#000
-                        class TAA,TP,SP,RP,MP,FU,EBM treatmentAgent
+                        classDef evaluationAgent fill:#9b59b6,stroke:#8e44ad,stroke-width:2px,color:#000
+                        class EAA,MA,CV,QA,RM,PM,CR evaluationAgent
                 </div>
             </div>
 
-            <!-- CNN Model Architecture -->
+            <!-- YOLO Model Architecture -->
             <div class="section">
-                <h2>🎯 CNN Model Architecture</h2>
+                <h2>🎯 YOLO Model Architecture</h2>
                 <div class="mermaid">
                     graph TB
-                        subgraph CNNModel["🧠 CNN Brain Tumor Classification Model"]
-                            CNN["CNN Model<br/>Deep Convolutional Neural Network"]
-                            CNN_FT["Model Configuration:<br/>• 4-class classification<br/>• Transfer learning<br/>• Enhanced confidence thresholds"]
-                            CNN_Input["Input: Enhanced MRI Image<br/>224x224 RGB"]
-                            CNN_Output["Output: Tumor Classification<br/>4 Classes + Confidence"]
-                            CNN_Features["Features:<br/>• Glioma detection<br/>• Meningioma detection<br/>• Pituitary detection<br/>• No Tumor detection"]
+                        subgraph YOLOModel["🎯 YOLO11m Polyp Detection Model"]
+                            YOLO["YOLO11m Model<br/>Real-time Object Detection"]
+                            YOLO_FT["Model Configuration:<br/>• 2-class classification<br/>• Optimized for polyp detection<br/>• Enhanced confidence thresholds"]
+                            YOLO_Input["Input: Enhanced Endoscopic Image<br/>640x640 RGB"]
+                            YOLO_Output["Output: Polyp Detection<br/>2 Classes + Confidence"]
+                            YOLO_Features["Features:<br/>• Polyp detection<br/>• No Polyp detection<br/>• Bounding box coordinates<br/>• Confidence scoring"]
                         end
                         
-                        subgraph Enhancement["🔧 MRI Enhancement Pipeline"]
-                            IE["MRI Enhancement Engine"]
+                        subgraph Enhancement["🔧 Endoscopic Enhancement Pipeline"]
+                            IE["Endoscopic Enhancement Engine"]
                             BF["Bilateral Filtering<br/>Noise reduction"]
                             CL["CLAHE<br/>Adaptive histogram equalization"]
                             ED["Edge Detection<br/>Canny + Sobel + Laplacian"]
-                            MO["Morphological Operations<br/>Brain structure enhancement"]
-                            SH["Sharpening<br/>Tumor boundary enhancement"]
+                            MO["Morphological Operations<br/>Polyp structure enhancement"]
+                            SH["Sharpening<br/>Polyp boundary enhancement"]
                             NM["Normalization<br/>Intensity standardization"]
                         end
                         
-                        subgraph Detection["🎯 Tumor Region Detection"]
-                            TD["Tumor Detection Engine"]
+                        subgraph Detection["🎯 Polyp Region Detection"]
+                            TD["Polyp Detection Engine"]
                             CT["Contour Detection<br/>Multi-strategy approach"]
                             BB["Bounding Box<br/>Red square annotation"]
                             FB["Fallback Detection<br/>Center region estimation"]
@@ -455,7 +453,7 @@
                         end
                         
                         %% Connections
-                        CNN_Input --> IE
+                        YOLO_Input --> IE
                         IE --> BF
                         IE --> CL
                         IE --> ED
@@ -463,88 +461,80 @@
                         IE --> SH
                         IE --> NM
                         
-                        BF --> CNN
-                        CL --> CNN
-                        ED --> CNN
-                        MO --> CNN
-                        SH --> CNN
-                        NM --> CNN
+                        BF --> YOLO
+                        CL --> YOLO
+                        ED --> YOLO
+                        MO --> YOLO
+                        SH --> YOLO
+                        NM --> YOLO
                         
-                        CNN --> CNN_FT
-                        CNN_FT --> CNN_Output
-                        CNN_Output --> CNN_Features
+                        YOLO --> YOLO_FT
+                        YOLO_FT --> YOLO_Output
+                        YOLO_Output --> YOLO_Features
                         
-                        CNN_Output --> TD
+                        YOLO_Output --> TD
                         TD --> CT
                         TD --> BB
                         TD --> FB
                         TD --> VF
                         
-                        CNN --> MV
+                        YOLO --> MV
                         MV --> PT
                         MV --> QA
                         MV --> CF
                         
                         %% Styling
-                        classDef cnnModel fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#000
+                        classDef yoloModel fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#000
                         classDef enhancement fill:#2ecc71,stroke:#27ae60,stroke-width:2px,color:#000
                         classDef detection fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#000
                         classDef validation fill:#f39c12,stroke:#e67e22,stroke-width:2px,color:#000
                         
-                        class CNN,CNN_Input,CNN_Output,CNN_Features,CNN_FT cnnModel
+                        class YOLO,YOLO_Input,YOLO_Output,YOLO_Features,YOLO_FT yoloModel
                         class IE,BF,CL,ED,MO,SH,NM enhancement
                         class TD,CT,BB,FB,VF detection
                         class MV,PT,QA,CF validation
                 </div>
             </div>
 
-            <!-- Tumor Classification System -->
+            <!-- Polyp Classification System -->
             <div class="section">
-                <h2>🧠 Brain Tumor Classification System</h2>
+                <h2>🩺 Gastrointestinal Polyp Classification System</h2>
                 <div class="mermaid">
                     graph TB
-                        subgraph TumorTypes["🧠 Supported Tumor Types"]
-                            FT["Tumor Classification System<br/>4 Primary Classes"]
+                        subgraph PolypTypes["🩺 Supported Polyp Types"]
+                            FT["Polyp Classification System<br/>2 Primary Classes"]
                             
-                            %% Tumor Types
-                            NT["No Tumor<br/>Healthy brain tissue"]
-                            GL["Glioma<br/>Malignant brain tumor"]
-                            MN["Meningioma<br/>Usually benign tumor"]
-                            PT["Pituitary<br/>Hormone-affecting tumor"]
+                            %% Polyp Types
+                            NP["No Polyp<br/>Healthy gastrointestinal tissue"]
+                            P["Polyp<br/>Abnormal growth requiring attention"]
                         end
                         
                         subgraph Classification["🔍 Classification Process"]
                             CP["Classification Pipeline"]
-                            FD["Feature Detection<br/>Tumor pattern analysis"]
+                            FD["Feature Detection<br/>Polyp pattern analysis"]
                             PA["Pattern Analysis<br/>Morphological assessment"]
                             SA["Severity Assessment<br/>Malignancy evaluation"]
                             CA["Confidence Analysis<br/>Reliability scoring >90%"]
                         end
                         
-                        subgraph Characteristics["📊 Tumor Characteristics"]
+                        subgraph Characteristics["📊 Polyp Characteristics"]
                             CH["Characteristic Analysis"]
                             
                             %% Severity Levels
                             HEALTHY["Healthy<br/>No intervention needed"]
-                            HIGH["High Severity<br/>Glioma - Malignant"]
-                            MOD["Moderate Severity<br/>Meningioma, Pituitary - Benign"]
+                            ABNORMAL["Abnormal<br/>Polyp detected"]
                             
                             %% Treatment Urgency
                             ROUTINE["Routine<br/>Regular monitoring"]
-                            URGENT["Urgent<br/>Within days"]
-                            EMERGENCY["Emergency<br/>Immediate consultation"]
+                            URGENT["Urgent<br/>Endoscopic removal"]
                         end
                         
                         %% Connections
-                        FT --> NT
-                        FT --> GL
-                        FT --> MN
-                        FT --> PT
+                        FT --> NP
+                        FT --> P
                         
-                        NT --> CP
-                        GL --> CP
-                        MN --> CP
-                        PT --> CP
+                        NP --> CP
+                        P --> CP
                         
                         CP --> FD
                         CP --> PA
@@ -557,23 +547,19 @@
                         CA --> CH
                         
                         CH --> HEALTHY
-                        CH --> HIGH
-                        CH --> MOD
+                        CH --> ABNORMAL
                         
                         HEALTHY --> ROUTINE
-                        HIGH --> EMERGENCY
-                        MOD --> URGENT
+                        ABNORMAL --> URGENT
                         
                         %% Styling
                         classDef healthy fill:#2ecc71,stroke:#27ae60,stroke-width:2px,color:#000
-                        classDef malignant fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#000
-                        classDef benign fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#000
+                        classDef abnormal fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#000
                         classDef process fill:#f39c12,stroke:#e67e22,stroke-width:2px,color:#000
                         classDef severity fill:#1abc9c,stroke:#16a085,stroke-width:2px,color:#000
                         
-                        class NT,HEALTHY,ROUTINE healthy
-                        class GL,HIGH,EMERGENCY malignant
-                        class MN,PT,MOD,URGENT benign
+                        class NP,HEALTHY,ROUTINE healthy
+                        class P,ABNORMAL,URGENT abnormal
                         class FT,CP,FD,PA,SA,CA,CH process
                 </div>
             </div>
@@ -605,8 +591,8 @@
                         <ul class="feature-list">
                             <li>LangChain - AI Agent Framework</li>
                             <li>Groq API - High-performance LLM</li>
+                            <li>YOLO11m - Real-time Object Detection</li>
                             <li>CNN - Convolutional Neural Network</li>
-                            <li>BLIP - Image Understanding Model</li>
                             <li>Multi-Agent System - Intelligent Analysis</li>
                         </ul>
                     </div>
@@ -641,13 +627,13 @@
                         MU["Memory Usage<br/>&lt; 4GB RAM"]
                         GM["GPU Memory<br/>&lt; 6GB VRAM (optional)"]
                         
-                        TC["Tumor Classes<br/>4 classification categories"]
-                        DS["Dataset Size<br/>7,023 MRI images"]
+                        TC["Polyp Classes<br/>2 classification categories"]
+                        DS["Dataset Size<br/>1,196 endoscopic images"]
                         IF["Image Formats<br/>JPG, PNG, JPEG"]
-                        RE["Resolution<br/>224x224 optimized"]
+                        RE["Resolution<br/>640x640 optimized"]
                         
                         MS["Multi-Agent<br/>3 specialized agents"]
-                        EA["Enhancement Accuracy<br/>Advanced MRI preprocessing"]
+                        EA["Enhancement Accuracy<br/>Advanced endoscopic preprocessing"]
                         AG["Agent Intelligence<br/>LangChain + Groq LLM"]
                         QA["Quality Assurance<br/>Comprehensive validation"]
                         
@@ -670,7 +656,7 @@
                         subgraph Security["🔒 Security Features"]
                             EV[Environment Variables<br/>Secure API Key Management]
                             EH[Error Handling<br/>Comprehensive Exception Management]
-                            IV[Input Validation<br/>MRI Format & Size Validation]
+                            IV[Input Validation<br/>Endoscopic Format & Size Validation]
                             FM[Fallback Mechanisms<br/>Graceful Degradation]
                         end
                         
@@ -715,20 +701,20 @@
                 <div class="mermaid">
                     graph TB
                         subgraph PlannedFeatures["📋 Planned Features"]
-                            MA[Multi-modal Analysis<br/>Clinical data + MRI integration]
+                            MA[Multi-modal Analysis<br/>Clinical data + Endoscopic integration]
                             RC[Real-time Collaboration<br/>Multi-user case review system]
-                            AA[Advanced Analytics<br/>Tumor growth prediction]
+                            AA[Advanced Analytics<br/>Polyp growth prediction]
                             MA2[Mobile Application<br/>iOS/Android companion apps]
                             CD[Cloud Deployment<br/>AWS/Azure integration]
-                            TS[Tumor Segmentation<br/>Precise boundary detection]
+                            TS[Polyp Segmentation<br/>Precise boundary detection]
                         end
                         
                         subgraph TechnicalImprovements["🔧 Technical Improvements"]
                             MO[Model Optimization<br/>Quantization and pruning]
                             FL[Federated Learning<br/>Privacy-preserving training]
                             EC[Edge Computing<br/>On-device inference]
-                            3D[3D MRI Analysis<br/>Volumetric assessment]
-                            MS[Multi-sequence MRI<br/>T1, T2, FLAIR analysis]
+                            3D[3D Endoscopic Analysis<br/>Volumetric assessment]
+                            MS[Multi-sequence Analysis<br/>Different endoscopic views]
                         end
                         
                         subgraph Scalability["📈 Scalability Features"]
@@ -759,7 +745,7 @@
                 <ul class="feature-list">
                     <li>Always consult qualified medical professionals for diagnosis</li>
                     <li>This tool aids in preliminary analysis only</li>
-                    <li>Professional neurological evaluation is essential</li>
+                    <li>Professional gastroenterological evaluation is essential</li>
                     <li>Treatment decisions require comprehensive medical assessment</li>
                     <li>Not FDA approved for clinical diagnosis</li>
                 </ul>
@@ -777,11 +763,11 @@
                 curve: 'basis'
             },
             themeVariables: {
-                primaryColor: '#667eea',
+                primaryColor: '#20b2aa',
                 primaryTextColor: '#000',
-                primaryBorderColor: '#5a6fd8',
+                primaryBorderColor: '#008b8b',
                 lineColor: '#2c3e50',
-                secondaryColor: '#764ba2',
+                secondaryColor: '#008b8b',
                 tertiaryColor: '#f39c12'
             }
         });
