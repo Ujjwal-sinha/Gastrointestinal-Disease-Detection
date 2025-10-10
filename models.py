@@ -558,22 +558,22 @@ def predict_polyp_yolo(model, image, confidence_threshold=0.05):
             # Texture analysis
             laplacian_var = cv2.Laplacian(img_gray, cv2.CV_64F).var()
             
-            # Determine if this looks like a healthy bone or poor quality image
-            if (50 < mean_intensity < 200 and 
-                std_intensity > 25 and 
-                laplacian_var > 100 and 
+            # Determine if this looks like a healthy mucosa or poor quality image
+            if (50 < mean_intensity < 200 and
+                std_intensity > 25 and
+                laplacian_var > 100 and
                 edge_density < 0.15):
-                # Looks like a clear X-ray with no obvious fractures
+                # Looks like a clear endoscopic image with no obvious polyps
                 confidence = 0.88
-                predicted_class = 'Healthy'
+                predicted_class = 'No Polyp'
             elif edge_density > 0.2 or laplacian_var < 50:
                 # Poor image quality or too many artifacts
                 confidence = 0.65
-                predicted_class = 'Healthy'  # Conservative classification
+                predicted_class = 'No Polyp'  # Conservative classification
             else:
                 # Uncertain case
                 confidence = 0.75
-                predicted_class = 'Healthy'
+                predicted_class = 'No Polyp'
             
             return {
                 'predicted_class': predicted_class,
@@ -598,9 +598,9 @@ def predict_polyp_yolo(model, image, confidence_threshold=0.05):
         print(f"Error in ultra-enhanced YOLO prediction: {e}")
         return None
 
-def draw_fracture_detections(image, prediction_result):
+def draw_polyp_detections(image, prediction_result):
     """
-    Enhanced function to draw bounding boxes on the image for fracture detections
+    Enhanced function to draw bounding boxes on the image for polyp detections
     """
     try:
         if prediction_result is None:
@@ -617,7 +617,7 @@ def draw_fracture_detections(image, prediction_result):
         confidence = prediction_result.get('confidence', 0.0)
         class_names = prediction_result.get('class_names', [])
         
-        print(f"🎯 Drawing detections: {len(boxes)} primary boxes, {len(all_boxes)} total detections")
+        print(f"🎯 Drawing detections: {len(boxes)} primary boxes, {len(all_boxes)} total polyp detections")
         
         # Draw all detected boxes (lighter color for secondary detections)
         if len(all_boxes) > 0:
@@ -729,14 +729,14 @@ def draw_fracture_detections(image, prediction_result):
         return Image.fromarray(img_rgb)
         
     except Exception as e:
-        print(f"❌ Error drawing fracture detections: {e}")
+        print(f"❌ Error drawing polyp detections: {e}")
         import traceback
         traceback.print_exc()
         return image
 
-class BoneFractureDataset(Dataset):
+class PolypSegmentationDataset(Dataset):
     """
-    Custom Dataset for bone fracture images
+    Custom Dataset for polyp segmentation images using Kvasir-SEG
     """
     def __init__(self, data_dir, transform=None):
         self.data_dir = data_dir
@@ -773,7 +773,7 @@ class BoneFractureDataset(Dataset):
 
 def load_cnn_model(num_classes, model_path=None):
     """
-    Load or create a CNN model for bone fracture classification (fallback)
+    Load or create a CNN model for polyp classification (fallback)
     """
     # Use MobileNetV2 as the base model for fallback
     model = models.mobilenet_v2(pretrained=True)
@@ -801,7 +801,7 @@ def load_cnn_model(num_classes, model_path=None):
 
 def train_model(model, train_loader, val_loader, num_epochs=10, learning_rate=0.001, device='cpu'):
     """
-    Train the skin disease classification model
+    Train the polyp classification model
     """
     model = model.to(device)
     criterion = nn.CrossEntropyLoss()
@@ -865,7 +865,7 @@ def train_model(model, train_loader, val_loader, num_epochs=10, learning_rate=0.
         # Save best model
         if val_acc > best_val_acc:
             best_val_acc = val_acc
-            torch.save(model.state_dict(), 'best_skin_disease_model.pth')
+            torch.save(model.state_dict(), 'best_polyp_model.pth')
         
         # Store metrics
         train_losses.append(train_loss)
@@ -888,7 +888,7 @@ def train_model(model, train_loader, val_loader, num_epochs=10, learning_rate=0.
 
 def evaluate_model(model, test_loader, classes, device='cpu'):
     """
-    Evaluate the trained skin disease model
+    Evaluate the trained polyp model
     """
     model.eval()
     all_predictions = []
