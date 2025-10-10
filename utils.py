@@ -428,43 +428,43 @@ def describe_image(image: Image.Image, suspected_polyp: str = None) -> str:
         out = model.generate(**inputs, max_length=100, num_beams=5)
         description = processor.decode(out[0], skip_special_tokens=True)
         
-        # Enhance description for brain tumor detection
-        enhanced_description = f"Brain MRI image showing: {description}. "
+        # Enhance description for polyp detection
+        enhanced_description = f"Endoscopic image showing: {description}. "
         
-        # Add brain-specific details
+        # Add GI-specific details
         img_array = np.array(image)
         gray = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY)
         
-        # Analyze brain tissue and structure
+        # Analyze GI tissue and structure
         mean_intensity = np.mean(gray)
         intensity_variance = np.var(gray)
         
-        # Detect potential abnormal masses or lesions
+        # Detect potential abnormal growths or lesions
         edges = cv2.Canny(gray, 50, 150)
         edge_density = np.sum(edges > 0) / (gray.shape[0] * gray.shape[1])
         
         if edge_density > 0.1:
-            enhanced_description += "Image shows detailed brain structures and potential abnormal masses. "
+            enhanced_description += "Image shows detailed GI structures and potential abnormal growths. "
         else:
-            enhanced_description += "Image shows relatively uniform brain tissue. "
+            enhanced_description += "Image shows relatively uniform GI tissue. "
         
-        # Analyze intensity variations for tumor indicators
+        # Analyze intensity variations for polyp indicators
         if intensity_variance > 1000:
-            enhanced_description += "Image shows intensity variations that may indicate tumors or lesions. "
+            enhanced_description += "Image shows intensity variations that may indicate polyps or lesions. "
         else:
             enhanced_description += "Image shows relatively uniform tissue density. "
         
-        # Check for typical MRI characteristics
+        # Check for typical endoscopic characteristics
         if mean_intensity < 100:
-            enhanced_description += "Dark MRI suggesting dense tissue areas. "
+            enhanced_description += "Dark endoscopic image suggesting dense tissue areas. "
         elif mean_intensity > 200:
-            enhanced_description += "Bright MRI with clear tissue contrast. "
+            enhanced_description += "Bright endoscopic image with clear tissue contrast. "
         
         return enhanced_description
         
     except Exception as e:
         print(f"Error describing image: {e}")
-        return "Brain MRI for tumor analysis"
+        return "Endoscopic image for polyp analysis"
 
 def test_groq_api():
     """Test GROQ API connectivity and model availability"""
