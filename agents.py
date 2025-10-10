@@ -38,8 +38,8 @@ def retry_with_exponential_backoff(func, max_retries=3, base_delay=1):
         except Exception as e:
             error_msg = str(e).lower()
             
-            # If it's not a capacity issue, don't retry
-            if "over capacity" not in error_msg and "503" not in str(e):
+            # If it's not a capacity or rate limit issue, don't retry
+            if "over capacity" not in error_msg and "503" not in str(e) and "rate limit" not in error_msg and "429" not in str(e):
                 raise e
             
             if attempt == max_retries:
@@ -47,7 +47,10 @@ def retry_with_exponential_backoff(func, max_retries=3, base_delay=1):
             
             # Calculate delay with exponential backoff and jitter
             delay = base_delay * (2 ** attempt) + random.uniform(0, 1)
-            print(f"GROQ API over capacity, retrying in {delay:.2f} seconds (attempt {attempt + 1}/{max_retries + 1})")
+            if "rate limit" in error_msg or "429" in str(e):
+                print(f"GROQ API rate limited, retrying in {delay:.2f} seconds (attempt {attempt + 1}/{max_retries + 1})")
+            else:
+                print(f"GROQ API over capacity, retrying in {delay:.2f} seconds (attempt {attempt + 1}/{max_retries + 1})")
             time.sleep(delay)
 
 # Gastrointestinal polyp knowledge base for Kvasir-SEG dataset
@@ -253,7 +256,7 @@ class GastrointestinalPolypAIAgent:
     def _get_working_llm(self):
         """Get a working LLM instance with fallback models and retry logic."""
         models_to_try = [
-            "llama-3.3-70b-versatile"
+            "llama-3.1-8b-instant"
         ]
         
         print(f"🔍 Testing {len(models_to_try)} Groq models...")
@@ -282,16 +285,19 @@ class GastrointestinalPolypAIAgent:
             except Exception as e:
                 error_msg = str(e).lower()
                 print(f"  ⚠️ {model_name} failed: {str(e)[:100]}")
-                if "over capacity" in error_msg or "503" in str(e):
-                    print(f"  ⏳ Model over capacity, trying next...")
+                if "over capacity" in error_msg or "503" in str(e) or "rate limit" in error_msg or "429" in str(e):
+                    if "rate limit" in error_msg or "429" in str(e):
+                        print(f"  ⏳ Model rate limited, trying next...")
+                    else:
+                        print(f"  ⏳ Model over capacity, trying next...")
                     continue
                 else:
                     # For other errors, try next model
                     print(f"  ⏭️ Trying next model...")
                     continue
         
-        # If all models fail, raise an exception
-        error_msg = "All GROQ models are currently unavailable. Please check your API key or try again later."
+        # If all models fail, provide specific error information
+        error_msg = "All GROQ models are currently unavailable. This could be due to:\n1. Rate limit exceeded (try again in ~24 hours)\n2. API key issues\n3. Service maintenance\n\nPlease check your GROQ_API_KEY in .env file or try again later."
         print(f"❌ {error_msg}")
         raise Exception(error_msg)
     

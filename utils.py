@@ -474,7 +474,7 @@ def test_groq_api():
             return False, "No API key provided"
         
         models_to_try = [
-            "llama-3.3-70b-versatile"
+            "llama-3.1-8b-instant"
         ]
         
         for model_name in models_to_try:
@@ -588,7 +588,7 @@ def query_langchain(prompt: str, detected_polyp: str, confidence: float = None, 
             return generate_fallback_response(detected_polyp, prompt, cnn_detection, confidence)
         
         models_to_try = [
-            "llama-3.3-70b-versatile"
+            "llama-3.1-8b-instant"
         ]
         
         for model_name in models_to_try:
