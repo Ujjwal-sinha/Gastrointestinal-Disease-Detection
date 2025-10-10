@@ -707,12 +707,12 @@ if not st.session_state.analysis_complete:
                                         "analysis_date": datetime.now().strftime("%Y-%m-%d")
                                     }
                                     
-                                    agent_result = st.session_state.agent_instance.analyze_tumor_case(
+                                    agent_result = st.session_state.agent_instance.analyze_polyp_case(
                                         image_description=image_description,
-                                        detected_tumor=predicted_class,
+                                        detected_polyp=predicted_class,
                                         confidence=confidence,
                                         patient_data=patient_data,
-                                        radiological_findings=f"Detected {predicted_class} with {confidence:.1%} confidence"
+                                        endoscopic_findings=f"Detected {predicted_class} with {confidence:.1%} confidence"
                                     )
                                     
                                     ai_summary = agent_result.get("analysis", "Analysis unavailable")
