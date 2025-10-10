@@ -1,6 +1,6 @@
 """
-Bone Fracture Detection Models - BoneFractureAI
-Advanced YOLO models for bone fracture detection and classification
+Gastrointestinal Polyp Segmentation Models - PolypAI
+Advanced segmentation models for polyp detection using Kvasir-SEG dataset
 """
 
 import os
@@ -36,32 +36,32 @@ def clear_mps_cache():
     if torch.backends.mps.is_available():
         torch.mps.empty_cache()
 
-def preprocess_xray_image(img_path, output_path):
-    """Preprocess X-ray images for better fracture detection"""
+def preprocess_endoscopic_image(img_path, output_path):
+    """Preprocess endoscopic images for better polyp detection"""
     try:
         img = Image.open(img_path).convert('RGB')
-        
-        # Convert to grayscale for X-ray processing
+
+        # Convert to grayscale for processing
         img_array = np.array(img)
         if len(img_array.shape) == 3:
             gray = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY)
         else:
             gray = img_array
-        
-        # Apply CLAHE for better contrast in X-rays
+
+        # Apply CLAHE for better contrast in endoscopic images
         clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8,8))
         enhanced = clahe.apply(gray)
-        
+
         # Apply histogram equalization
         enhanced = cv2.equalizeHist(enhanced)
-        
+
         # Convert back to RGB
         enhanced_rgb = cv2.cvtColor(enhanced, cv2.COLOR_GRAY2RGB)
         enhanced_img = Image.fromarray(enhanced_rgb)
         enhanced_img.save(output_path, quality=95)
         return True
     except Exception as e:
-        print(f"Error preprocessing X-ray image: {e}")
+        print(f"Error preprocessing endoscopic image: {e}")
         return False
 
 def augment_with_blur(img_path, output_path, blur_radius=2):
@@ -77,7 +77,7 @@ def augment_with_blur(img_path, output_path, blur_radius=2):
 
 def load_yolo_model(model_path="yolo11m.pt"):
     """
-    Load and optimize YOLO model for bone fracture detection
+    Load and optimize YOLO model for polyp detection
     """
     try:
         if not YOLO_AVAILABLE:
@@ -87,12 +87,12 @@ def load_yolo_model(model_path="yolo11m.pt"):
         if os.path.exists(model_path):
             model = YOLO(model_path)
             print(f"✅ Loaded YOLO model from {model_path}")
-            
-            # Optimize model settings for fracture detection
+
+            # Optimize model settings for polyp detection
             # Set model to evaluation mode for inference
             model.model.eval()
-            
-            # Configure model for better fracture detection
+
+            # Configure model for better polyp detection
             if hasattr(model.model, 'model'):
                 # Access the underlying model if available
                 for module in model.model.modules():
@@ -100,8 +100,8 @@ def load_yolo_model(model_path="yolo11m.pt"):
                         module.conf = 0.05  # Lower confidence threshold
                     if hasattr(module, 'iou'):
                         module.iou = 0.3   # Lower IoU threshold for overlapping detections
-            
-            print("🔧 Model optimized for fracture detection")
+
+            print("🔧 Model optimized for polyp detection")
             return model
         else:
             print(f"⚠️ Model file {model_path} not found. Loading default YOLOv11 model.")
@@ -122,18 +122,18 @@ def load_yolo_model(model_path="yolo11m.pt"):
         print(f"❌ Error loading YOLO model: {e}")
         return None
 
-def fine_tune_yolo_for_fractures(model, dataset_path="dataset", epochs=50, imgsz=640):
+def fine_tune_yolo_for_polyps(model, dataset_path="dataset", epochs=50, imgsz=640):
     """
-    Fine-tune YOLO model specifically for bone fracture detection
+    Fine-tune YOLO model specifically for polyp detection
     """
     try:
         if model is None:
             print("❌ No model provided for fine-tuning")
             return None
         
-        print("🚀 Starting YOLO fine-tuning for fracture detection...")
-        
-        # Fine-tuning parameters optimized for medical imaging
+        print("🚀 Starting YOLO fine-tuning for polyp detection...")
+
+        # Fine-tuning parameters optimized for endoscopic imaging
         results = model.train(
             data=os.path.join(dataset_path, "data.yaml"),
             epochs=epochs,
@@ -174,8 +174,8 @@ def fine_tune_yolo_for_fractures(model, dataset_path="dataset", epochs=50, imgsz
             cache=False,
             device='',
             workers=8,
-            project='fracture_detection',
-            name='yolo_fracture_finetuned',
+            project='polyp_detection',
+            name='yolo_polyp_finetuned',
             exist_ok=True,
             pretrained=True,
             optimizer='auto',
@@ -228,7 +228,7 @@ def fine_tune_yolo_for_fractures(model, dataset_path="dataset", epochs=50, imgsz
         print("✅ YOLO fine-tuning completed!")
         
         # Load the best model from training
-        best_model_path = os.path.join("fracture_detection", "yolo_fracture_finetuned", "weights", "best.pt")
+        best_model_path = os.path.join("polyp_detection", "yolo_polyp_finetuned", "weights", "best.pt")
         if os.path.exists(best_model_path):
             fine_tuned_model = YOLO(best_model_path)
             print(f"✅ Loaded fine-tuned model from {best_model_path}")
@@ -243,14 +243,14 @@ def fine_tune_yolo_for_fractures(model, dataset_path="dataset", epochs=50, imgsz
 
 def validate_model_performance(model, dataset_path="dataset"):
     """
-    Validate model performance on fracture detection
+    Validate model performance on polyp detection
     """
     try:
         if model is None:
             print("❌ No model provided for validation")
             return None
         
-        print("🔍 Validating model performance...")
+        print("🔍 Validating model performance on polyp detection...")
         
         # Run validation on test set
         results = model.val(
