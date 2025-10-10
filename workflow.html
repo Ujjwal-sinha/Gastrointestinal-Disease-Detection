@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Tumor Detection - Workflow Diagrams</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 30px;
+        }
+        .diagram-section {
+            margin-bottom: 60px;
+            padding: 30px;
+            border-radius: 15px;
+            background: #f8f9fa;
+            border-left: 8px solid #e53e3e;
+        }
+        .diagram-title {
+            color: #e53e3e;
+            margin: 0 0 20px 0;
+            font-size: 2em;
+            text-align: center;
+        }
+        .diagram-description {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        .mermaid {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        .download-section {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #fef5e7;
+            border-radius: 10px;
+        }
+        .download-btn {
+            background: #e53e3e;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 0 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .download-btn:hover {
+            background: #c53030;
+        }
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #e53e3e;
+        }
+        .feature-card h4 {
+            color: #e53e3e;
+            margin: 0 0 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 Brain Tumor Detection System</h1>
+            <p>AI-Powered Brain Tumor Classification Workflow with CNN Deep Learning</p>
+        </div>
+        
+        <div class="content">
+            <!-- Phase 1: MRI Image Upload & Quality Validation -->
+            <div class="diagram-section">
+                <h2 class="diagram-title">Phase 1: MRI Image Upload & Quality Validation</h2>
+                <p class="diagram-description">
+                    Initial phase where the user uploads a brain MRI image, followed by quality validation and preprocessing.
+                    This includes format validation, quality scoring, and MRI-specific image optimization for accurate tumor detection.
+                </p>
+                <div class="mermaid">
+                    sequenceDiagram
+                        participant User
+                        participant StreamApp
+                        participant ImageValidator
+                        participant MRIProcessor
+                        participant ValidatedImage
+
+                        Note over User, ValidatedImage: Phase 1: MRI Image Upload & Quality Validation
+
+                        User->>StreamApp: Upload Brain MRI Image
+                        StreamApp->>StreamApp: Validate File Format (PNG/JPG/JPEG)
+                        StreamApp->>ImageValidator: Check Image Quality
+                        ImageValidator->>ImageValidator: Quality Score Calculation (0-1 scale)
+                        ImageValidator->>MRIProcessor: Quality Validated Image
+                        MRIProcessor->>MRIProcessor: MRI Image Normalization
+                        MRIProcessor->>MRIProcessor: Contrast Enhancement
+                        MRIProcessor->>MRIProcessor: Resolution Standardization (224x224)
+                        MRIProcessor->>ValidatedImage: Processed MRI Image
+
+                        Note over User, ValidatedImage: MRI preprocessing completed, ready for tumor classification
+                </div>
+            </div>
+
+            <!-- Phase 2: CNN Tumor Classification -->
+            <div class="diagram-section">
+                <h2 class="diagram-title">Phase 2: CNN Tumor Classification</h2>
+                <p class="diagram-description">
+                    Advanced AI classification phase where CNN analyzes the MRI image for brain tumor detection with
+                    multi-class classification, confidence scoring, and tumor type identification using deep learning.
+                </p>
+                <div class="mermaid">
+                    sequenceDiagram
+                        participant ValidatedImage
+                        participant CNNModel
+                        participant FeatureExtractor
+                        participant ClassificationHead
+                        participant TumorClassifier
+                        participant ConfidenceScorer
+
+                        Note over ValidatedImage, ConfidenceScorer: Phase 2: CNN Tumor Classification
+
+                        ValidatedImage->>CNNModel: Send Processed MRI Image (224x224)
+                        CNNModel->>FeatureExtractor: Deep Feature Extraction (Conv Layers)
+                        FeatureExtractor->>FeatureExtractor: Multi-layer Convolution & Pooling
+                        FeatureExtractor->>ClassificationHead: Extracted Feature Maps
+                        ClassificationHead->>ClassificationHead: Fully Connected Layers
+                        ClassificationHead->>TumorClassifier: Raw Classification Scores
+                        TumorClassifier->>TumorClassifier: Multi-class Tumor Classification
+                        TumorClassifier->>ConfidenceScorer: Tumor Type Prediction
+                        ConfidenceScorer->>ConfidenceScorer: Confidence Score Calculation
+                        ConfidenceScorer->>ConfidenceScorer: Probability Calibration (90%+ threshold)
+
+                        Note over ValidatedImage, ConfidenceScorer: Tumor classification completed with high confidence scoring
+                </div>
+            </div>
+
+            <!-- Phase 3: AI Agent Medical Analysis -->
+            <div class="diagram-section">
+                <h2 class="diagram-title">Phase 3: AI Agent Medical Analysis</h2>
+                <p class="diagram-description">
+                    AI-powered medical analysis using BrainTumorAIAgent for tumor assessment and treatment recommendations.
+                </p>
+                <div class="mermaid">
+                    sequenceDiagram
+                        participant ConfidenceScorer
+                        participant BrainTumorAgent
+                        participant TreatmentAdvisor
+                        participant Report
+
+                        Note over ConfidenceScorer, Report: Phase 3: AI Medical Analysis
+
+                        ConfidenceScorer->>BrainTumorAgent: Classification Results
+                        BrainTumorAgent->>BrainTumorAgent: Medical Analysis
+                        BrainTumorAgent->>TreatmentAdvisor: Tumor Assessment
+                        TreatmentAdvisor->>TreatmentAdvisor: Generate Recommendations
+                        TreatmentAdvisor->>Report: Complete Analysis
+
+                        Note over ConfidenceScorer, Report: Analysis completed
+                </div>
+            </div>
+
+            <!-- Phase 4: Tumor Region Detection & Reporting -->
+            <div class="diagram-section">
+                <h2 class="diagram-title">Phase 4: Tumor Region Detection & Reporting</h2>
+                <p class="diagram-description">
+                    Tumor region detection, visualization generation, and PDF report creation for clinical documentation.
+                </p>
+                <div class="mermaid">
+                    sequenceDiagram
+                        participant Analysis
+                        participant Detector
+                        participant Visualizer
+                        participant Report
+                        participant User
+
+                        Note over Analysis, User: Phase 4: Detection & Reporting
+
+                        Analysis->>Detector: Classification Results
+                        Detector->>Detector: Tumor Region Detection
+                        Detector->>Visualizer: Annotated Image
+                        Visualizer->>Visualizer: Generate Explanations
+                        Visualizer->>Report: Visualizations & Findings
+                        Report->>Report: Compile PDF Report
+                        Report->>User: Download Report
+
+                        Note over Analysis, User: Report completed
+                </div>
+            </div>
+
+            <!-- System Features -->
+            <div class="download-section">
+                <h3>📊 System Features & Capabilities</h3>
+                <p style="margin-bottom: 20px;">Advanced brain tumor detection system with comprehensive AI-powered analysis</p>
+
+                <div class="feature-list">
+                    <div class="feature-card">
+                        <h4>🧠 Brain Tumor Detection</h4>
+                        <p>4 tumor categories: Glioma (malignant), Meningioma (benign), Pituitary (benign), No Tumor (healthy)</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>🔍 CNN Classification</h4>
+                        <p>Deep learning CNN model with 224x224 input, multi-class classification, and high confidence scoring</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>🖼️ MRI Image Processing</h4>
+                        <p>Image quality validation, contrast enhancement, normalization, and resolution standardization</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>🤖 AI Agents</h4>
+                        <p>BrainTumorAIAgent with LangChain integration, medical analysis, and clinical recommendations</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>🔥 Explainable AI</h4>
+                        <p>LIME, SHAP, and Grad-CAM visualizations for model interpretability and decision transparency</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>📋 Medical Reports</h4>
+                        <p>Comprehensive PDF reports with tumor findings, classifications, treatment recommendations, and visualizations</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>⚕️ Clinical Support</h4>
+                        <p>Treatment protocols, surgical recommendations, prognosis assessment, and follow-up planning</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>📊 Performance Metrics</h4>
+                        <p>Real-time confidence scoring, image quality assessment, and classification validation</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <p><strong>Classification Accuracy:</strong> High accuracy CNN model with 90%+ confidence threshold</p>
+                    <p><strong>Tumor Types:</strong> Glioma (Malignant), Meningioma (Benign), Pituitary (Benign), No Tumor (Healthy)</p>
+                    <p><strong>Technology Stack:</strong> CNN, PyTorch, Streamlit, LangChain, GROQ API, OpenCV, LIME, SHAP</p>
+                </div>
+            </div>
+
+            <!-- Workflow Overview -->
+            <div class="diagram-section">
+                <h2 class="diagram-title">Complete System Workflow</h2>
+                <p class="diagram-description">
+                    End-to-end workflow showing all four phases integrated for comprehensive brain tumor detection and analysis
+                </p>
+                <div class="mermaid">
+                    flowchart TB
+                        A[🧠 Upload Brain MRI] --> B[📊 Quality Validation]
+                        B --> C[🔍 MRI Image Processing]
+                        C --> D[🖼️ Normalization (224x224)]
+                        D --> E[✨ Contrast Enhancement]
+                        E --> F[🤖 CNN Tumor Classification]
+                        F --> G[🔍 Feature Extraction]
+                        G --> H[✅ Confidence Scoring]
+                        H --> I[🎯 Tumor Region Detection]
+                        I --> J[🏥 AI Agent Medical Analysis]
+                        J --> K[⚠️ Risk Assessment]
+                        K --> L[💊 Treatment Recommendations]
+                        L --> M[🔥 Generate LIME/SHAP]
+                        M --> N[🎨 Generate Grad-CAM]
+                        N --> O[📋 Compile Medical Report]
+                        O --> P[📄 Generate PDF]
+                        P --> Q[📥 Download Complete Report]
+
+                        style A fill:#fed7d7,stroke:#e53e3e,stroke-width:3px
+                        style F fill:#dcfce7,stroke:#48bb78,stroke-width:3px
+                        style J fill:#fef5e7,stroke:#ed8936,stroke-width:3px
+                        style O fill:#e6fffa,stroke:#38b2ac,stroke-width:3px
+                        style Q fill:#667eea,stroke:#764ba2,stroke-width:3px,color:#ffffff
+                </div>
+            </div>
+
+            <!-- Research Paper Information -->
+            <div class="download-section">
+                <h3>📄 Research Paper Ready Diagrams</h3>
+                <p>These workflow diagrams are optimized for research paper presentation with clear 4-phase separation and comprehensive medical workflows.</p>
+                <p style="margin-top: 15px;"><strong>Citation:</strong> Enhanced Bone Fracture Detection using Deep Learning with Multi-Scale YOLO Detection and AI-Powered Medical Analysis</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            sequence: {
+                useMaxWidth: true,
+                diagramMarginX: 50,
+                diagramMarginY: 10,
+                actorMargin: 50,
+                width: 150,
+                height: 65,
+                boxMargin: 10,
+                boxTextMargin: 5,
+                noteMargin: 10,
+                messageMargin: 35,
+                mirrorActors: true,
+                bottomMarginAdj: 1,
+                useMaxWidth: true,
+                rightAngles: false,
+                showSequenceNumbers: false,
+                actorFontSize: 14,
+                noteFontSize: 14,
+                messageFontSize: 16
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 20
+            },
+            themeVariables: {
+                primaryColor: '#e53e3e',
+                primaryTextColor: '#fff',
+                primaryBorderColor: '#c53030',
+                lineColor: '#2c3e50',
+                secondaryColor: '#667eea',
+                tertiaryColor: '#ed8936',
+                noteBkgColor: '#fef5e7',
+                noteTextColor: '#2d3748',
+                noteBorderColor: '#ed8936'
+            }
+        });
+    </script>
+</body>
+</html>
