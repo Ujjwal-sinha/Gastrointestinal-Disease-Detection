@@ -866,7 +866,7 @@ def validate_dataset(dataset_dir):
         testing_dir = os.path.join(dataset_dir, "Testing")
         
         if os.path.exists(training_dir) and os.path.exists(testing_dir):
-            # Brain tumor dataset structure
+            # Polyp dataset structure
             for folder in [training_dir, testing_dir]:
                 for subfolder in os.listdir(folder):
                     subfolder_path = os.path.join(folder, subfolder)
@@ -894,7 +894,7 @@ def validate_dataset(dataset_dir):
         return False, f"Dataset validation error: {str(e)}"
 
 def preprocess_image(img_path, output_path):
-    """Preprocess MRI images for better tumor detection"""
+    """Preprocess endoscopic images for better polyp detection"""
     try:
         img = Image.open(img_path).convert('RGB')
         
@@ -925,7 +925,7 @@ def augment_with_blur(img_path, output_path, blur_radius=2):
         return False
 
 def load_css():
-    """Load custom CSS for brain tumor detection app"""
+    """Load custom CSS for polyp detection app"""
     st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -995,7 +995,7 @@ def clear_mps_cache():
         torch.mps.empty_cache()
 
 def get_image_transform():
-    """Get image transformation for brain tumor detection"""
+    """Get image transformation for polyp detection"""
     return transforms.Compose([
         transforms.Resize((224, 224)),
         transforms.ToTensor(),
@@ -1003,7 +1003,7 @@ def get_image_transform():
     ])
 
 def create_dataset_splits(dataset_dir, split_ratio=(0.7, 0.15, 0.15)):
-    """Create train/validation/test splits for brain tumor dataset"""
+    """Create train/validation/test splits for polyp dataset"""
     try:
         from sklearn.model_selection import train_test_split
         
@@ -1044,9 +1044,9 @@ def create_dataset_splits(dataset_dir, split_ratio=(0.7, 0.15, 0.15)):
         print(f"Error creating dataset splits: {e}")
         return None
 
-def search_fractures_globally(query, classes):
+def search_polyps_globally(query, classes):
     """
-    Search for brain tumors globally based on query
+    Search for polyps globally based on query
     """
     if not query or not classes:
         return []
@@ -1054,31 +1054,19 @@ def search_fractures_globally(query, classes):
     query = query.lower().strip()
     results = []
     
-    # Tumor database with symptoms and descriptions
-    tumor_database = {
-        'glioma': {
-            'name': 'Glioma',
-            'type': 'Malignant',
-            'symptoms': ['headaches', 'seizures', 'cognitive changes', 'vision problems', 'weakness'],
-            'description': 'Tumors that originate from glial cells in the brain, can be benign or malignant'
+    # Polyp database with symptoms and descriptions
+    polyp_database = {
+        'polyp': {
+            'name': 'Polyp',
+            'type': 'Precancerous',
+            'symptoms': ['often asymptomatic', 'occasional bleeding', 'changes in bowel habits'],
+            'description': 'Abnormal growths in the gastrointestinal tract that can be precursors to colorectal cancer'
         },
-        'meningioma': {
-            'name': 'Meningioma',
-            'type': 'Benign (usually)',
-            'symptoms': ['headaches', 'vision changes', 'hearing loss', 'memory loss', 'seizures'],
-            'description': 'Tumors that arise from the meninges, the membranes surrounding the brain and spinal cord'
-        },
-        'notumor': {
-            'name': 'No Tumor',
+        'nopolyp': {
+            'name': 'No Polyp',
             'type': 'Healthy',
-            'symptoms': ['no symptoms', 'normal brain function', 'healthy tissue'],
-            'description': 'Normal brain tissue without any abnormal masses or lesions'
-        },
-        'pituitary': {
-            'name': 'Pituitary Tumor',
-            'type': 'Benign (usually)',
-            'symptoms': ['hormonal imbalances', 'vision problems', 'headaches', 'fatigue', 'irregular menstruation'],
-            'description': 'Tumors that develop in the pituitary gland and can affect hormone production'
+            'symptoms': ['no symptoms', 'normal bowel function', 'healthy tissue'],
+            'description': 'Normal gastrointestinal tissue without any abnormal growths or lesions'
         }
     }
     
@@ -1088,28 +1076,28 @@ def search_fractures_globally(query, classes):
         
         # Direct match
         if query in class_lower:
-            if class_lower in tumor_database:
-                results.append(tumor_database[class_lower])
+            if class_lower in polyp_database:
+                results.append(polyp_database[class_lower])
             else:
-                # Extract tumor name from class name
-                tumor = class_name.replace('_', ' ').title()
+                # Extract polyp name from class name
+                polyp = class_name.replace('_', ' ').title()
                 
                 results.append({
-                    'name': tumor,
-                    'type': 'Brain Tumor',
+                    'name': polyp,
+                    'type': 'Gastrointestinal',
                     'symptoms': [],
-                    'description': f'Brain tumor detected: {tumor}'
+                    'description': f'Polyp detected: {polyp}'
                 })
         
-        # Search in tumor database
-        for tumor_key, tumor_info in tumor_database.items():
-            if (query in tumor_key or 
-                query in tumor_info['name'].lower() or
-                query in tumor_info['type'].lower() or
-                any(query in symptom for symptom in tumor_info['symptoms'])):
+        # Search in polyp database
+        for polyp_key, polyp_info in polyp_database.items():
+            if (query in polyp_key or 
+                query in polyp_info['name'].lower() or
+                query in polyp_info['type'].lower() or
+                any(query in symptom for symptom in polyp_info['symptoms'])):
                 
-                if tumor_info not in results:
-                    results.append(tumor_info)
+                if polyp_info not in results:
+                    results.append(polyp_info)
     
     return results[:10]  # Limit to top 10 results
 
