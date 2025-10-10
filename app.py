@@ -788,7 +788,7 @@ else:
     
     # Results Header
     st.markdown('<h2 style="color: #212529; text-align: center; margin-bottom: 2rem; font-weight: 800;">📊 Analysis Results</h2>', unsafe_allow_html=True)
-    
+
     # Diagnosis Summary Card
     st.markdown(f'''
     <div class="result-box {result_class}">
@@ -797,7 +797,7 @@ else:
             {results["confidence"]:.1%} Confidence
         </div>
         <p style="margin-top: 1rem; font-size: 1.1rem; font-weight: 600; color: #212529;">
-            {'Tumor Detected - Immediate consultation recommended' if is_tumor else 'No Tumor Detected - Healthy brain tissue'}
+            {'Polyp Detected - Consultation recommended' if is_polyp else 'No Polyp Detected - Healthy tissue'}
         </p>
         <p style="margin-top: 0.5rem; color: #6c757d;">
             <strong>📅 Analysis Date:</strong> {results["timestamp"]} | <strong>📊 Image Quality:</strong> {int(results["quality_score"]*100)}%
@@ -808,7 +808,7 @@ else:
     st.markdown("<br>", unsafe_allow_html=True)
     
     # Display annotated image prominently
-    st.markdown("### 🎯 Detection Results")
+    st.markdown("### 🎯 Segmentation Results")
     
     # Create centered frame for the image
     col1, col2, col3 = st.columns([1, 2, 1])
@@ -912,14 +912,14 @@ else:
     with col1:
         if st.button("📥 Download PDF Report", key="download_pdf", use_container_width=True):
             with tempfile.TemporaryDirectory() as tmp_dir:
-                pdf = BoneFracturePDF(tumor_info=predicted_class)
+                pdf = BoneFracturePDF(polyp_info=predicted_class)
                 pdf.cover_page()
                 pdf.add_summary(results["ai_summary"])
                 tmp_path = os.path.join(tmp_dir, f"img_{uuid.uuid4()}.jpg")
                 results["image"].save(tmp_path, quality=90, format="JPEG")
                 pdf.add_image(tmp_path)
                 pdf.add_section("AI Agent Analysis", results["ai_summary"])
-                pdf_path = f"brain_tumor_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+                pdf_path = f"polyp_detection_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
                 pdf.output(pdf_path)
                 with open(pdf_path, "rb") as f:
                     st.download_button("📥 Download", f.read(), pdf_path, "application/pdf", use_container_width=True)
@@ -941,7 +941,7 @@ st.markdown('''
         ⚕️ <strong style="color: #212529;">Medical Disclaimer:</strong> This tool is for educational purposes only. Always consult medical professionals.
     </p>
     <p style="color: #212529; font-weight: 600; margin: 0;">
-        Developed by <strong>Ujjwal Sinha</strong>
+        Developed by <strong>Ujjwal Sinha</strong> for Gastrointestinal Disease Detection
     </p>
 </div>
 ''', unsafe_allow_html=True)
