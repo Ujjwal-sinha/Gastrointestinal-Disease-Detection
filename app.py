@@ -12,7 +12,7 @@ import uuid
 import glob
 import numpy as np
 
-from models import device, load_cnn_model
+from models import device, load_cnn_model, load_yolo_model, predict_polyp_yolo, combined_prediction
 from utils import load_models, check_image_quality, describe_image, query_langchain, GastrointestinalPolypPDF, validate_dataset, test_groq_api, detect_polyp_region
 from agents import GastrointestinalPolypAIAgent, get_agent_recommendations, POLYP_KNOWLEDGE, DataPreprocessingAgent, ModelTrainingAgent, EvaluationAgent
 from dotenv import load_dotenv
@@ -500,10 +500,11 @@ if 'results' not in st.session_state:
 if 'agent_instance' not in st.session_state:
     st.session_state.agent_instance = None
 
-# Dataset validation for Kvasir-SEG
+# Dataset validation for both Kvasir datasets
 dataset_dir = "/Users/ujjwalsinha/Gastrointestinal-Disease-Detection/dataset"
-classes = ['Polyp', 'No Polyp']  # Correct polyp classes for Kvasir-SEG
+classes = ['Polyp', 'No Polyp']  # Unified polyp classes for both datasets
 total_images = 0
+dataset_info = {}
 
 # Check Kvasir-SEG dataset
 kvasir_seg_dir = os.path.join(dataset_dir, "kvasir-seg")
@@ -513,12 +514,45 @@ if os.path.exists(kvasir_seg_dir):
     
     if os.path.exists(images_dir):
         images = [f for f in os.listdir(images_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
-        total_images += len(images)
-        print(f"Found {total_images} images in Kvasir-SEG dataset")
+        seg_count = len(images)
+        total_images += seg_count
+        dataset_info['kvasir-seg'] = seg_count
+        print(f"Found {seg_count} images in Kvasir-SEG dataset")
     else:
         print(f"Images directory not found: {images_dir}")
 else:
     print(f"Kvasir-SEG directory not found: {kvasir_seg_dir}")
+
+# Check Kvasir-Sessile dataset
+kvasir_sessile_dir = os.path.join(dataset_dir, "kvasir-sessile")
+if os.path.exists(kvasir_sessile_dir):
+    images_dir = os.path.join(kvasir_sessile_dir, "images")
+    masks_dir = os.path.join(kvasir_sessile_dir, "masks")
+    
+    if os.path.exists(images_dir):
+        images = [f for f in os.listdir(images_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+        sessile_count = len(images)
+        total_images += sessile_count
+        dataset_info['kvasir-sessile'] = sessile_count
+        print(f"Found {sessile_count} images in Kvasir-Sessile dataset")
+    else:
+        print(f"Images directory not found: {images_dir}")
+else:
+    print(f"Kvasir-Sessile directory not found: {kvasir_sessile_dir}")
+
+print(f"Total images across both datasets: {total_images}")
+
+# Initialize YOLO model
+yolo_model = None
+try:
+    yolo_model = load_yolo_model("yolo11m.pt")
+    if yolo_model:
+        st.success("✅ YOLO11m model loaded successfully!")
+    else:
+        st.warning("⚠️ YOLO11m model not available")
+except Exception as e:
+    st.warning(f"⚠️ YOLO model initialization failed: {str(e)}")
+    yolo_model = None
 
 # Initialize AI Agent with verbose logging
 if GROQ_API_KEY:
@@ -546,6 +580,12 @@ with st.sidebar:
     st.markdown("#### 📊 System Information")
     st.markdown(f"**Total Images:** {total_images:,}")
     st.markdown(f"**Polyp Types:** {len(classes)}")
+    
+    # Dataset breakdown
+    if dataset_info:
+        st.markdown("**Dataset Breakdown:**")
+        for dataset_name, count in dataset_info.items():
+            st.markdown(f"• {dataset_name}: {count:,} images")
 
     api_working, api_message = test_groq_api() if GROQ_API_KEY else (False, "No API key")
     status_icon = "✅" if api_working else "⚠️"
@@ -555,6 +595,10 @@ with st.sidebar:
 
     agent_status = "✅ Active" if st.session_state.agent_instance else "⚠️ Inactive"
     st.markdown(f"**AI Agent:** {agent_status}")
+    
+    # YOLO model status
+    yolo_status = "✅ Active" if yolo_model else "⚠️ Inactive"
+    st.markdown(f"**YOLO Model:** {yolo_status}")
 
     st.markdown("---")
     st.markdown("#### 🎯 Detectable Conditions")
@@ -563,12 +607,17 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown("#### ℹ️ About")
-    st.markdown("""
-    This AI-powered system uses deep learning to detect and segment gastrointestinal polyps from endoscopic images using Kvasir-SEG dataset.
+    st.markdown(f"""
+    This AI-powered system uses deep learning to detect and segment gastrointestinal polyps from endoscopic images using **Kvasir-SEG** and **Kvasir-Sessile** datasets.
+
+    **Datasets:**
+    - Kvasir-SEG: 1,000 polyp images with segmentation masks
+    - Kvasir-Sessile: 196 additional polyp images
+    - **Total:** {total_images:,} endoscopic images
 
     **Features:**
     - 🔍 Polyp Detection
-    - 🎯 Region Segmentation
+    - 🎯 Region Segmentation  
     - 🤖 AI Agent Analysis
     - 📊 Detailed Reports
     """)
@@ -588,7 +637,7 @@ st.markdown('''
 ''', unsafe_allow_html=True)
 
 # Metrics
-col1, col2, col3, col4 = st.columns(4)
+col1, col2, col3, col4, col5 = st.columns(5)
 with col1:
     st.markdown(f'''
     <div class="metric-card fade-in">
@@ -627,6 +676,18 @@ with col4:
         <div class="metric-icon">{agent_icon}</div>
         <div class="metric-value">{agent_status}</div>
         <div class="metric-label">AI Agent</div>
+</div>
+    ''', unsafe_allow_html=True)
+
+# Add YOLO status as a fifth metric
+with col5:
+    yolo_status = "Active" if yolo_model else "Inactive"
+    yolo_icon = "🎯" if yolo_model else "⚠️"
+    st.markdown(f'''
+    <div class="metric-card fade-in">
+        <div class="metric-icon">{yolo_icon}</div>
+        <div class="metric-value">{yolo_status}</div>
+        <div class="metric-label">YOLO Model</div>
 </div>
     ''', unsafe_allow_html=True)
 
@@ -682,63 +743,107 @@ if not st.session_state.analysis_complete:
                     processor, blip_model = load_models()
                     image_description = describe_image(image)
                     
-                    # Load CNN model
-                    model_path = "best_baseline.pth"
-                    cnn_model = load_cnn_model(num_classes=len(classes), model_path=model_path if os.path.exists(model_path) else None)
-                    
-                    if cnn_model:
-                        transform = transforms.Compose([
-                            transforms.Resize((224, 224)),
-                            transforms.ToTensor(),
-                            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-                        ])
+                    # Use YOLO model for detection if available
+                    if yolo_model:
+                        st.info("🎯 Using YOLO11m model for polyp detection...")
+                        try:
+                            # Use combined prediction with YOLO
+                            result = combined_prediction(image, yolo_model, classes)
+                            
+                            predicted_class = result['predicted_class']
+                            confidence = result['yolo_confidence']
+                            detection_info = result.get('detection_info', {})
+                            
+                            st.success(f"✅ YOLO Detection: {predicted_class} ({confidence:.1%} confidence)")
+                            
+                        except Exception as e:
+                            st.warning(f"YOLO detection failed: {str(e)}")
+                            # Fallback to CNN model
+                            model_path = "best_baseline.pth"
+                            cnn_model = load_cnn_model(num_classes=len(classes), model_path=model_path if os.path.exists(model_path) else None)
+                            
+                            if cnn_model:
+                                transform = transforms.Compose([
+                                    transforms.Resize((224, 224)),
+                                    transforms.ToTensor(),
+                                    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+                                ])
+                                
+                                image_tensor = transform(image).unsqueeze(0).to(device)
+                                cnn_model.eval()
+                                
+                                with torch.no_grad():
+                                    outputs = cnn_model(image_tensor)
+                                    probabilities = torch.softmax(outputs, dim=1)
+                                    predicted_idx = torch.argmax(probabilities, dim=1).item()
+                                    raw_confidence = probabilities[0][predicted_idx].item()
+                                    confidence = max(0.90, raw_confidence)
+                                
+                                predicted_class = classes[predicted_idx] if predicted_idx < len(classes) else "Unknown"
+                            else:
+                                st.error("❌ Failed to load any model")
+                                return
+                    else:
+                        # Use CNN model as fallback
+                        st.info("🔄 Using CNN model for polyp detection...")
+                        model_path = "best_baseline.pth"
+                        cnn_model = load_cnn_model(num_classes=len(classes), model_path=model_path if os.path.exists(model_path) else None)
                         
-                        image_tensor = transform(image).unsqueeze(0).to(device)
-                        cnn_model.eval()
-                        
-                        with torch.no_grad():
-                            outputs = cnn_model(image_tensor)
-                            probabilities = torch.softmax(outputs, dim=1)
-                            predicted_idx = torch.argmax(probabilities, dim=1).item()
-                            raw_confidence = probabilities[0][predicted_idx].item()
-                            # Ensure confidence is always above 90%
-                            confidence = max(0.90, raw_confidence)
-                        
-                        predicted_class = classes[predicted_idx] if predicted_idx < len(classes) else "Unknown"
-                        
-                        # Use AI Agent for comprehensive analysis
-                        if st.session_state.agent_instance:
-                            try:
-                                with st.spinner("🤖 AI Agent generating comprehensive analysis..."):
-                                    patient_data = {
-                                        "image_quality": quality_score,
-                                        "scan_type": "Endoscopy",
-                                        "analysis_date": datetime.now().strftime("%Y-%m-%d")
-                                    }
-                                    
-                                    agent_result = st.session_state.agent_instance.analyze_polyp_case(
-                                        image_description=image_description,
-                                        detected_polyp=predicted_class,
-                                        confidence=confidence,
-                                        patient_data=patient_data,
-                                        endoscopic_findings=f"Detected {predicted_class} with {confidence:.1%} confidence"
-                                    )
-                                    
-                                    ai_summary = agent_result.get("analysis", "Analysis unavailable")
-                                    agent_used = True
-                            except Exception as e:
-                                st.warning(f"Agent analysis unavailable: {str(e)}")
-                                severity = "Moderate" if "polyp" in predicted_class.lower() else "Low"
-                                ai_summary = f"**Diagnosis:** Detected **{predicted_class}** with {confidence:.1%} confidence.\n\n**Severity:** {severity}\n\n**Recommendations:**\n• Consult gastroenterologist\n• Schedule comprehensive colonoscopy\n• Follow endoscopic removal protocols\n\n**Prognosis:** Outcome depends on polyp type, size, and patient health."
-                                agent_used = False
+                        if cnn_model:
+                            transform = transforms.Compose([
+                                transforms.Resize((224, 224)),
+                                transforms.ToTensor(),
+                                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+                            ])
+                            
+                            image_tensor = transform(image).unsqueeze(0).to(device)
+                            cnn_model.eval()
+                            
+                            with torch.no_grad():
+                                outputs = cnn_model(image_tensor)
+                                probabilities = torch.softmax(outputs, dim=1)
+                                predicted_idx = torch.argmax(probabilities, dim=1).item()
+                                raw_confidence = probabilities[0][predicted_idx].item()
+                                confidence = max(0.90, raw_confidence)
+                            
+                            predicted_class = classes[predicted_idx] if predicted_idx < len(classes) else "Unknown"
                         else:
+                            st.error("❌ Failed to load model")
+                            return
+                    
+                    # Use AI Agent for comprehensive analysis
+                    if st.session_state.agent_instance:
+                        try:
+                            with st.spinner("🤖 AI Agent generating comprehensive analysis..."):
+                                patient_data = {
+                                    "image_quality": quality_score,
+                                    "scan_type": "Endoscopy",
+                                    "analysis_date": datetime.now().strftime("%Y-%m-%d")
+                                }
+                                
+                                agent_result = st.session_state.agent_instance.analyze_polyp_case(
+                                    image_description=image_description,
+                                    detected_polyp=predicted_class,
+                                    confidence=confidence,
+                                    patient_data=patient_data,
+                                    endoscopic_findings=f"Detected {predicted_class} with {confidence:.1%} confidence"
+                                )
+                                
+                                ai_summary = agent_result.get("analysis", "Analysis unavailable")
+                                agent_used = True
+                        except Exception as e:
+                            st.warning(f"Agent analysis unavailable: {str(e)}")
                             severity = "Moderate" if "polyp" in predicted_class.lower() else "Low"
                             ai_summary = f"**Diagnosis:** Detected **{predicted_class}** with {confidence:.1%} confidence.\n\n**Severity:** {severity}\n\n**Recommendations:**\n• Consult gastroenterologist\n• Schedule comprehensive colonoscopy\n• Follow endoscopic removal protocols\n\n**Prognosis:** Outcome depends on polyp type, size, and patient health."
                             agent_used = False
-                        
-                        recommendations = get_agent_recommendations(predicted_class, {"age": "N/A", "history": "N/A"})
-                        
-                        # Detect polyp region and create annotated image
+                    else:
+                        severity = "Moderate" if "polyp" in predicted_class.lower() else "Low"
+                        ai_summary = f"**Diagnosis:** Detected **{predicted_class}** with {confidence:.1%} confidence.\n\n**Severity:** {severity}\n\n**Recommendations:**\n• Consult gastroenterologist\n• Schedule comprehensive colonoscopy\n• Follow endoscopic removal protocols\n\n**Prognosis:** Outcome depends on polyp type, size, and patient health."
+                        agent_used = False
+                    
+                    recommendations = get_agent_recommendations(predicted_class, {"age": "N/A", "history": "N/A"})
+                    
+                    # Detect polyp region and create annotated image
                         try:
                             st.info("🔍 Detecting polyp region...")
                             annotated_image = detect_polyp_region(image, predicted_class)
