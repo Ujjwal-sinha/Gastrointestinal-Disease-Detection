@@ -535,36 +535,36 @@ else:
 
 # Sidebar
 with st.sidebar:
-    st.markdown("### 🧠 BrainTumorAI")
+    st.markdown("### 🩺 GastrointestinalPolypAI")
     st.markdown("---")
-    
+
     st.markdown("#### 📊 System Information")
     st.markdown(f"**Total Images:** {total_images:,}")
-    st.markdown(f"**Tumor Types:** {len(classes)}")
-    
+    st.markdown(f"**Polyp Types:** {len(classes)}")
+
     api_working, _ = test_groq_api() if GROQ_API_KEY else (False, "No key")
     st.markdown(f"**AI Status:** {'✅ Active' if api_working else '⚠️ Inactive'}")
-    
+
     agent_status = "✅ Active" if st.session_state.agent_instance else "⚠️ Inactive"
     st.markdown(f"**AI Agent:** {agent_status}")
-    
+
     st.markdown("---")
-    st.markdown("#### 🎯 Detectable Tumors")
-    for tumor_class in classes:
-        st.markdown(f"• {tumor_class}")
-    
+    st.markdown("#### 🎯 Detectable Polyps")
+    for polyp_class in classes:
+        st.markdown(f"• {polyp_class}")
+
     st.markdown("---")
     st.markdown("#### ℹ️ About")
     st.markdown("""
-    This AI-powered system uses deep learning to detect and classify brain tumors from MRI scans.
-    
+    This AI-powered system uses deep learning to detect and segment gastrointestinal polyps from endoscopic images using Kvasir-SEG dataset.
+
     **Features:**
-    - 🔍 Tumor Detection
-    - 🎯 Region Highlighting
+    - 🔍 Polyp Detection
+    - 🎯 Region Segmentation
     - 🤖 AI Agent Analysis
     - 📊 Detailed Reports
     """)
-    
+
     st.markdown("---")
     st.markdown("#### ⚠️ Disclaimer")
     st.markdown("""
@@ -629,11 +629,11 @@ if not st.session_state.analysis_complete:
     <div class="content-card fade-in">
         <div class="card-header">
             <div class="card-icon">📤</div>
-            <div class="card-title">Upload Brain MRI Scan</div>
+            <div class="card-title">Upload Endoscopic Image</div>
                             </div>
                         </div>
     ''', unsafe_allow_html=True)
-    
+
     uploaded_file = st.file_uploader("", type=['jpg', 'jpeg', 'png'], label_visibility="collapsed")
     
     if uploaded_file:
