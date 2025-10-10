@@ -160,16 +160,16 @@ def detect_polyp_region(image, predicted_class):
             
             try:
                 # Find brightest region in central area as fallback
-                central_region = gray[brain_margin_y:brain_margin_y+brain_height, 
-                                     brain_margin_x:brain_margin_x+brain_width]
+                central_region = gray[gi_margin_y:gi_margin_y+gi_height, 
+                                     gi_margin_x:gi_margin_x+gi_width]
                 
                 # Find location of maximum brightness
                 min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(central_region)
                 
                 # Create box around brightest point
-                box_size = min(brain_width, brain_height) // 3
-                x = brain_margin_x + max_loc[0] - box_size // 2
-                y = brain_margin_y + max_loc[1] - box_size // 2
+                box_size = min(gi_width, gi_height) // 3
+                x = gi_margin_x + max_loc[0] - box_size // 2
+                y = gi_margin_y + max_loc[1] - box_size // 2
                 w_box = box_size
                 h_box = box_size
             except:
@@ -293,7 +293,7 @@ def detect_polyp_region(image, predicted_class):
         return result_pil
         
     except Exception as e:
-        print(f"Error in tumor region detection: {e}")
+        print(f"Error in polyp region detection: {e}")
         import traceback
         traceback.print_exc()
         
@@ -309,7 +309,7 @@ def detect_polyp_region(image, predicted_class):
             y = (h - box_size) // 2
             
             cv2.rectangle(img_array, (x, y), (x + box_size, y + box_size), (255, 0, 0), 8)
-            cv2.putText(img_array, "TUMOR DETECTED", 
+            cv2.putText(img_array, "POLYP DETECTED",  
                        (x, y - 10), cv2.FONT_HERSHEY_BOLD, 1.0, (255, 0, 0), 3)
             
             print("Emergency box drawn successfully")
@@ -363,9 +363,9 @@ def load_models():
         print(f"Error loading BLIP models: {e}")
         return None, None
 
-def check_image_quality(image: Image.Image, suspected_tumor: str = None) -> float:
+def check_image_quality(image: Image.Image, suspected_polyp: str = None) -> float:
     """
-    Check image quality for brain tumor detection
+    Check image quality for polyp detection
     Returns a quality score between 0 and 1
     """
     try:
@@ -412,14 +412,14 @@ def check_image_quality(image: Image.Image, suspected_tumor: str = None) -> floa
         print(f"Error checking image quality: {e}")
         return 0.5  # Default quality score
 
-def describe_image(image: Image.Image, suspected_tumor: str = None) -> str:
+def describe_image(image: Image.Image, suspected_polyp: str = None) -> str:
     """
-    Generate detailed description of brain MRI image for tumor analysis
+    Generate detailed description of endoscopic image for polyp analysis
     """
     try:
         processor, model = load_models()
         if processor is None or model is None:
-            return "Brain MRI showing tissue and structure"
+            return "Endoscopic image showing gastrointestinal tract"
         
         # Prepare image for BLIP
         inputs = processor(image, return_tensors="pt")
