@@ -396,7 +396,7 @@ def predict_polyp_yolo(model, image, confidence_threshold=0.05):
         # Convert PIL image to numpy array
         img_array = np.array(image)
         
-        # Apply multiple enhancement techniques for better fracture detection
+        # Apply multiple enhancement techniques for better polyp detection
         enhanced_images = []
         
         # 1. Original image
@@ -413,7 +413,7 @@ def predict_polyp_yolo(model, image, confidence_threshold=0.05):
         high_contrast_rgb = cv2.cvtColor(high_contrast, cv2.COLOR_GRAY2RGB)
         enhanced_images.append(("high_contrast", high_contrast_rgb))
         
-        # 4. Edge-enhanced version for fracture line detection
+        # 4. Edge-enhanced version for polyp boundary detection
         edges = cv2.Canny(gray, 30, 100)
         edge_enhanced = cv2.addWeighted(gray, 0.7, edges, 0.3, 0)
         edge_enhanced_rgb = cv2.cvtColor(edge_enhanced, cv2.COLOR_GRAY2RGB)
@@ -551,7 +551,7 @@ def predict_polyp_yolo(model, image, confidence_threshold=0.05):
             mean_intensity = np.mean(img_gray)
             std_intensity = np.std(img_gray)
             
-            # Edge analysis for potential fracture lines
+            # Edge analysis for potential polyp boundaries
             edges = cv2.Canny(img_gray, 50, 150)
             edge_density = np.sum(edges > 0) / (img_gray.shape[0] * img_gray.shape[1])
             
@@ -670,7 +670,7 @@ def draw_polyp_detections(image, prediction_result):
                     # Draw main bounding box in bright red
                     cv2.rectangle(img_cv, (x1, y1), (x2, y2), (0, 0, 255), 5)
                     
-                    # Create label with fracture type and confidence
+                    # Create label with polyp type and confidence
                     label = f"{predicted_class}: {confidence:.1%}"
                     
                     # Calculate label background size
