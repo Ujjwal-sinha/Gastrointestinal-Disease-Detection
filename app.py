@@ -657,11 +657,11 @@ if not st.session_state.analysis_complete:
                 <p style="margin: 0.5rem 0 0 0;">{'Excellent quality for analysis' if quality_score > 0.7 else 'Good quality' if quality_score > 0.5 else 'Fair quality'}</p>
             </div>
             ''', unsafe_allow_html=True)
-            
+
             st.markdown('''
             <div class="info-box">
                 <h4>🎯 Detectable Conditions</h4>
-                <p style="margin: 0.5rem 0;">• Glioma (Malignant)<br>• Meningioma (Benign)<br>• Pituitary Tumor (Benign)<br>• No Tumor (Healthy)</p>
+                <p style="margin: 0.5rem 0;">• Polyp (Abnormal Growth)<br>• No Polyp (Healthy)</p>
                             </div>
             ''', unsafe_allow_html=True)
             
