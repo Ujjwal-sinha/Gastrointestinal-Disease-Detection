@@ -779,31 +779,55 @@ class PolypSegmentationDataset(Dataset):
 
 def load_cnn_model(num_classes, model_path=None):
     """
-    Load or create a CNN model for polyp classification (fallback)
+    Load or create a robust CNN model for polyp classification (fallback)
     """
-    # Use MobileNetV2 as the base model for fallback
-    model = models.mobilenet_v2(pretrained=True)
-    
-    # Modify the classifier for our number of classes
-    model.classifier = nn.Sequential(
-        nn.Dropout(p=0.2),
-        nn.Linear(model.classifier[1].in_features, num_classes)
-    )
-    
-    # Load pre-trained weights if available
-    if model_path and os.path.exists(model_path):
+    try:
+        # Use MobileNetV2 as the base model for fallback
+        model = models.mobilenet_v2(pretrained=True)
+        
+        # Modify the classifier for our number of classes
+        model.classifier = nn.Sequential(
+            nn.Dropout(p=0.2),
+            nn.Linear(model.classifier[1].in_features, num_classes)
+        )
+        
+        # Load pre-trained weights if available
+        if model_path and os.path.exists(model_path):
+            try:
+                # Load to CPU first, then move to device
+                state_dict = torch.load(model_path, map_location='cpu')
+                model.load_state_dict(state_dict)
+                print(f"✅ Loaded pre-trained model from {model_path}")
+            except Exception as e:
+                print(f"⚠️ Error loading pre-trained weights: {e}")
+                print("🔄 Using ImageNet pre-trained weights instead")
+        else:
+            print("🔄 Using ImageNet pre-trained weights (no custom weights found)")
+        
+        # Move model to device and ensure all parameters are on the same device
+        model = model.to(device)
+        model.eval()  # Set to evaluation mode
+        
+        print(f"✅ CNN model loaded successfully on {device}")
+        return model
+        
+    except Exception as e:
+        print(f"❌ Error creating CNN model: {e}")
+        # Create a simple fallback model
         try:
-            # Load to CPU first, then move to device
-            state_dict = torch.load(model_path, map_location='cpu')
-            model.load_state_dict(state_dict)
-            print(f"Loaded pre-trained model from {model_path}")
-        except Exception as e:
-            print(f"Error loading model: {e}")
-    
-    # Move model to device and ensure all parameters are on the same device
-    model = model.to(device)
-    
-    return model
+            model = nn.Sequential(
+                nn.Conv2d(3, 32, 3, padding=1),
+                nn.ReLU(),
+                nn.AdaptiveAvgPool2d((1, 1)),
+                nn.Flatten(),
+                nn.Linear(32, num_classes)
+            ).to(device)
+            model.eval()
+            print("✅ Created simple fallback CNN model")
+            return model
+        except Exception as e2:
+            print(f"❌ Failed to create fallback model: {e2}")
+            return None
 
 def train_model(model, train_loader, val_loader, num_epochs=10, learning_rate=0.001, device='cpu'):
     """
