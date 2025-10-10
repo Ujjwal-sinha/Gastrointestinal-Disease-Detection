@@ -327,34 +327,34 @@ def enhance_endoscopic_for_detection(image):
         edge_combined = cv2.addWeighted(sobel_combined, 0.4, canny_combined, 0.4, 0)
         edge_combined = cv2.addWeighted(edge_combined, 0.8, laplacian, 0.2, 0)
         
-        # Stage 5: Morphological operations for bone structure enhancement
-        # Different kernels for different bone structures
+        # Stage 5: Morphological operations for polyp structure enhancement
+        # Different kernels for different polyp structures
         kernel_small = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
         kernel_medium = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
-        
-        # Closing operation to connect fracture lines
+
+        # Closing operation to connect polyp boundaries
         morph_closed = cv2.morphologyEx(hist_equalized, cv2.MORPH_CLOSE, kernel_small)
-        
+
         # Opening operation to remove small artifacts
         morph_opened = cv2.morphologyEx(morph_closed, cv2.MORPH_OPEN, kernel_small)
-        
-        # Stage 6: Advanced sharpening for fracture line enhancement
-        # Unsharp masking for better fracture visibility
+
+        # Stage 6: Advanced sharpening for polyp boundary enhancement
+        # Unsharp masking for better polyp visibility
         gaussian_blur = cv2.GaussianBlur(morph_opened, (0, 0), 2.0)
         unsharp_mask = cv2.addWeighted(morph_opened, 1.5, gaussian_blur, -0.5, 0)
-        
-        # Custom sharpening kernel optimized for fracture lines
+
+        # Custom sharpening kernel optimized for polyp boundaries
         sharpen_kernel = np.array([[-1, -1, -1, -1, -1],
                                   [-1,  2,  2,  2, -1],
                                   [-1,  2,  8,  2, -1],
                                   [-1,  2,  2,  2, -1],
                                   [-1, -1, -1, -1, -1]]) / 8.0
         sharpened = cv2.filter2D(unsharp_mask, -1, sharpen_kernel)
-        
+
         # Stage 7: Final enhancement combining all techniques
         # Weighted combination of enhanced image and edge information
         final_enhanced = cv2.addWeighted(sharpened, 0.7, edge_combined, 0.3, 0)
-        
+
         # Stage 8: Adaptive brightness and contrast adjustment
         # Ensure optimal brightness for YOLO detection
         mean_brightness = np.mean(final_enhanced)
@@ -364,9 +364,9 @@ def enhance_endoscopic_for_detection(image):
         elif mean_brightness > 180:
             # Too bright - darken
             final_enhanced = cv2.convertScaleAbs(final_enhanced, alpha=0.8, beta=-10)
-        
-        # Stage 9: Final noise reduction while preserving fracture details
-        # Non-local means denoising with parameters optimized for medical images
+
+        # Stage 9: Final noise reduction while preserving polyp details
+        # Non-local means denoising with parameters optimized for endoscopic images
         final_denoised = cv2.fastNlMeansDenoising(final_enhanced, None, 10, 7, 21)
         
         # Convert back to RGB
@@ -375,7 +375,7 @@ def enhance_endoscopic_for_detection(image):
         return Image.fromarray(enhanced_rgb)
         
     except Exception as e:
-        print(f"Error in ultra-enhanced X-ray processing: {e}")
+        print(f"Error in ultra-enhanced endoscopic processing: {e}")
         # Fallback to basic enhancement
         try:
             clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8,8))
@@ -385,9 +385,9 @@ def enhance_endoscopic_for_detection(image):
         except:
             return image
 
-def predict_fracture_yolo(model, image, confidence_threshold=0.05):
+def predict_polyp_yolo(model, image, confidence_threshold=0.05):
     """
-    Ultra-enhanced bone fracture prediction using YOLO model with advanced detection techniques
+    Ultra-enhanced polyp prediction using YOLO model with advanced detection techniques
     """
     try:
         if model is None:
@@ -402,9 +402,9 @@ def predict_fracture_yolo(model, image, confidence_threshold=0.05):
         # 1. Original image
         enhanced_images.append(("original", img_array))
         
-        # 2. Enhanced X-ray preprocessing
-        enhanced_xray = enhance_xray_for_detection(image)
-        enhanced_images.append(("enhanced", np.array(enhanced_xray)))
+        # 2. Enhanced endoscopic preprocessing
+        enhanced_endoscopic = enhance_endoscopic_for_detection(image)
+        enhanced_images.append(("enhanced", np.array(enhanced_endoscopic)))
         
         # 3. High contrast version
         gray = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY)
@@ -486,7 +486,7 @@ def predict_fracture_yolo(model, image, confidence_threshold=0.05):
             best_detection = None
             
             # Load class names from dataset configuration
-            fracture_classes = load_class_names_from_dataset()
+            polyp_classes = load_class_names_from_dataset()
             
             for cls_idx, detections in class_detections.items():
                 if len(detections) >= 2:  # Require at least 2 detections for reliability
@@ -519,16 +519,16 @@ def predict_fracture_yolo(model, image, confidence_threshold=0.05):
             else:
                 boosted_confidence = min(0.85, best_confidence * 1.05)
             
-            if best_class is not None and best_class < len(fracture_classes):
-                predicted_class = fracture_classes[best_class]
+            if best_class is not None and best_class < len(polyp_classes):
+                predicted_class = polyp_classes[best_class]
                 print(f"🏷️ Class index {best_class} mapped to: {predicted_class}")
             else:
                 predicted_class = f"Unknown_Class_{best_class}"
-                print(f"⚠️ Unknown class index: {best_class}, available classes: {len(fracture_classes)}")
+                print(f"⚠️ Unknown class index: {best_class}, available classes: {len(polyp_classes)}")
                 
             # Debug: Show class mapping for verification
-            if best_class == 5:
-                print(f"✅ Detected class 5 = {fracture_classes[5]} (Oblique fracture)")
+            if best_class == 1:
+                print(f"✅ Detected class 1 = {polyp_classes[1]} (Polyp)")
             
             return {
                 'predicted_class': predicted_class,
@@ -537,7 +537,7 @@ def predict_fracture_yolo(model, image, confidence_threshold=0.05):
                 'all_detections': None,
                 'boxes': [best_detection['box']] if best_detection else [],
                 'all_boxes': [d['box'] for d in detection_scores.values()],
-                'class_names': fracture_classes,
+                'class_names': polyp_classes,
                 'detection_count': len(detection_scores),
                 'consensus_detections': len(class_detections.get(best_class, [])) if best_class is not None else 0,
                 'enhancement_used': best_detection['enhancement'] if best_detection else 'none'
@@ -582,7 +582,7 @@ def predict_fracture_yolo(model, image, confidence_threshold=0.05):
                 'all_detections': None,
                 'boxes': [],
                 'all_boxes': [],
-                'class_names': fracture_classes,
+                'class_names': polyp_classes,
                 'detection_count': 0,
                 'consensus_detections': 0,
                 'enhancement_used': 'image_analysis',
