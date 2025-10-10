@@ -506,6 +506,9 @@ classes = ['Polyp', 'No Polyp']  # Unified polyp classes for both datasets
 total_images = 0
 dataset_info = {}
 
+print(f"🔍 Checking dataset directory: {dataset_dir}")
+print(f"🔍 Dataset directory exists: {os.path.exists(dataset_dir)}")
+
 # Check Kvasir-SEG dataset
 kvasir_seg_dir = os.path.join(dataset_dir, "kvasir-seg")
 if os.path.exists(kvasir_seg_dir):
@@ -546,14 +549,19 @@ print(f"Total images across both datasets: {total_images}")
 yolo_model = None
 try:
     with st.spinner("🔄 Loading YOLO11m model..."):
+        print("🔄 Starting YOLO model loading...")
         yolo_model = load_yolo_model("yolo11m.pt")
+        print(f"🔄 YOLO model loading result: {yolo_model is not None}")
         if yolo_model:
             st.success("✅ YOLO11m model loaded successfully!")
+            print("✅ YOLO model loaded successfully in Streamlit")
         else:
             st.warning("⚠️ YOLO11m model not available - will use CNN fallback")
+            print("⚠️ YOLO model is None")
 except Exception as e:
     st.warning(f"⚠️ YOLO model initialization failed: {str(e)}")
     st.info("💡 Will use CNN model as fallback")
+    print(f"❌ YOLO model initialization error: {str(e)}")
     yolo_model = None
 
 # Initialize AI Agent with verbose logging
