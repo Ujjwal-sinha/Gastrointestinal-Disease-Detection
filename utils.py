@@ -489,7 +489,7 @@ def test_groq_api():
                         groq_api_key=api_key
                     )
                     # Test the model with a simple prompt
-                    test_response = llm.invoke("Test brain tumor analysis")
+                    test_response = llm.invoke("Test polyp analysis")
                     if test_response:
                         return True, f"Working (using {model_name})"
                     else:
@@ -513,27 +513,27 @@ def test_groq_api():
     except Exception as e:
         return False, f"API test failed: {str(e)}"
 
-def generate_fallback_response(detected_tumor: str, image_description: str, cnn_detection: str = None, confidence: float = None) -> str:
+def generate_fallback_response(detected_polyp: str, image_description: str, cnn_detection: str = None, confidence: float = None) -> str:
     """
     Generate fallback analysis when AI models are unavailable
     """
     try:
-        # Basic brain tumor analysis based on common patterns
+        # Basic polyp analysis based on common patterns
         analysis = f"""
-        **Brain Tumor Analysis Report**
+        **Gastrointestinal Polyp Analysis Report**
         
         **Image Analysis:**
         {image_description}
         
         **AI Detection Results:**
-        - Detected Tumor Type: {detected_tumor}
+        - Detected Polyp Type: {detected_polyp}
         - Confidence Level: 99.0%
         - CNN Model Detection: {cnn_detection if cnn_detection else "Not available"}
         
-        **Tumor Assessment:**
-        Based on the MRI analysis, the brain appears to show characteristics consistent with {detected_tumor.lower()}.
+        **Polyp Assessment:**
+        Based on the endoscopic analysis, the gastrointestinal tract appears to show characteristics consistent with {detected_polyp.lower()}.
         
-        **Common Tumor Indicators:**
+        **Common Polyp Indicators:**
         - Abnormal tissue mass or lesion
         - Changes in brain tissue density
         - Displacement of normal structures
