@@ -187,7 +187,6 @@
                         BF["Grad-CAM<br/>Heatmap Overlay"]
                         CL["SHAP Analysis<br/>Feature Importance"]
                         MO["LIME<br/>Local Explanation"]
-                        BB["Bounding Box<br/>Red Square Detection"]
                         
                         %% Step 7: Results & Reports
                         RD["Results Display<br/>Polyp Type<br/>Confidence Score"]
@@ -216,12 +215,10 @@
                         IE --> BF
                         IE --> CL
                         IE --> MO
-                        IE --> BB
                         ED --> RD
                         BF --> RD
                         CL --> RD
                         MO --> RD
-                        BB --> RD
                         RD --> QA
                         RD --> MC
                         RD --> PDF
@@ -240,7 +237,7 @@
                         class ML,IP backendLayer
                         class YOLO_MODEL,CNN_MODEL modelsLayer
                         class AO,MA,TA,EA agentsLayer
-                        class IE,ED,BF,CL,MO,BB vizLayer
+                        class IE,ED,BF,CL,MO vizLayer
                         class RD,QA,MC,PDF resultsLayer
                 </div>
             </div>
@@ -325,28 +322,19 @@
                             IE[Image Enhancement<br/>CLAHE, Bilateral Filter, Edge Detection]
                             QA[Quality Assessment<br/>Image quality scoring<br/>Enhancement validation]
                             NM[Normalization<br/>Resolution standardization<br/>Intensity normalization]
-                            VP[Validation Pipeline<br/>Format validation<br/>Quality checks]
-                            EP[Enhancement Pipeline<br/>Multi-strategy enhancement<br/>Polyp boundary detection]
-                            CP[Context Processing<br/>Endoscopic context<br/>Clinical relevance]
                         end
                         
                         %% Preprocessing Agent Flow
                         MA --> IE
                         MA --> QA
                         MA --> NM
-                        MA --> VP
-                        MA --> EP
-                        MA --> CP
                         
                         IE --> QA
                         QA --> NM
-                        NM --> VP
-                        VP --> EP
-                        EP --> CP
                         
                         %% Styling
-                        classDef preprocessingAgent fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#000
-                        class MA,IE,QA,NM,VP,EP,CP preprocessingAgent
+                        classDef preprocessingAgent fill:#ffb3ba,stroke:#ff6b6b,stroke-width:2px,color:#000
+                        class MA,IE,QA,NM preprocessingAgent
                 </div>
                 
                 <!-- Model Training Agent -->
@@ -357,28 +345,19 @@
                             MO[Model Optimization<br/>Hyperparameter tuning<br/>Performance enhancement]
                             PM[Performance Monitoring<br/>Training metrics<br/>Validation accuracy]
                             CV[Cross Validation<br/>Model validation<br/>Overfitting prevention]
-                            RT[Retraining Logic<br/>Model updates<br/>Continuous learning]
-                            OM[Optimization Metrics<br/>Loss optimization<br/>Accuracy improvement]
-                            CM[Configuration Management<br/>Model settings<br/>Parameter management]
                         end
                         
                         %% Training Agent Flow
                         TAA --> MO
                         TAA --> PM
                         TAA --> CV
-                        TAA --> RT
-                        TAA --> OM
-                        TAA --> CM
                         
                         MO --> PM
                         PM --> CV
-                        CV --> RT
-                        RT --> OM
-                        OM --> CM
                         
                         %% Styling
-                        classDef trainingAgent fill:#f39c12,stroke:#e67e22,stroke-width:2px,color:#000
-                        class TAA,MO,PM,CV,RT,OM,CM trainingAgent
+                        classDef trainingAgent fill:#ffd1dc,stroke:#ff69b4,stroke-width:2px,color:#000
+                        class TAA,MO,PM,CV trainingAgent
                 </div>
                 
                 <!-- Evaluation Agent -->
@@ -389,24 +368,15 @@
                             MA[Metrics Analysis<br/>Dice coefficient, IoU<br/>Clinical accuracy]
                             CV[Clinical Validation<br/>Medical accuracy<br/>Clinical relevance]
                             QA[Quality Assurance<br/>Detection reliability<br/>Confidence validation]
-                            RM[Risk Management<br/>False positive/negative<br/>Clinical safety]
-                            PM[Performance Metrics<br/>Model performance<br/>Accuracy tracking]
-                            CR[Clinical Reporting<br/>Medical reports<br/>Clinical documentation]
                         end
                         
                         %% Evaluation Agent Flow
                         EAA --> MA
                         EAA --> CV
                         EAA --> QA
-                        EAA --> RM
-                        EAA --> PM
-                        EAA --> CR
                         
                         MA --> CV
                         CV --> QA
-                        QA --> RM
-                        RM --> PM
-                        PM --> CR
                         
                         %% Styling
                         classDef evaluationAgent fill:#9b59b6,stroke:#8e44ad,stroke-width:2px,color:#000
