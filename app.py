@@ -668,7 +668,7 @@ if not st.session_state.analysis_complete:
             st.markdown("<br>", unsafe_allow_html=True)
             
             if st.button("🔬 Start AI Agent Analysis", key="analyze_button"):
-                with st.spinner("🧠 AI Agent analyzing your MRI scan..."):
+                with st.spinner("🩺 AI Agent analyzing your endoscopic image..."):
                     # Load models
                     processor, blip_model = load_models()
                     image_description = describe_image(image)
