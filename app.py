@@ -45,7 +45,7 @@ st.markdown("""
 
 /* Clean Header */
 .glass-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
     border-radius: 16px;
     padding: 2rem 2rem;
     text-align: center;
@@ -82,8 +82,8 @@ st.markdown("""
 
 .metric-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
-    border-color: #667eea;
+    box-shadow: 0 4px 16px rgba(14, 165, 233, 0.25);
+    border-color: #0ea5e9;
 }
 
 .metric-icon {
@@ -94,7 +94,7 @@ st.markdown("""
 .metric-value {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #667eea;
+    color: #0ea5e9;
     margin: 0.2rem 0;
 }
 
@@ -119,7 +119,7 @@ st.markdown("""
 
 .content-card:hover {
     box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
-    border-color: #667eea;
+    border-color: #0ea5e9;
 }
 
 .card-header {
@@ -134,7 +134,7 @@ st.markdown("""
 .card-icon {
     width: 40px;
     height: 40px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -152,7 +152,7 @@ st.markdown("""
 
 /* Clean Upload Zone */
 .upload-zone {
-    border: 3px dashed #667eea;
+    border: 3px dashed #0ea5e9;
     border-radius: 12px;
     padding: 3rem 2rem;
     text-align: center;
@@ -161,7 +161,7 @@ st.markdown("""
 }
 
 .upload-zone:hover {
-    border-color: #764ba2;
+    border-color: #06b6d4;
     background: #e9ecef;
 }
 
@@ -234,7 +234,7 @@ st.markdown("""
 
 /* AI Agent Summary */
 .agent-summary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
     border-radius: 20px;
     padding: 2rem;
     color: white;
@@ -325,7 +325,7 @@ st.markdown("""
     padding: 1rem;
     border-radius: 8px;
     margin: 0.5rem 0;
-    border-left: 4px solid #667eea;
+    border-left: 4px solid #0ea5e9;
     transition: all 0.3s ease;
     color: #212529;
 }
@@ -337,7 +337,7 @@ st.markdown("""
 
 /* Buttons */
 .stButton>button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
     color: white;
     border: none;
     border-radius: 12px;
@@ -357,7 +357,7 @@ st.markdown("""
 /* Info Box */
 .info-box {
     background: #f8f9fa;
-    border-left: 5px solid #667eea;
+    border-left: 5px solid #0ea5e9;
     padding: 1.5rem;
     border-radius: 12px;
     margin: 1rem 0;
@@ -397,7 +397,7 @@ st.markdown("""
 
 /* Sidebar Styling */
 section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #667eea 0%, #764ba2 100%) !important;
+    background: linear-gradient(180deg, #06b6d4 0%, #0ea5e9 100%) !important;
 }
 
 section[data-testid="stSidebar"] > div {
@@ -437,7 +437,7 @@ section[data-testid="stSidebar"] .stButton button {
 
 section[data-testid="stSidebar"] .stButton button:hover {
     background: white !important;
-    color: #667eea !important;
+    color: #0ea5e9 !important;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
 }
@@ -469,13 +469,13 @@ section[data-testid="stSidebar"] select {
 
 .stTabs [data-baseweb="tab"]:hover {
     background-color: #e9ecef;
-    border-color: #667eea;
+    border-color: #0ea5e9;
 }
 
 .stTabs [aria-selected="true"] {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%) !important;
     color: white !important;
-    border-color: #667eea !important;
+    border-color: #0ea5e9 !important;
 }
 
 /* Responsive */
@@ -580,7 +580,7 @@ with st.sidebar:
 st.markdown('''
 <div class="glass-header fade-in">
     <h1>🩺 GastrointestinalPolypAI</h1>
-    <p>Advanced AI Agent-Powered Polyp Detection and Segmentation</p>
+    <p>Clinical-grade polyp detection and segmentation with Kvasir-SEG</p>
 </div>
 ''', unsafe_allow_html=True)
 
@@ -634,7 +634,7 @@ if not st.session_state.analysis_complete:
     <div class="content-card fade-in">
         <div class="card-header">
             <div class="card-icon">📤</div>
-            <div class="card-title">Upload Endoscopic Image</div>
+            <div class="card-title">Upload Colonoscopy Frame</div>
                             </div>
                         </div>
     ''', unsafe_allow_html=True)
@@ -775,7 +775,7 @@ if not st.session_state.analysis_complete:
         st.markdown('''
         <div class="upload-zone">
             <div class="upload-icon">📁</div>
-            <h2 style="color: #667eea; margin: 0;">No Endoscopic Image Uploaded</h2>
+            <h2 style="color: #0ea5e9; margin: 0;">No Endoscopic Image Uploaded</h2>
             <p style="color: #718096; font-size: 1.1rem;">Click "Browse files" above to upload your endoscopic image</p>
         </div>
         ''', unsafe_allow_html=True)
@@ -825,7 +825,7 @@ else:
     st.markdown("<br>", unsafe_allow_html=True)
     
     # Tabs for organized results
-    tab1, tab2, tab3 = st.tabs(["🤖 AI Analysis", "💡 Recommendations", "📄 Details"])
+    tab1, tab2, tab3 = st.tabs(["🤖 AI Analysis", "🧭 Care Plan", "📄 Details"])
     
     with tab1:
         st.markdown("### AI Agent Analysis")
