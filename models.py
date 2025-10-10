@@ -277,9 +277,9 @@ def validate_model_performance(model, dataset_path="dataset"):
         print(f"❌ Error during validation: {e}")
         return None
 
-def enhance_xray_for_detection(image):
+def enhance_endoscopic_for_detection(image):
     """
-    Ultra-enhanced X-ray preprocessing for superior fracture detection
+    Ultra-enhanced endoscopic preprocessing for superior polyp detection
     """
     try:
         # Convert PIL to numpy array
@@ -292,21 +292,21 @@ def enhance_xray_for_detection(image):
             gray = img_array
         
         # Advanced multi-stage enhancement pipeline
-        
+
         # Stage 1: Noise reduction and initial enhancement
         # Bilateral filter to reduce noise while preserving edges
         denoised = cv2.bilateralFilter(gray, 9, 75, 75)
-        
+
         # Stage 2: Adaptive contrast enhancement
-        # CLAHE with optimized parameters for bone structures
+        # CLAHE with optimized parameters for polyp structures
         clahe = cv2.createCLAHE(clipLimit=4.0, tileGridSize=(8,8))
         contrast_enhanced = clahe.apply(denoised)
-        
+
         # Stage 3: Histogram equalization for better dynamic range
         hist_equalized = cv2.equalizeHist(contrast_enhanced)
-        
+
         # Stage 4: Advanced edge detection and enhancement
-        # Multiple edge detection methods for comprehensive fracture line detection
+        # Multiple edge detection methods for comprehensive polyp boundary detection
         
         # Sobel edge detection
         sobel_x = cv2.Sobel(hist_equalized, cv2.CV_64F, 1, 0, ksize=3)
