@@ -168,12 +168,12 @@
                         IU["Image Upload<br/>Drag & Drop Endoscopic Images"]
                         
                         %% Step 3: Backend Processing
-                        ML["Model Loader<br/>YOLO11m + CNN Model Loading"]
+                        ML["Model Loader<br/>YOLO11m + Groq LLM Loading"]
                         IP["Image Preprocessor<br/>Endoscopic Enhancement"]
                         
                         %% Step 4: AI Models
                         YOLO_MODEL["YOLO11m Model<br/>Polyp Detection<br/>Real-time Object Detection"]
-                        CNN_MODEL["CNN Classification Model<br/>Polyp Classification<br/>Fallback Classification"]
+                        GROQ_MODEL["Groq LLM Model<br/>llama-3.3-70b-versatile<br/>AI Agent Intelligence"]
                         
                         %% Step 5: Multi-Agent System
                         AO["Agent Orchestrator<br/>Multi-Agent Coordination"]
@@ -186,7 +186,6 @@
                         ED["Edge Detection<br/>Polyp Boundary Enhancement"]
                         BF["Grad-CAM<br/>Heatmap Overlay"]
                         CL["SHAP Analysis<br/>Feature Importance"]
-                        MO["LIME<br/>Local Explanation"]
                         
                         %% Step 7: Results & Reports
                         RD["Results Display<br/>Polyp Type<br/>Confidence Score"]
@@ -202,9 +201,9 @@
                         IU --> ML
                         ML --> IP
                         IP --> YOLO_MODEL
-                        IP --> CNN_MODEL
+                        IP --> GROQ_MODEL
                         YOLO_MODEL --> AO
-                        CNN_MODEL --> AO
+                        GROQ_MODEL --> AO
                         AO --> MA
                         AO --> TA
                         AO --> EA
@@ -214,11 +213,9 @@
                         IE --> ED
                         IE --> BF
                         IE --> CL
-                        IE --> MO
                         ED --> RD
                         BF --> RD
                         CL --> RD
-                        MO --> RD
                         RD --> QA
                         RD --> MC
                         RD --> PDF
@@ -235,9 +232,9 @@
                         class DS,PR,CC dataLayer
                         class ST,IU frontendLayer
                         class ML,IP backendLayer
-                        class YOLO_MODEL,CNN_MODEL modelsLayer
+                        class YOLO_MODEL,GROQ_MODEL modelsLayer
                         class AO,MA,TA,EA agentsLayer
-                        class IE,ED,BF,CL,MO vizLayer
+                        class IE,ED,BF,CL vizLayer
                         class RD,QA,MC,PDF resultsLayer
                 </div>
             </div>
@@ -558,7 +555,7 @@
                             <li>LangChain - AI Agent Framework</li>
                             <li>Groq API - High-performance LLM</li>
                             <li>YOLO11m - Real-time Object Detection</li>
-                            <li>CNN - Convolutional Neural Network</li>
+                            <li>llama-3.3-70b-versatile - Advanced Language Model</li>
                             <li>Multi-Agent System - Intelligent Analysis</li>
                         </ul>
                     </div>
