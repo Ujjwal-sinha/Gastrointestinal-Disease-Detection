@@ -544,6 +544,7 @@ else:
     print(f"Kvasir-Sessile directory not found: {kvasir_sessile_dir}")
 
 print(f"Total images across both datasets: {total_images}")
+print(f"📊 Dataset Status: {total_images} images ready for analysis")
 
 # Initialize YOLO model with better error handling
 yolo_model = None
@@ -555,9 +556,11 @@ try:
         if yolo_model:
             st.success("✅ YOLO11m model loaded successfully!")
             print("✅ YOLO model loaded successfully in Streamlit")
+            print(f"🚀 YOLO Model Status: Active")
         else:
             st.warning("⚠️ YOLO11m model not available - will use CNN fallback")
             print("⚠️ YOLO model is None")
+            print(f"🚀 YOLO Model Status: Inactive")
 except Exception as e:
     st.warning(f"⚠️ YOLO model initialization failed: {str(e)}")
     st.info("💡 Will use CNN model as fallback")
