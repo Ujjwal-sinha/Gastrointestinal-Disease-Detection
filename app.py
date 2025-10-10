@@ -1,7 +1,7 @@
 import os
 import streamlit as st
 
-st.set_page_config(page_title="BrainTumorAI", layout="wide", page_icon="🧠", initial_sidebar_state="expanded")
+st.set_page_config(page_title="GastrointestinalPolypAI", layout="wide", page_icon="🩺", initial_sidebar_state="expanded")
 
 from PIL import Image
 from datetime import datetime
@@ -14,7 +14,7 @@ import numpy as np
 
 from models import device, load_cnn_model
 from utils import load_models, check_image_quality, describe_image, query_langchain, BoneFracturePDF, validate_dataset, test_groq_api, detect_tumor_region
-from agents import BrainTumorAIAgent, get_agent_recommendations, BRAIN_TUMOR_KNOWLEDGE
+from agents import GastrointestinalPolypAIAgent, get_agent_recommendations, POLYP_KNOWLEDGE
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -574,8 +574,8 @@ with st.sidebar:
 # Header
 st.markdown('''
 <div class="glass-header fade-in">
-    <h1>🧠 BrainTumorAI</h1>
-    <p>Advanced AI Agent-Powered Brain Tumor Detection</p>
+    <h1>🩺 GastrointestinalPolypAI</h1>
+    <p>Advanced AI Agent-Powered Polyp Detection and Segmentation</p>
 </div>
 ''', unsafe_allow_html=True)
 
@@ -586,7 +586,7 @@ with col1:
     <div class="metric-card fade-in">
         <div class="metric-icon">📊</div>
         <div class="metric-value">{total_images:,}</div>
-        <div class="metric-label">Images</div>
+        <div class="metric-label">Polyp Images</div>
         </div>
     ''', unsafe_allow_html=True)
 
@@ -595,7 +595,7 @@ with col2:
     <div class="metric-card fade-in">
         <div class="metric-icon">🎯</div>
         <div class="metric-value">{len(classes)}</div>
-        <div class="metric-label">Tumor Types</div>
+        <div class="metric-label">Polyp Types</div>
             </div>
     ''', unsafe_allow_html=True)
 

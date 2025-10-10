@@ -1,6 +1,6 @@
 """
-AI Agents for BrainTumorAI - Brain Tumor Analysis Platform
-Enhanced with intelligent agents for comprehensive brain tumor analysis
+AI Agents for Gastrointestinal Disease Detection - Polyp Segmentation Platform
+Enhanced with intelligent agents for comprehensive polyp detection and segmentation using Kvasir-SEG dataset
 """
 
 import os
@@ -50,76 +50,58 @@ def retry_with_exponential_backoff(func, max_retries=3, base_delay=1):
             print(f"GROQ API over capacity, retrying in {delay:.2f} seconds (attempt {attempt + 1}/{max_retries + 1})")
             time.sleep(delay)
 
-# Brain tumor knowledge base
-BRAIN_TUMOR_KNOWLEDGE = {
-    "notumor": {
-        "symptoms": ["normal brain structure", "no abnormal masses", "clear brain tissue"],
-        "characteristics": ["healthy brain tissue", "normal ventricles", "no lesions"],
-        "recommendations": ["maintain brain health", "regular checkups", "healthy lifestyle"]
+# Gastrointestinal polyp knowledge base for Kvasir-SEG dataset
+POLYP_KNOWLEDGE = {
+    "no_polyp": {
+        "symptoms": ["normal gastrointestinal tract", "no abnormal growths", "healthy mucosa"],
+        "characteristics": ["smooth mucosal surface", "normal vascular pattern", "no protrusions"],
+        "recommendations": ["regular screening", "healthy diet", "maintain gut health"]
     },
-    "glioma": {
-        "symptoms": ["headaches", "seizures", "cognitive changes", "vision problems", "weakness"],
-        "characteristics": ["originates from glial cells", "can be low or high grade", "infiltrative growth"],
-        "causes": ["genetic mutations", "exposure to radiation", "family history"],
-        "treatments": ["surgery", "radiation therapy", "chemotherapy", "targeted therapy"],
-        "severity": "high",
-        "type": "malignant",
-        "description": "Gliomas are tumors that originate from glial cells in the brain. They can be benign or malignant."
-    },
-    "meningioma": {
-        "symptoms": ["headaches", "vision changes", "hearing loss", "memory loss", "seizures"],
-        "characteristics": ["arises from meninges", "usually benign", "slow-growing"],
-        "causes": ["radiation exposure", "genetic factors", "hormone levels"],
-        "treatments": ["observation", "surgery", "radiation therapy", "stereotactic radiosurgery"],
-        "severity": "moderate",
+    "polyp": {
+        "symptoms": ["often asymptomatic", "occasional bleeding", "changes in bowel habits", "abdominal pain"],
+        "characteristics": ["protruding growth from mucosa", "can be sessile or pedunculated", "various sizes and shapes"],
+        "causes": ["genetic factors", "diet", "lifestyle", "chronic inflammation"],
+        "treatments": ["polypectomy", "endoscopic removal", "surveillance colonoscopy"],
+        "severity": "low to high (precancerous potential)",
         "type": "benign (usually)",
-        "description": "Meningiomas are tumors that arise from the meninges, the membranes surrounding the brain and spinal cord."
-    },
-    "pituitary": {
-        "symptoms": ["hormonal imbalances", "vision problems", "headaches", "fatigue", "irregular menstruation"],
-        "characteristics": ["located in pituitary gland", "affects hormone production", "usually benign"],
-        "causes": ["genetic mutations", "hormonal factors", "unknown causes"],
-        "treatments": ["medication", "surgery", "radiation therapy", "hormone replacement"],
-        "severity": "moderate",
-        "type": "benign (usually)",
-        "description": "Pituitary tumors develop in the pituitary gland and can affect hormone production and regulation."
+        "description": "Polyps are abnormal growths in the gastrointestinal tract that can be precursors to colorectal cancer."
     }
 }
 
-class BrainImageAnalysisTool(BaseTool):
-    name: str = "brain_image_analyzer"
-    description: str = """Analyze MRI images for brain tumor detection and assessment with enhanced accuracy. 
-    Input should be a JSON string with keys: 'image_description', 'detected_tumor', and 'confidence'."""
+class PolypImageAnalysisTool(BaseTool):
+    name: str = "polyp_image_analyzer"
+    description: str = """Analyze endoscopic images for polyp detection and segmentation with enhanced accuracy using Kvasir-SEG dataset.
+    Input should be a JSON string with keys: 'image_description', 'detected_polyp', and 'confidence'."""
     
     def _run(self, query: str) -> str:
-        """Analyze MRI image and provide detailed insights with enhanced tumor detection"""
+        """Analyze endoscopic image and provide detailed insights with enhanced polyp detection"""
         
         # Parse input JSON
         try:
             import json
             data = json.loads(query)
             image_description = data.get("image_description", "")
-            detected_tumor = data.get("detected_tumor", "")
+            detected_polyp = data.get("detected_polyp", "")
             confidence = float(data.get("confidence", 0.0))
         except:
-            return "Error: Invalid input format. Please provide JSON with 'image_description', 'detected_tumor', and 'confidence'."
-        
-        # Enhanced tumor analysis with multiple factors
-        tumor_analysis = self._enhanced_tumor_analysis(detected_tumor, confidence, image_description)
+            return "Error: Invalid input format. Please provide JSON with 'image_description', 'detected_polyp', and 'confidence'."
+
+        # Enhanced polyp analysis with multiple factors
+        polyp_analysis = self._enhanced_polyp_analysis(detected_polyp, confidence, image_description)
         
         analysis = {
-            "tumor": detected_tumor,
+            "polyp": detected_polyp,
             "confidence": confidence,
-            "enhanced_confidence": tumor_analysis["enhanced_confidence"],
-            "severity": tumor_analysis["severity"],
-            "tumor_type": tumor_analysis["tumor_type"],
-            "location": tumor_analysis["location"],
-            "treatment_timeline": tumor_analysis["treatment_timeline"],
-            "symptoms": self._get_symptoms(detected_tumor),
-            "recommendations": self._get_recommendations(detected_tumor),
-            "risk_level": self._assess_risk(detected_tumor, confidence),
-            "treatment_urgency": tumor_analysis["treatment_urgency"],
-            "complications_risk": tumor_analysis["complications_risk"]
+            "enhanced_confidence": polyp_analysis["enhanced_confidence"],
+            "severity": polyp_analysis["severity"],
+            "polyp_type": polyp_analysis["polyp_type"],
+            "location": polyp_analysis["location"],
+            "treatment_timeline": polyp_analysis["treatment_timeline"],
+            "symptoms": self._get_symptoms(detected_polyp),
+            "recommendations": self._get_recommendations(detected_polyp),
+            "risk_level": self._assess_risk(detected_polyp, confidence),
+            "treatment_urgency": polyp_analysis["treatment_urgency"],
+            "complications_risk": polyp_analysis["complications_risk"]
         }
         return json.dumps(analysis, indent=2)
     
@@ -127,81 +109,67 @@ class BrainImageAnalysisTool(BaseTool):
         """Async version of _run"""
         return self._run(query)
     
-    def _enhanced_tumor_analysis(self, tumor: str, confidence: float, image_description: str) -> dict:
-        """Enhanced tumor analysis with multiple assessment factors"""
-        tumor_lower = tumor.lower().replace(' ', '_')
-        
+    def _enhanced_polyp_analysis(self, polyp: str, confidence: float, image_description: str) -> dict:
+        """Enhanced polyp analysis with multiple assessment factors"""
+        polyp_lower = polyp.lower().replace(' ', '_')
+
         # Base analysis from knowledge base
-        base_info = BRAIN_TUMOR_KNOWLEDGE.get(tumor_lower, {})
+        base_info = POLYP_KNOWLEDGE.get(polyp_lower, {})
         
         # Enhanced confidence calculation
         enhanced_confidence = confidence
-        if "mass" in image_description.lower() or "lesion" in image_description.lower():
-            if any(tumor_type in tumor_lower for tumor_type in ["glioma", "meningioma", "pituitary"]):
+        if "mass" in image_description.lower() or "polyp" in image_description.lower() or "growth" in image_description.lower():
+            if polyp_lower in ["polyp"]:
                 enhanced_confidence = min(0.98, confidence * 1.15)
-        
-        if "abnormal" in image_description.lower() or "irregular" in image_description.lower():
-            if any(ttype in tumor_lower for ttype in ["glioma", "meningioma"]):
+
+        if "abnormal" in image_description.lower() or "irregular" in image_description.lower() or "protrusion" in image_description.lower():
+            if polyp_lower in ["polyp"]:
                 enhanced_confidence = min(0.97, confidence * 1.10)
         
-        # Determine tumor characteristics
-        tumor_type = base_info.get("type", "Unknown")
-        
-        # Estimate location based on tumor type
-        location = "Brain tissue"
-        if "glioma" in tumor_lower:
-            location = "Glial cells (cerebral hemispheres)"
-        elif "meningioma" in tumor_lower:
-            location = "Meninges (brain covering)"
-        elif "pituitary" in tumor_lower:
-            location = "Pituitary gland (brain base)"
-        
+        # Determine polyp characteristics
+        polyp_type = base_info.get("type", "Unknown")
+
+        # Estimate location based on polyp type
+        location = "Gastrointestinal tract"
+        if polyp_lower in ["polyp"]:
+            location = "Colorectal mucosa"
+
         # Treatment timeline estimation
-        treatment_timeline = self._estimate_treatment_time(tumor_lower, tumor_type)
-        
+        treatment_timeline = self._estimate_treatment_time(polyp_lower, polyp_type)
+
         # Treatment urgency
         treatment_urgency = "Routine"
-        if "glioma" in tumor_lower:
-            treatment_urgency = "Urgent"
-        elif "meningioma" in tumor_lower or "pituitary" in tumor_lower:
-            treatment_urgency = "Semi-urgent"
-        
+        if polyp_lower in ["polyp"]:
+            treatment_urgency = "Semi-urgent"  # Polyps are precancerous but not immediately life-threatening
+
         # Complications risk
         complications_risk = "Low"
-        if "glioma" in tumor_lower:
-            complications_risk = "High"
-        elif "meningioma" in tumor_lower:
-            complications_risk = "Moderate"
-        elif "pituitary" in tumor_lower:
-            complications_risk = "Moderate"
+        if polyp_lower in ["polyp"]:
+            complications_risk = "Moderate"  # Risk of bleeding or perforation during removal
         
         return {
             "enhanced_confidence": enhanced_confidence,
             "severity": base_info.get("severity", "moderate"),
-            "tumor_type": tumor_type,
+            "polyp_type": polyp_type,
             "location": location,
             "treatment_timeline": treatment_timeline,
             "treatment_urgency": treatment_urgency,
             "complications_risk": complications_risk
         }
     
-    def _estimate_treatment_time(self, tumor_type: str, complexity: str) -> str:
-        """Estimate treatment timeline based on tumor characteristics"""
-        if "notumor" in tumor_type:
-            return "No treatment needed (healthy brain)"
-        elif "glioma" in tumor_type:
-            return "12-18 months (surgery + chemo/radiation)"
-        elif "meningioma" in tumor_type:
-            return "3-6 months (surgery or observation)"
-        elif "pituitary" in tumor_type:
-            return "6-12 months (medication or surgery)"
+    def _estimate_treatment_time(self, polyp_type: str, complexity: str) -> str:
+        """Estimate treatment timeline based on polyp characteristics"""
+        if "no_polyp" in polyp_type:
+            return "No treatment needed (healthy GI tract)"
+        elif "polyp" in polyp_type:
+            return "1-3 months (endoscopic removal)"
         else:
-            return "Varies based on tumor type and grade"
+            return "Varies based on polyp type and size"
     
-    def _assess_severity(self, confidence: float, tumor: str) -> str:
-        tumor_lower = tumor.lower().replace(' ', '_')
-        if tumor_lower in BRAIN_TUMOR_KNOWLEDGE:
-            return BRAIN_TUMOR_KNOWLEDGE[tumor_lower].get("severity", "unknown")
+    def _assess_severity(self, confidence: float, polyp: str) -> str:
+        polyp_lower = polyp.lower().replace(' ', '_')
+        if polyp_lower in POLYP_KNOWLEDGE:
+            return POLYP_KNOWLEDGE[polyp_lower].get("severity", "unknown")
         elif confidence > 0.9:
             return "High"
         elif confidence > 0.7:
@@ -209,35 +177,33 @@ class BrainImageAnalysisTool(BaseTool):
         else:
             return "Low"
     
-    def _get_symptoms(self, tumor: str) -> List[str]:
-        tumor_lower = tumor.lower().replace(' ', '_')
-        if tumor_lower in BRAIN_TUMOR_KNOWLEDGE:
-            return BRAIN_TUMOR_KNOWLEDGE[tumor_lower].get("symptoms", [])
-        return ["Consult neurologist or neurosurgeon for specific symptoms"]
-    
-    def _get_recommendations(self, tumor: str) -> List[str]:
-        tumor_lower = tumor.lower().replace(' ', '_')
-        if tumor_lower in BRAIN_TUMOR_KNOWLEDGE:
-            return BRAIN_TUMOR_KNOWLEDGE[tumor_lower].get("treatments", [])
-        return ["Seek professional neurological consultation"]
-    
-    def _assess_risk(self, tumor: str, confidence: float) -> str:
-        """Assess risk level based on tumor type"""
-        tumor_lower = tumor.lower().replace(' ', '_')
-        if "glioma" in tumor_lower:
-            return "High"
-        elif "meningioma" in tumor_lower or "pituitary" in tumor_lower:
-            return "Moderate"
-        elif "notumor" in tumor_lower:
+    def _get_symptoms(self, polyp: str) -> List[str]:
+        polyp_lower = polyp.lower().replace(' ', '_')
+        if polyp_lower in POLYP_KNOWLEDGE:
+            return POLYP_KNOWLEDGE[polyp_lower].get("symptoms", [])
+        return ["Consult gastroenterologist for specific symptoms"]
+
+    def _get_recommendations(self, polyp: str) -> List[str]:
+        polyp_lower = polyp.lower().replace(' ', '_')
+        if polyp_lower in POLYP_KNOWLEDGE:
+            return POLYP_KNOWLEDGE[polyp_lower].get("treatments", [])
+        return ["Seek professional gastroenterological consultation"]
+
+    def _assess_risk(self, polyp: str, confidence: float) -> str:
+        """Assess risk level based on polyp type"""
+        polyp_lower = polyp.lower().replace(' ', '_')
+        if "polyp" in polyp_lower:
+            return "Moderate"  # Polyps can be precancerous
+        elif "no_polyp" in polyp_lower:
             return "Low"
         else:
             return "Unknown"
 
-class BrainTumorAIAgent:
-    """Main Brain Tumor AI Agent with Enhanced Detection"""
+class GastrointestinalPolypAIAgent:
+    """Main Gastrointestinal Polyp AI Agent with Enhanced Detection for Kvasir-SEG"""
     
     def __init__(self, api_key: str, verbose: bool = True):
-        print(f"🤖 Initializing BrainTumorAIAgent with verbose={verbose}...")
+        print(f"🤖 Initializing GastrointestinalPolypAIAgent with verbose={verbose}...")
         self.api_key = api_key
         self.verbose = verbose
         
@@ -332,43 +298,43 @@ class BrainTumorAIAgent:
         print(f"❌ {error_msg}")
         raise Exception(error_msg)
     
-    def analyze_tumor_case(self, 
+    def analyze_polyp_case(self,
                              image_description: str,
-                             detected_tumor: str,
+                             detected_polyp: str,
                              confidence: float,
                              patient_data: Dict,
-                             radiological_findings: str = "",
+                             endoscopic_findings: str = "",
                              detection_metadata: Dict = None) -> Dict:
-        """Comprehensive brain tumor case analysis with enhanced accuracy"""
-        
+        """Comprehensive gastrointestinal polyp case analysis with enhanced accuracy"""
+
         print("=" * 60)
-        print("🔬 Starting AI Agent tumor case analysis...")
-        print(f"📋 Detected Tumor: {detected_tumor}")
+        print("🔬 Starting AI Agent polyp case analysis...")
+        print(f"📋 Detected Polyp: {detected_polyp}")
         print(f"📊 Confidence: {confidence:.2%}")
         print("=" * 60)
         
         # Enhanced analysis prompt with multiple assessment factors
         prompt = f"""
-        Analyze this brain tumor case comprehensively with enhanced accuracy:
-        
+        Analyze this gastrointestinal polyp case comprehensively with enhanced accuracy using Kvasir-SEG dataset:
+
         Image Description: {image_description}
-        Detected Tumor: {detected_tumor}
+        Detected Polyp: {detected_polyp}
         Detection Confidence: {confidence}
         Patient Data: {patient_data}
-        Radiological Findings: {radiological_findings}
+        Endoscopic Findings: {endoscopic_findings}
         Detection Metadata: {detection_metadata}
-        
+
         Provide a detailed multi-factor analysis including:
-        1. Tumor classification and severity assessment
-        2. Radiological finding correlation and validation
-        3. Enhanced treatment recommendations with surgical considerations
+        1. Polyp classification and severity assessment
+        2. Endoscopic finding correlation and validation
+        3. Enhanced treatment recommendations with endoscopic considerations
         4. Comprehensive risk assessment and complication prediction
         5. Treatment timeline and monitoring protocols
-        6. Follow-up strategies and imaging recommendations
+        6. Follow-up strategies and colonoscopy recommendations
         7. Patient-specific considerations and modifications
         8. Quality assurance and confidence validation
-        
-        Use enhanced tumor detection algorithms and cross-reference multiple diagnostic criteria.
+
+        Use enhanced polyp detection algorithms and cross-reference multiple diagnostic criteria for Kvasir-SEG dataset.
         """
         
         try:
@@ -376,7 +342,7 @@ class BrainTumorAIAgent:
             response = self.agent.run(prompt)
             print("✅ Agent analysis completed successfully!")
             print("=" * 60)
-            
+
             return {
                 "analysis": response,
                 "confidence": confidence,
@@ -394,40 +360,40 @@ class BrainTumorAIAgent:
                 )
             }
     
-    def _generate_fallback_analysis(self, tumor: str, confidence: float, patient_data: Dict) -> str:
+    def _generate_fallback_analysis(self, polyp: str, confidence: float, patient_data: Dict) -> str:
         """Generate fallback analysis when agent fails"""
         return f"""
-        **Fallback Brain Tumor Analysis**
-        
-        Tumor Type: {tumor}
+        **Fallback Gastrointestinal Polyp Analysis**
+
+        Polyp Type: {polyp}
         Confidence: {confidence:.2f}
-        
+
         **Immediate Recommendations:**
-        1. Seek immediate neurological consultation
-        2. Schedule comprehensive MRI with contrast
-        3. Consult with neurosurgeon for treatment options
-        4. Monitor symptoms and neurological status
-        5. Consider genetic testing if indicated
-        
+        1. Seek immediate gastroenterological consultation
+        2. Schedule comprehensive colonoscopy with biopsy
+        3. Consult with gastroenterologist for removal options
+        4. Monitor symptoms and bowel habits
+        5. Consider polyp size and location assessment
+
         **Follow-up Actions:**
-        - Obtain additional imaging if needed
+        - Obtain additional endoscopic imaging if needed
         - Monitor for symptom progression
-        - Begin appropriate treatment protocol
-        - Consider multidisciplinary tumor board review
-        
-        **Note:** This is a preliminary analysis. Professional neurological evaluation is essential for accurate diagnosis and treatment planning.
+        - Begin appropriate removal protocol
+        - Consider multidisciplinary GI board review
+
+        **Note:** This is a preliminary analysis. Professional gastroenterological evaluation is essential for accurate diagnosis and treatment planning.
         """
 
 # Utility functions
 def create_agent_instance(agent_type: str, api_key: str):
     """Create agent instance based on type"""
-    if agent_type in ["tumor", "brain", "mri"]:
-        return BrainTumorAIAgent(api_key)
+    if agent_type in ["polyp", "gi", "gastrointestinal"]:
+        return GastrointestinalPolypAIAgent(api_key)
     else:
         raise ValueError(f"Unknown agent type: {agent_type}")
 
-def get_agent_recommendations(tumor: str, patient_data: Dict) -> Dict:
-    """Get enhanced agent recommendations for a tumor"""
+def get_agent_recommendations(polyp: str, patient_data: Dict) -> Dict:
+    """Get enhanced agent recommendations for a polyp"""
     recommendations = {
         "immediate_actions": [],
         "short_term": [],
@@ -435,62 +401,139 @@ def get_agent_recommendations(tumor: str, patient_data: Dict) -> Dict:
         "monitoring": [],
         "enhanced_protocols": []
     }
-    
-    # Tumor-specific recommendations with enhanced protocols
-    tumor_lower = tumor.lower()
-    
-    if "glioma" in tumor_lower:
+
+    # Polyp-specific recommendations with enhanced protocols
+    polyp_lower = polyp.lower()
+
+    if "polyp" in polyp_lower:
         recommendations["immediate_actions"].extend([
-            "Seek immediate neurosurgical consultation",
-            "Schedule comprehensive MRI with contrast",
-            "Begin steroid therapy if indicated"
+            "Seek immediate gastroenterological consultation",
+            "Schedule comprehensive colonoscopy with biopsy",
+            "Assess polyp size and location"
         ])
         recommendations["short_term"].extend([
-            "Surgical planning and intervention",
-            "Post-operative monitoring and care",
-            "Initiate radiation and chemotherapy protocols"
+            "Endoscopic polyp removal planning",
+            "Post-removal monitoring and care",
+            "Histological analysis of removed polyp"
         ])
         recommendations["long_term"].extend([
-            "Ongoing chemotherapy and radiation",
-            "Regular MRI surveillance",
-            "Neurological function monitoring"
+            "Regular surveillance colonoscopy",
+            "GI health monitoring",
+            "Lifestyle modifications for polyp prevention"
         ])
-    
-    elif "meningioma" in tumor_lower:
+
+    elif "no_polyp" in polyp_lower:
         recommendations["immediate_actions"].extend([
-            "Neurosurgical consultation for assessment",
-            "MRI surveillance protocol establishment"
+            "Continue regular screening schedule",
+            "Maintain healthy diet and lifestyle"
         ])
         recommendations["short_term"].extend([
-            "Observation or surgical planning",
-            "Symptom management",
-            "Treatment decision making"
+            "Routine check-ups",
+            "Monitor for any new symptoms"
         ])
-    
-    elif "pituitary" in tumor_lower:
-        recommendations["immediate_actions"].extend([
-            "Endocrinology and neurosurgery consultation",
-            "Hormone level assessment"
-        ])
-        recommendations["short_term"].extend([
-            "Medical management or surgical planning",
-            "Hormone replacement therapy if needed"
-        ])
-    
+
     # Universal monitoring recommendations
     recommendations["monitoring"].extend([
-        "Regular MRI follow-up",
-        "Neurological status assessment",
-        "Symptom monitoring",
+        "Regular colonoscopy follow-up",
+        "Bowel habit monitoring",
+        "Symptom tracking",
         "Quality of life evaluation"
     ])
-    
-    # Enhanced protocols for all tumors
+
+    # Enhanced protocols for all polyps
     recommendations["enhanced_protocols"].extend([
-        "Evidence-based treatment protocols",
+        "Evidence-based endoscopic protocols",
         "Patient-specific risk assessment",
-        "Multidisciplinary team approach",
+        "Multidisciplinary GI team approach",
         "Quality outcome measures"
     ])
-    
+
     return recommendations
+
+# 3 Agents for Enhancing Model Confidence and Providing Wider Context
+
+class DataPreprocessingAgent:
+    """Agent for preprocessing Kvasir-SEG dataset images and masks"""
+
+    def __init__(self, image_dir: str, mask_dir: str, bbox_file: str):
+        self.image_dir = image_dir
+        self.mask_dir = mask_dir
+        self.bbox_file = bbox_file
+
+    def preprocess_data(self, target_size=(512, 512)):
+        """Load and preprocess images, masks, and bounding boxes"""
+        import cv2
+        import numpy as np
+        from PIL import Image
+        import json
+
+        images, masks, bboxes = [], [], {}
+
+        with open(self.bbox_file, 'r') as f:
+            bboxes = json.load(f)
+
+        for filename in os.listdir(self.image_dir):
+            if filename.endswith('.jpg'):
+                img_path = os.path.join(self.image_dir, filename)
+                img = cv2.imread(img_path)
+                img = cv2.resize(img, target_size)
+
+                mask_path = os.path.join(self.mask_dir, filename.replace('.jpg', '.png'))
+                mask = Image.open(mask_path).convert('L')
+                mask = np.array(mask) > 0
+                mask = cv2.resize(mask.astype(np.uint8), target_size)
+
+                images.append(img)
+                masks.append(mask)
+
+        return np.array(images), np.array(masks), bboxes
+
+class ModelTrainingAgent:
+    """Agent for training polyp segmentation models"""
+
+    def __init__(self, model):
+        self.model = model
+
+    def train_model(self, images, masks, epochs=50, validation_split=0.2):
+        """Train the model with validation"""
+        from sklearn.model_selection import train_test_split
+
+        X_train, X_val, y_train, y_val = train_test_split(images, masks, test_size=validation_split)
+
+        # Compile and train (assuming Keras/TensorFlow model)
+        self.model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+        history = self.model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=epochs)
+
+        return history, self.model
+
+class EvaluationAgent:
+    """Agent for evaluating model performance with Dice and IoU metrics"""
+
+    def __init__(self, model):
+        self.model = model
+
+    def evaluate_model(self, images, masks):
+        """Evaluate model and compute metrics"""
+        import numpy as np
+        from sklearn.metrics import accuracy_score
+
+        predictions = self.model.predict(images)
+        predictions = (predictions > 0.5).astype(int)
+
+        dice_scores = []
+        iou_scores = []
+
+        for pred, true in zip(predictions, masks):
+            intersection = np.sum(pred * true)
+            union = np.sum(pred) + np.sum(true) - intersection
+            dice = 2 * intersection / (np.sum(pred) + np.sum(true)) if (np.sum(pred) + np.sum(true)) > 0 else 0
+            iou = intersection / union if union > 0 else 0
+
+            dice_scores.append(dice)
+            iou_scores.append(iou)
+
+        return {
+            'dice': np.mean(dice_scores),
+            'iou': np.mean(iou_scores),
+            'accuracy': accuracy_score(masks.flatten(), predictions.flatten())
+        }
