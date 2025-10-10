@@ -1,5 +1,5 @@
 """
-Brain Tumor Detection Utilities - BrainTumorAI
+Gastrointestinal Polyp Detection Utilities - GastrointestinalPolypAI
 Utility functions for image processing, AI analysis, and report generation
 """
 
@@ -125,22 +125,18 @@ def detect_polyp_region(image, predicted_class):
         # Sort by score
         valid_contours = sorted(valid_contours, key=lambda x: x['score'], reverse=True)
         
-        # Determine color and labels based on tumor type
-        if "glioma" in predicted_class.lower():
-            color = (255, 0, 0)  # Pure Red (Malignant)
-            label = "GLIOMA DETECTED"
-            severity = "HIGH RISK - Malignant"
-        elif "meningioma" in predicted_class.lower():
-            color = (255, 30, 30)  # Bright Red
-            label = "MENINGIOMA DETECTED"
-            severity = "MODERATE - Benign"
-        elif "pituitary" in predicted_class.lower():
-            color = (255, 50, 50)  # Light Red
-            label = "PITUITARY TUMOR"
-            severity = "MODERATE - Benign"
+        # Determine color and labels based on polyp type
+        if "polyp" in predicted_class.lower():
+            color = (255, 0, 0)  # Pure Red (Polyp detected)
+            label = "POLYP DETECTED"
+            severity = "HIGH RISK - Precancerous"
+        elif "no polyp" in predicted_class.lower():
+            color = (0, 255, 0)  # Green (Healthy)
+            label = "NO POLYP DETECTED"
+            severity = "LOW RISK - Healthy"
         else:
             color = (255, 0, 0)  # Pure Red
-            label = "TUMOR DETECTED"
+            label = "ABNORMALITY DETECTED"
             severity = "REQUIRES EVALUATION"
         
         # Create result image
@@ -153,14 +149,14 @@ def detect_polyp_region(image, predicted_class):
             x, y, w_box, h_box = best['bbox']
             
         else:
-            # FALLBACK: No clear contour found - draw box in brain center region
+            # FALLBACK: No clear contour found - draw box in GI tract center region
             print("No contours found - using fallback box placement")
             
-            # Estimate brain region (typically central 60% of image)
-            brain_margin_x = int(w * 0.2)
-            brain_margin_y = int(h * 0.2)
-            brain_width = int(w * 0.6)
-            brain_height = int(h * 0.6)
+            # Estimate GI tract region (typically central 60% of image)
+            gi_margin_x = int(w * 0.2)
+            gi_margin_y = int(h * 0.2)
+            gi_width = int(w * 0.6)
+            gi_height = int(h * 0.6)
             
             try:
                 # Find brightest region in central area as fallback
