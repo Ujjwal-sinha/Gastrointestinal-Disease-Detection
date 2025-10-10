@@ -1142,8 +1142,8 @@ def combined_prediction(image, yolo_model, classes, ai_analysis=None):
         
         print(f"🎯 Using optimized confidence threshold: {confidence_threshold}")
         
-        # Use ultra-enhanced YOLO for fracture detection
-        yolo_result = predict_fracture_yolo(yolo_model, image, confidence_threshold=confidence_threshold)
+        # Use ultra-enhanced YOLO for polyp detection
+        yolo_result = predict_polyp_yolo(yolo_model, image, confidence_threshold=confidence_threshold)
         
         if yolo_result is None:
             print("❌ Enhanced YOLO prediction failed")
@@ -1206,14 +1206,14 @@ def combined_prediction(image, yolo_model, classes, ai_analysis=None):
         
         # Special handling for "Healthy" classification
         if predicted_class == 'Healthy' and detection_count == 0:
-            # High confidence for healthy bones when no fractures detected
+            # High confidence for healthy GI tract when no polyps detected
             final_confidence = max(0.88, final_confidence)
             detection_quality = 'High'
         
-        # Fracture-specific confidence boosting
-        fracture_types = ['Comminuted', 'Linear', 'Oblique', 'Spiral', 'Transverse', 'Segmental']
-        if any(ftype in predicted_class for ftype in fracture_types):
-            # Boost confidence for clear fracture detections
+        # Polyp-specific confidence boosting
+        polyp_types = ['Polyp', 'Sessile', 'Pedunculated', 'Flat']
+        if any(ptype in predicted_class for ptype in polyp_types):
+            # Boost confidence for clear polyp detections
             if enhanced_confidence > 0.5:
                 final_confidence = min(0.99, final_confidence * 1.05)
         

@@ -227,7 +227,7 @@ class GastrointestinalPolypAIAgent:
         try:
             print("🔧 Initializing tools...")
             self.tools = [
-                BrainImageAnalysisTool()
+                PolypImageAnalysisTool()
             ]
             print(f"✅ Tools initialized: {len(self.tools)} tool(s)")
         except Exception as e:
@@ -356,7 +356,7 @@ class GastrointestinalPolypAIAgent:
             return {
                 "error": str(e),
                 "fallback_analysis": self._generate_fallback_analysis(
-                    detected_tumor, confidence, patient_data
+                    detected_polyp, confidence, patient_data
                 )
             }
     

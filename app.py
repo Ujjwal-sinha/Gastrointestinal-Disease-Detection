@@ -13,8 +13,8 @@ import glob
 import numpy as np
 
 from models import device, load_cnn_model
-from utils import load_models, check_image_quality, describe_image, query_langchain, BoneFracturePDF, validate_dataset, test_groq_api, detect_tumor_region
-from agents import GastrointestinalPolypAIAgent, get_agent_recommendations, POLYP_KNOWLEDGE
+from utils import load_models, check_image_quality, describe_image, query_langchain, GastrointestinalPolypPDF, validate_dataset, test_groq_api, detect_polyp_region
+from agents import GastrointestinalPolypAIAgent, get_agent_recommendations, POLYP_KNOWLEDGE, DataPreprocessingAgent, ModelTrainingAgent, EvaluationAgent
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -502,7 +502,7 @@ if 'agent_instance' not in st.session_state:
 
 # Dataset validation for Kvasir-SEG
 dataset_dir = "/Users/ujjwalsinha/Gastrointestinal-Disease-Detection/dataset"
-classes = ['Polyp', 'No Polyp']  # Correct polyp classes
+classes = ['Polyp', 'No Polyp']  # Correct polyp classes for Kvasir-SEG
 total_images = 0
 
 # Check Kvasir-SEG dataset
@@ -514,6 +514,11 @@ if os.path.exists(kvasir_seg_dir):
     if os.path.exists(images_dir):
         images = [f for f in os.listdir(images_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
         total_images += len(images)
+        print(f"Found {total_images} images in Kvasir-SEG dataset")
+    else:
+        print(f"Images directory not found: {images_dir}")
+else:
+    print(f"Kvasir-SEG directory not found: {kvasir_seg_dir}")
 
 # Initialize AI Agent with verbose logging
 if GROQ_API_KEY:
@@ -724,7 +729,7 @@ if not st.session_state.analysis_complete:
                                 agent_used = False
                         else:
                             severity = "Moderate" if "polyp" in predicted_class.lower() else "Low"
-                            ai_summary = f"**Diagnosis:** Detected **{predicted_class}** with {confidence:.1%} confidence.\n\n**Severity:** {severity}\n\n**Recommendations:**\n• Consult neurologist/neurosurgeon\n• Schedule comprehensive imaging\n• Follow treatment protocols\n\n**Prognosis:** Outcome depends on tumor type, location, and patient health."
+                            ai_summary = f"**Diagnosis:** Detected **{predicted_class}** with {confidence:.1%} confidence.\n\n**Severity:** {severity}\n\n**Recommendations:**\n• Consult gastroenterologist\n• Schedule comprehensive colonoscopy\n• Follow endoscopic removal protocols\n\n**Prognosis:** Outcome depends on polyp type, size, and patient health."
                             agent_used = False
                         
                         recommendations = get_agent_recommendations(predicted_class, {"age": "N/A", "history": "N/A"})
@@ -889,9 +894,9 @@ else:
             st.markdown(f'''
             <div class="content-card">
                 <h4 style="color: #212529;">📋 Classification Details</h4>
-                <p style="color: #212529;"><strong>Tumor Type:</strong> {predicted_class}</p>
+                <p style="color: #212529;"><strong>Polyp Type:</strong> {predicted_class}</p>
                 <p style="color: #212529;"><strong>Confidence:</strong> {results["confidence"]:.2%}</p>
-                <p style="color: #212529;"><strong>Severity:</strong> {'High Risk' if is_malignant else 'Moderate' if is_tumor else 'Low Risk'}</p>
+                <p style="color: #212529;"><strong>Severity:</strong> {'High Risk' if 'polyp' in predicted_class.lower() else 'Low Risk'}</p>
             </div>
             ''', unsafe_allow_html=True)
         
@@ -912,7 +917,7 @@ else:
     with col1:
         if st.button("📥 Download PDF Report", key="download_pdf", use_container_width=True):
             with tempfile.TemporaryDirectory() as tmp_dir:
-                pdf = BoneFracturePDF(polyp_info=predicted_class)
+                pdf = GastrointestinalPolypPDF(polyp_info=predicted_class)
                 pdf.cover_page()
                 pdf.add_summary(results["ai_summary"])
                 tmp_path = os.path.join(tmp_dir, f"img_{uuid.uuid4()}.jpg")

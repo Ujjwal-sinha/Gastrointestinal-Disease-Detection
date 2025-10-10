@@ -659,12 +659,12 @@ def query_langchain(prompt: str, detected_tumor: str, confidence: float = None, 
     except Exception as e:
         return generate_fallback_response(detected_tumor, prompt, cnn_detection, confidence)
 
-class BrainTumorPDF(FPDF):
-    """PDF generator for brain tumor reports"""
+class GastrointestinalPolypPDF(FPDF):
+    """PDF generator for gastrointestinal polyp reports"""
     
-    def __init__(self, tumor_info=""):
+    def __init__(self, polyp_info=""):
         super().__init__()
-        self.tumor_info = self.sanitize_text(tumor_info)
+        self.polyp_info = self.sanitize_text(polyp_info)
         self.set_auto_page_break(auto=True, margin=15)
         self.add_page()
     
@@ -714,14 +714,14 @@ class BrainTumorPDF(FPDF):
     def cover_page(self):
         """Create cover page"""
         self.set_font('Arial', 'B', 24)
-        self.cell(0, 60, 'Brain Tumor Analysis Report', 0, 1, 'C')
+        self.cell(0, 60, 'Gastrointestinal Polyp Analysis Report', 0, 1, 'C')
         self.set_font('Arial', 'B', 16)
-        self.cell(0, 20, 'AI-Powered Neurological Assessment', 0, 1, 'C')
+        self.cell(0, 20, 'AI-Powered GI Assessment', 0, 1, 'C')
         self.set_font('Arial', '', 12)
         self.cell(0, 20, f'Generated on: {time.strftime("%Y-%m-%d %H:%M:%S")}', 0, 1, 'C')
-        if self.tumor_info:
-            sanitized_info = self.sanitize_text(self.tumor_info)
-            self.cell(0, 20, f'Tumor Information: {sanitized_info}', 0, 1, 'C')
+        if self.polyp_info:
+            sanitized_info = self.sanitize_text(self.polyp_info)
+            self.cell(0, 20, f'Polyp Information: {sanitized_info}', 0, 1, 'C')
         self.add_page()
     
     def table_of_contents(self):
@@ -852,7 +852,7 @@ class BrainTumorPDF(FPDF):
                 self.ln(5)
 
 # Alias for backward compatibility
-BoneFracturePDF = BrainTumorPDF
+GastrointestinalPolypPDF = GastrointestinalPolypPDF
 
 def gradient_text(text, color1, color2):
     """Create gradient text effect"""
