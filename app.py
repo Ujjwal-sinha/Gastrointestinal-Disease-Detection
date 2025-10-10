@@ -530,13 +530,13 @@ if GROQ_API_KEY:
                 if st.session_state.agent_instance:
                     st.success("✅ AI Agent initialized successfully!")
         except Exception as e:
-            st.error(f"⚠️ AI Agent initialization failed: {str(e)}")
-            st.warning(f"Details: {str(e)[:200]}")
-            st.info("💡 Tip: Check your GROQ_API_KEY in .env file")
+            st.warning(f"⚠️ AI Agent initialization failed: {str(e)}")
+            st.info("💡 The app will work in fallback mode without AI Agent features")
+            st.info("💡 To enable AI Agent: Check your GROQ_API_KEY in .env file")
             st.session_state.agent_instance = None
 else:
     st.session_state.agent_instance = None
-    st.warning("⚠️ No GROQ_API_KEY found. AI Agent features will be limited.")
+    st.info("💡 **Fallback Mode**: App works without AI Agent. Add GROQ_API_KEY to .env for enhanced analysis.")
 
 # Sidebar
 with st.sidebar:
@@ -547,8 +547,11 @@ with st.sidebar:
     st.markdown(f"**Total Images:** {total_images:,}")
     st.markdown(f"**Polyp Types:** {len(classes)}")
 
-    api_working, _ = test_groq_api() if GROQ_API_KEY else (False, "No key")
-    st.markdown(f"**AI Status:** {'✅ Active' if api_working else '⚠️ Inactive'}")
+    api_working, api_message = test_groq_api() if GROQ_API_KEY else (False, "No API key")
+    status_icon = "✅" if api_working else "⚠️"
+    st.markdown(f"**AI Status:** {status_icon} {'Active' if api_working else 'Inactive'}")
+    if not api_working and GROQ_API_KEY:
+        st.caption(f"*{api_message}*")
 
     agent_status = "✅ Active" if st.session_state.agent_instance else "⚠️ Inactive"
     st.markdown(f"**AI Agent:** {agent_status}")
@@ -605,12 +608,13 @@ with col2:
     ''', unsafe_allow_html=True)
 
 with col3:
-    api_working, _ = test_groq_api() if GROQ_API_KEY else (False, "No key")
+    api_working, api_message = test_groq_api() if GROQ_API_KEY else (False, "No key")
     status_icon = "✅" if api_working else "⚠️"
+    status_text = "Active" if api_working else "Inactive"
     st.markdown(f'''
     <div class="metric-card fade-in">
         <div class="metric-icon">{status_icon}</div>
-        <div class="metric-value">Groq</div>
+        <div class="metric-value">{status_text}</div>
         <div class="metric-label">AI Status</div>
             </div>
     ''', unsafe_allow_html=True)
@@ -777,6 +781,10 @@ if not st.session_state.analysis_complete:
             <div class="upload-icon">📁</div>
             <h2 style="color: #0ea5e9; margin: 0;">No Endoscopic Image Uploaded</h2>
             <p style="color: #718096; font-size: 1.1rem;">Click "Browse files" above to upload your endoscopic image</p>
+            <p style="color: #6b7280; font-size: 0.9rem; margin-top: 1rem;">
+                💡 <strong>Tip:</strong> The app works in fallback mode without AI Agent. 
+                Upload a colonoscopy image to see polyp detection in action!
+            </p>
         </div>
         ''', unsafe_allow_html=True)
 
