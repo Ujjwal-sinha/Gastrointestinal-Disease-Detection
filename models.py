@@ -1068,24 +1068,22 @@ def apply_lime(image, model, classes):
         print(f"Error applying LIME: {e}")
         return None
 
-def load_class_names_from_dataset(dataset_path="dataset"):
-    """Load class names from dataset configuration"""
+def load_class_names_from_dataset(dataset_path="/Users/ujjwalsinha/Gastrointestinal-Disease-Detection/dataset"):
+    """Load class names from Kvasir-SEG dataset configuration"""
     try:
         import yaml
-        data_yaml_path = os.path.join(dataset_path, "data.yaml")
+        data_yaml_path = os.path.join(dataset_path, "kvasir-seg", "data.yaml")
         if os.path.exists(data_yaml_path):
             with open(data_yaml_path, 'r') as f:
                 data_config = yaml.safe_load(f)
             class_names = data_config.get('names', [])
-            print(f"📊 Loaded {len(class_names)} classes from dataset: {class_names}")
+            print(f"📊 Loaded {len(class_names)} classes from Kvasir-SEG dataset: {class_names}")
             return class_names
     except Exception as e:
         print(f"Warning: Could not load class names from dataset: {e}")
     
-    # Fallback to hardcoded class names
-    return ['Comminuted', 'Greenstick', 'Healthy', 'Linear', 
-            'Oblique Displaced', 'Oblique', 'Segmental', 'Spiral', 
-            'Transverse Displaced', 'Transverse']
+    # Fallback to Kvasir-SEG polyp class names
+    return ['Polyp', 'No Polyp']
 
 def load_optimized_config():
     """Load optimized detection configuration if available"""

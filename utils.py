@@ -44,10 +44,10 @@ def detect_polyp_region(image, predicted_class):
         original_img = img_array.copy()
         h, w = img_array.shape[:2]
         
-        # If no tumor detected, return original with text
-        if "no tumor" in predicted_class.lower():
-            # Add "No Tumor Detected" text in green
-            cv2.putText(original_img, "No Tumor Detected - Healthy Brain", 
+        # If no polyp detected, return original with text
+        if "no polyp" in predicted_class.lower():
+            # Add "No Polyp Detected" text in green
+            cv2.putText(original_img, "No Polyp Detected - Healthy GI Tract", 
                        (10, 40), cv2.FONT_HERSHEY_BOLD, 0.8, (0, 255, 0), 3)
             return Image.fromarray(original_img)
         
@@ -57,20 +57,20 @@ def detect_polyp_region(image, predicted_class):
         # Apply Gaussian blur to reduce noise
         blurred = cv2.GaussianBlur(gray, (5, 5), 0)
         
-        # Multiple detection strategies
-        # Strategy 1: Find brightest regions (tumors often appear bright in MRI)
-        _, thresh_bright = cv2.threshold(blurred, 150, 255, cv2.THRESH_BINARY)
+        # Multiple detection strategies for polyp detection
+        # Strategy 1: Find regions with different texture (polyps have different appearance)
+        _, thresh_bright = cv2.threshold(blurred, 100, 255, cv2.THRESH_BINARY)
         
-        # Strategy 2: Adaptive thresholding
+        # Strategy 2: Adaptive thresholding for endoscopic images
         adaptive = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
                                         cv2.THRESH_BINARY, 21, 5)
         
-        # Strategy 3: Edge detection
+        # Strategy 3: Edge detection for polyp boundaries
         edges = cv2.Canny(blurred, 30, 100)
         
-        # Strategy 4: Find regions with high variance (abnormal tissue)
+        # Strategy 4: Find regions with different intensity (polyps vs normal mucosa)
         mean_intensity = np.mean(gray)
-        _, thresh_var = cv2.threshold(gray, mean_intensity + 20, 255, cv2.THRESH_BINARY)
+        _, thresh_var = cv2.threshold(gray, mean_intensity + 15, 255, cv2.THRESH_BINARY)
         
         # Combine strategies
         combined = cv2.bitwise_or(thresh_bright, adaptive)
@@ -84,9 +84,9 @@ def detect_polyp_region(image, predicted_class):
         # Find contours
         contours, _ = cv2.findContours(combined, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         
-        # Score and filter contours
-        min_area = (h * w) * 0.003  # Minimum 0.3% of image
-        max_area = (h * w) * 0.7    # Maximum 70% of image
+        # Score and filter contours for polyp detection
+        min_area = (h * w) * 0.001  # Minimum 0.1% of image (polyps can be small)
+        max_area = (h * w) * 0.5    # Maximum 50% of image
         
         valid_contours = []
         for contour in contours:
