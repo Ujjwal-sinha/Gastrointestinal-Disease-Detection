@@ -782,7 +782,8 @@ if not st.session_state.analysis_complete:
                                 predicted_class = classes[predicted_idx] if predicted_idx < len(classes) else "Unknown"
                             else:
                                 st.error("❌ Failed to load any model")
-                                return
+                                predicted_class = "Unknown"
+                                confidence = 0.0
                     else:
                         # Use CNN model as fallback
                         st.info("🔄 Using CNN model for polyp detection...")
@@ -809,7 +810,8 @@ if not st.session_state.analysis_complete:
                             predicted_class = classes[predicted_idx] if predicted_idx < len(classes) else "Unknown"
                         else:
                             st.error("❌ Failed to load model")
-                            return
+                            predicted_class = "Unknown"
+                            confidence = 0.0
                     
                     # Use AI Agent for comprehensive analysis
                     if st.session_state.agent_instance:
@@ -844,42 +846,40 @@ if not st.session_state.analysis_complete:
                     recommendations = get_agent_recommendations(predicted_class, {"age": "N/A", "history": "N/A"})
                     
                     # Detect polyp region and create annotated image
-                        try:
-                            st.info("🔍 Detecting polyp region...")
-                            annotated_image = detect_polyp_region(image, predicted_class)
-                            
-                            # Verify annotation was applied
-                            if isinstance(annotated_image, Image.Image) and isinstance(image, Image.Image):
-                                orig_array = np.array(image)
-                                annot_array = np.array(annotated_image)
-                                if np.array_equal(orig_array, annot_array):
-                                    st.warning("⚠️ Detection function returned same image - no box drawn")
-                                else:
-                                    st.success("✅ Polyp region detected and annotated!")
-                            
-                        except Exception as e:
-                            st.error(f"❌ Could not annotate polyp region: {str(e)}")
-                            import traceback
-                            st.code(traceback.format_exc())
-                            annotated_image = image
+                    try:
+                        st.info("🔍 Detecting polyp region...")
+                        annotated_image = detect_polyp_region(image, predicted_class)
                         
-                        st.session_state.results = {
-                            "image": image,
-                            "annotated_image": annotated_image,
-                            "predicted_class": predicted_class,
-                            "confidence": confidence,
-                            "quality_score": quality_score,
-                            "image_description": image_description,
-                            "ai_summary": ai_summary,
-                            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                            "agent_used": agent_used,
-                            "recommendations": recommendations
-                        }
+                        # Verify annotation was applied
+                        if isinstance(annotated_image, Image.Image) and isinstance(image, Image.Image):
+                            orig_array = np.array(image)
+                            annot_array = np.array(annotated_image)
+                            if np.array_equal(orig_array, annot_array):
+                                st.warning("⚠️ Detection function returned same image - no box drawn")
+                            else:
+                                st.success("✅ Polyp region detected and annotated!")
                         
-                        st.session_state.analysis_complete = True
-                        st.rerun()
-                    else:
-                        st.error("❌ Failed to load model")
+                    except Exception as e:
+                        st.error(f"❌ Could not annotate polyp region: {str(e)}")
+                        import traceback
+                        st.code(traceback.format_exc())
+                        annotated_image = image
+                    
+                    st.session_state.results = {
+                        "image": image,
+                        "annotated_image": annotated_image,
+                        "predicted_class": predicted_class,
+                        "confidence": confidence,
+                        "quality_score": quality_score,
+                        "image_description": image_description,
+                        "ai_summary": ai_summary,
+                        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                        "agent_used": agent_used,
+                        "recommendations": recommendations
+                    }
+                    
+                    st.session_state.analysis_complete = True
+                    st.rerun()
     else:
         st.markdown('''
         <div class="upload-zone">
