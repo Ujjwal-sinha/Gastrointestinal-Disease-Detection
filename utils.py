@@ -534,47 +534,45 @@ def generate_fallback_response(detected_polyp: str, image_description: str, cnn_
         Based on the endoscopic analysis, the gastrointestinal tract appears to show characteristics consistent with {detected_polyp.lower()}.
         
         **Common Polyp Indicators:**
-        - Abnormal tissue mass or lesion
-        - Changes in brain tissue density
-        - Displacement of normal structures
-        - Possible edema or swelling
+        - Abnormal tissue growth or lesion
+        - Changes in GI tissue density
+        - Irregular mucosal surfaces
+        - Possible inflammation or swelling
         
         **Immediate Recommendations:**
-        1. **Seek immediate neurological consultation** for proper diagnosis and treatment
-        2. **Schedule comprehensive MRI with contrast** if not already done
-        3. **Consult with neurosurgeon** for treatment options
-        4. **Monitor symptoms** and neurological status
+        1. **Seek immediate gastroenterological consultation** for proper diagnosis and treatment
+        2. **Schedule comprehensive colonoscopy with biopsy** if not already done
+        3. **Consult with gastroenterologist** for treatment options
+        4. **Monitor symptoms** and GI health status
         
         **Treatment Options:**
-        - **Glioma**: Surgery, radiation therapy, chemotherapy, targeted therapy
-        - **Meningioma**: Observation, surgery, radiation therapy, stereotactic radiosurgery
-        - **Pituitary Tumors**: Medication, surgery, radiation therapy, hormone replacement
-        - **No Tumor**: Regular monitoring and healthy lifestyle
+        - **Polyp**: Endoscopic removal, surveillance colonoscopy, histological analysis
+        - **No Polyp**: Regular screening, healthy diet, lifestyle modifications
         
         **Recovery Strategies:**
         1. **Follow medical treatment plan** strictly
-        2. **Rehabilitation therapy** as recommended by healthcare provider
-        3. **Symptom management** and quality of life optimization
-        4. **Regular follow-up MRIs** to monitor treatment response
+        2. **Maintain regular follow-up appointments**
+        3. **Adopt healthy lifestyle habits**
+        4. **Monitor for any changes in symptoms**
         5. **Support groups** and counseling services
         
         **Follow-up Actions:**
-        - Schedule immediate neurology/neurosurgery consultation
+        - Schedule immediate gastroenterology consultation
         - Obtain additional imaging or tests if recommended
         - Begin appropriate treatment protocol
-        - Consider multidisciplinary tumor board review
+        - Consider multidisciplinary GI team review
         
         **Important Notes:**
-        - This is a preliminary analysis based on MRI assessment
-        - Professional neurological consultation is essential for accurate diagnosis
-        - Treatment effectiveness depends on tumor type, grade, location, and patient factors
+        - This is a preliminary analysis based on endoscopic assessment
+        - Professional gastroenterological consultation is essential for accurate diagnosis
+        - Treatment effectiveness depends on polyp type, size, location, and patient factors
         - Always follow medical advice and treatment protocols
         
         **Risk Factors for Complications:**
-        - Tumor location and size
-        - Grade and aggressiveness of tumor
+        - Polyp location and size
+        - Grade and malignancy potential of polyp
         - Patient age and overall health
-        - Previous radiation exposure
+        - Previous GI conditions
         - Genetic factors and family history
         """
         
@@ -583,14 +581,14 @@ def generate_fallback_response(detected_polyp: str, image_description: str, cnn_
     except Exception as e:
         return f"Error generating fallback response: {str(e)}"
 
-def query_langchain(prompt: str, detected_tumor: str, confidence: float = None, brain_context: str = None, cnn_detection: str = None) -> str:
+def query_langchain(prompt: str, detected_polyp: str, confidence: float = None, gi_context: str = None, cnn_detection: str = None) -> str:
     """
-    Query LangChain for brain tumor analysis
+    Query LangChain for polyp analysis
     """
     try:
         api_key = os.getenv("GROQ_API_KEY")
         if not api_key:
-            return generate_fallback_response(detected_tumor, prompt, cnn_detection, confidence)
+            return generate_fallback_response(detected_polyp, prompt, cnn_detection, confidence)
         
         models_to_try = [
             "llama3-70b-8192",
@@ -608,29 +606,29 @@ def query_langchain(prompt: str, detected_tumor: str, confidence: float = None, 
                         groq_api_key=api_key
                     )
                     
-                    # Enhanced prompt for brain tumor analysis
+                    # Enhanced prompt for polyp analysis
                     enhanced_prompt = f"""
-                    You are an expert neurologist and neurosurgeon. Analyze the following brain tumor case:
-                    
+                    You are an expert gastroenterologist and endoscopist. Analyze the following polyp case:
+
                     {prompt}
-                    
-                    Detected Tumor: {detected_tumor}
+
+                    Detected Polyp: {detected_polyp}
                     Confidence: 99.0%
                     CNN Detection: {cnn_detection if cnn_detection else "Not available"}
-                    Brain Context: {brain_context if brain_context else "Not provided"}
-                    
-                    Provide a comprehensive brain tumor analysis including:
-                    
-                    1. **Tumor Classification**: Confirm or suggest the detected tumor type
-                    2. **Radiological Analysis**: Detailed description of visible tumor patterns
-                    3. **Tumor Characteristics**: Grade, malignancy, and growth patterns
-                    4. **Treatment Recommendations**: Specific treatment options including surgery, radiation, and chemotherapy
+                    GI Context: {gi_context if gi_context else "Not provided"}
+
+                    Provide a comprehensive polyp analysis including:
+
+                    1. **Polyp Classification**: Confirm or suggest the detected polyp type
+                    2. **Endoscopic Analysis**: Detailed description of visible polyp patterns
+                    3. **Polyp Characteristics**: Size, morphology, and malignancy potential
+                    4. **Treatment Recommendations**: Specific treatment options including endoscopic removal, surveillance, and surgery
                     5. **Prognosis**: Expected outcomes and survival rates
                     6. **Risk Assessment**: Complications and treatment challenges
-                    7. **Neurological Impact**: Effects on brain function and quality of life
+                    7. **GI Impact**: Effects on digestive function and quality of life
                     8. **Follow-up Actions**: Monitoring and care recommendations
                     
-                    Be specific, practical, and provide actionable advice for neurological care and medical consultation.
+                    Be specific, practical, and provide actionable advice for gastroenterological care and medical consultation.
                     """
                     
                     response = llm.invoke(enhanced_prompt)
@@ -650,10 +648,10 @@ def query_langchain(prompt: str, detected_tumor: str, confidence: float = None, 
                     continue
         
         # If all models fail, return fallback response
-        return generate_fallback_response(detected_tumor, prompt, cnn_detection, confidence)
+            return generate_fallback_response(detected_polyp, prompt, cnn_detection, confidence)
         
     except Exception as e:
-        return generate_fallback_response(detected_tumor, prompt, cnn_detection, confidence)
+            return generate_fallback_response(detected_polyp, prompt, cnn_detection, confidence)
 
 class GastrointestinalPolypPDF(FPDF):
     """PDF generator for gastrointestinal polyp reports"""
@@ -698,7 +696,7 @@ class GastrointestinalPolypPDF(FPDF):
     def header(self):
         """Header for each page"""
         self.set_font('Arial', 'B', 12)
-        self.cell(0, 10, 'Brain Tumor Analysis Report', 0, 1, 'C')
+        self.cell(0, 10, 'Gastrointestinal Polyp Analysis Report', 0, 1, 'C')
         self.ln(5)
     
     def footer(self):
@@ -855,7 +853,7 @@ def gradient_text(text, color1, color2):
     return f'<span style="background: linear-gradient(45deg, {color1}, {color2}); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold;">{text}</span>'
 
 def validate_dataset(dataset_dir):
-    """Validate brain tumor dataset structure"""
+    """Validate polyp dataset structure"""
     try:
         if not os.path.exists(dataset_dir):
             return False, f"Dataset directory '{dataset_dir}' not found"
@@ -863,7 +861,7 @@ def validate_dataset(dataset_dir):
         # Check for both Training/Testing structure and train/test/valid structure
         total_images = 0
         
-        # Check for Training/Testing folder structure (brain tumor dataset)
+        # Check for Training/Testing folder structure (polyp dataset)
         training_dir = os.path.join(dataset_dir, "Training")
         testing_dir = os.path.join(dataset_dir, "Testing")
         
