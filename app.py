@@ -703,7 +703,7 @@ if not st.session_state.analysis_complete:
                                 with st.spinner("🤖 AI Agent generating comprehensive analysis..."):
                                     patient_data = {
                                         "image_quality": quality_score,
-                                        "scan_type": "MRI",
+                                        "scan_type": "Endoscopy",
                                         "analysis_date": datetime.now().strftime("%Y-%m-%d")
                                     }
                                     
@@ -719,11 +719,11 @@ if not st.session_state.analysis_complete:
                                     agent_used = True
                             except Exception as e:
                                 st.warning(f"Agent analysis unavailable: {str(e)}")
-                                severity = "High" if "glioma" in predicted_class.lower() else "Moderate" if any(x in predicted_class.lower() for x in ["meningioma", "pituitary"]) else "Low"
-                                ai_summary = f"**Diagnosis:** Detected **{predicted_class}** with {confidence:.1%} confidence.\n\n**Severity:** {severity}\n\n**Recommendations:**\n• Consult neurologist/neurosurgeon\n• Schedule comprehensive imaging\n• Follow treatment protocols\n\n**Prognosis:** Outcome depends on tumor type, location, and patient health."
+                                severity = "Moderate" if "polyp" in predicted_class.lower() else "Low"
+                                ai_summary = f"**Diagnosis:** Detected **{predicted_class}** with {confidence:.1%} confidence.\n\n**Severity:** {severity}\n\n**Recommendations:**\n• Consult gastroenterologist\n• Schedule comprehensive colonoscopy\n• Follow endoscopic removal protocols\n\n**Prognosis:** Outcome depends on polyp type, size, and patient health."
                                 agent_used = False
                         else:
-                            severity = "High" if "glioma" in predicted_class.lower() else "Moderate" if any(x in predicted_class.lower() for x in ["meningioma", "pituitary"]) else "Low"
+                            severity = "Moderate" if "polyp" in predicted_class.lower() else "Low"
                             ai_summary = f"**Diagnosis:** Detected **{predicted_class}** with {confidence:.1%} confidence.\n\n**Severity:** {severity}\n\n**Recommendations:**\n• Consult neurologist/neurosurgeon\n• Schedule comprehensive imaging\n• Follow treatment protocols\n\n**Prognosis:** Outcome depends on tumor type, location, and patient health."
                             agent_used = False
                         
@@ -770,8 +770,8 @@ if not st.session_state.analysis_complete:
         st.markdown('''
         <div class="upload-zone">
             <div class="upload-icon">📁</div>
-            <h2 style="color: #667eea; margin: 0;">No MRI Scan Uploaded</h2>
-            <p style="color: #718096; font-size: 1.1rem;">Click "Browse files" above to upload your brain MRI scan</p>
+            <h2 style="color: #667eea; margin: 0;">No Endoscopic Image Uploaded</h2>
+            <p style="color: #718096; font-size: 1.1rem;">Click "Browse files" above to upload your endoscopic image</p>
         </div>
         ''', unsafe_allow_html=True)
 
@@ -779,12 +779,12 @@ else:
     # Results Section
     results = st.session_state.results
     predicted_class = results["predicted_class"]
-    is_malignant = "glioma" in predicted_class.lower()
-    is_tumor = "no tumor" not in predicted_class.lower()
-    
-    result_class = "result-danger" if is_malignant else ("result-warning" if is_tumor else "result-success")
-    emoji = "🔴" if is_malignant else ("🟡" if is_tumor else "🟢")
-    confidence_color = "#e53e3e" if is_malignant else ("#ed8936" if is_tumor else "#48bb78")
+    is_polyp = "polyp" in predicted_class.lower()
+    is_abnormal = "no polyp" not in predicted_class.lower()
+
+    result_class = "result-warning" if is_polyp else "result-success"
+    emoji = "🟡" if is_polyp else "🟢"
+    confidence_color = "#ed8936" if is_polyp else "#48bb78"
     
     # Results Header
     st.markdown('<h2 style="color: #212529; text-align: center; margin-bottom: 2rem; font-weight: 800;">📊 Analysis Results</h2>', unsafe_allow_html=True)
