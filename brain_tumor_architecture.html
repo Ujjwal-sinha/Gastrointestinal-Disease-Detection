@@ -158,58 +158,52 @@
                 <h2>🏗️ System Architecture</h2>
                 <div class="mermaid">
                     graph TB
-                        %% IEEE Research Paper Style Architecture - Two Vertical Columns for A4
+                        %% IEEE Research Paper Style Architecture - A4 Optimized
                         
                         %% Left Column - Input to Processing
                         subgraph LeftColumn["Data Flow & Processing"]
                             DS["Kvasir-SEG Dataset<br/>1,196 Images<br/>2 Classes"]
-                            PR["Patient Records<br/>Medical History"]
-                            ST["Streamlit Web App<br/>Main Interface"]
-                            IU["Image Upload<br/>Module"]
-                            ML["Model Loader<br/>YOLO11m + LLM"]
+                            ST["Streamlit Interface<br/>Patient Records & Image Upload"]
+                            ML["Model Loader<br/>YOLO11m + Dual LLM"]
                             IP["Image Preprocessor<br/>Enhancement"]
                             YOLO["YOLO11m Model<br/>Object Detection"]
-                            LLM1["llama-3.1-8b-instant<br/>Fast Analysis"]
-                            LLM2["qwen/qwen3-32b<br/>Deep Analysis"]
+                            LLM["Dual LLM<br/>llama-3.1-8b + qwen3-32b"]
                         end
                         
                         %% Right Column - Agents to Output
-                        subgraph RightColumn["  "]
-                            AO["Agent Orchestrator<br/>Coordination"]
-                            MA["Data Preprocessing<br/>Agent"]
-                            TA["Model Training<br/>Agent"]
-                            EA["Evaluation<br/>Agent"]
-                            IE["Visualization Engine<br/>Region Detection"]
-                            XAI["Explainable AI<br/>Grad-CAM + SHAP"]
-                            RD["Results Display<br/>Classification"]
-                            QA["Quality Assessment<br/>Reliability"]
-                            PDF["PDF Report<br/>Documentation"]
+                        subgraph RightColumn["AI Agents & Analysis"]
+                            AO["Agent Orchestrator<br/>Multi-Agent Coordination"]
+                            MA["DataPreprocessingAgent<br/>Kvasir-SEG Dataset"]
+                            TA["ModelTrainingAgent<br/>Polyp Segmentation"]
+                            EA["EvaluationAgent<br/>Clinical Metrics"]
+                            GA["GastrointestinalPolypAIAgent<br/>Clinical Analysis"]
+                            VIZ["Visualization & Explainable AI<br/>Polyp Detection + Grad-CAM"]
+                            RD["Results Display<br/>Polyp Classification"]
+                            QA["Quality Assessment<br/>Detection Reliability"]
+                            PDF["PDF Report<br/>Clinical Documentation"]
                         end
                         
                         %% Main Flow - Left Column (Top to Bottom)
-                        DS --> PR
-                        PR --> ST
-                        ST --> IU
-                        IU --> ML
+                        DS --> ST
+                        ST --> ML
                         ML --> IP
                         IP --> YOLO
-                        IP --> LLM1
-                        IP --> LLM2
+                        IP --> LLM
                         
                         %% Cross-Column Connections
                         YOLO --> AO
-                        LLM1 --> AO
-                        LLM2 --> AO
+                        LLM --> AO
                         
-                        %% Right Column Flow (Top to Bottom)
+                        %% Right Column Flow (Agent Orchestrator Coordination)
                         AO --> MA
                         AO --> TA
                         AO --> EA
-                        MA --> IE
-                        TA --> IE
-                        EA --> IE
-                        IE --> XAI
-                        XAI --> RD
+                        AO --> GA
+                        MA --> VIZ
+                        TA --> VIZ
+                        EA --> VIZ
+                        GA --> VIZ
+                        VIZ --> RD
                         RD --> QA
                         RD --> PDF
                         
@@ -223,12 +217,12 @@
                         classDef outputStyle fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000,font-weight:bold
                         classDef subgraphStyle fill:#ffffff,stroke:#212529,stroke-width:3px,color:#000,font-weight:bold
                         
-                        class DS,PR inputStyle
-                        class ST,IU interfaceStyle
+                        class DS inputStyle
+                        class ST interfaceStyle
                         class ML,IP processingStyle
-                        class YOLO,LLM1,LLM2 aiStyle
-                        class AO,MA,TA,EA agentsStyle
-                        class IE,XAI analysisStyle
+                        class YOLO,LLM aiStyle
+                        class AO,MA,TA,EA,GA agentsStyle
+                        class VIZ analysisStyle
                         class RD,QA,PDF outputStyle
                         class LeftColumn,RightColumn subgraphStyle
                 </div>
@@ -291,27 +285,31 @@
                 <div class="mermaid">
                     graph TB
                         AO[Agent Orchestrator<br/>Multi-Agent Coordination]
-                        MA[Data Preprocessing Agent]
-                        TA[Model Training Agent]
-                        EA[Evaluation Agent]
+                        MA[DataPreprocessingAgent<br/>Kvasir-SEG Dataset]
+                        TA[ModelTrainingAgent<br/>Polyp Segmentation]
+                        EA[EvaluationAgent<br/>Clinical Metrics]
+                        GA[GastrointestinalPolypAIAgent<br/>Clinical Analysis]
 
                         AO --> MA
                         AO --> TA
                         AO --> EA
+                        AO --> GA
 
                         %% Styling
                         classDef orchestrator fill:#20b2aa,stroke:#008b8b,stroke-width:3px,color:#000
-                        class AO,MA,TA,EA orchestrator
+                        classDef agentsStyle fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+                        class AO orchestrator
+                        class MA,TA,EA,GA agentsStyle
                 </div>
                 
                 <!-- Data Preprocessing Agent -->
                 <div class="mermaid">
                     graph TB
-                        subgraph PreprocessingAgent[" Data Preprocessing Agent - Image Enhancement"]
-                            MA[Data Preprocessing Agent<br/>LangChain + Groq LLM]
+                        subgraph PreprocessingAgent["DataPreprocessingAgent - Kvasir-SEG Dataset"]
+                            MA[DataPreprocessingAgent<br/>Kvasir-SEG Compatibility]
                             IE[Image Enhancement<br/>CLAHE, Bilateral Filter, Edge Detection]
                             QA[Quality Assessment<br/>Image quality scoring<br/>Enhancement validation]
-                            NM[Normalization<br/>Resolution standardization<br/>Intensity normalization]
+                            NM[Normalization<br/>512x512 standardization<br/>Intensity normalization]
                         end
                         
                         %% Preprocessing Agent Flow
@@ -330,8 +328,8 @@
                 <!-- Model Training Agent -->
                 <div class="mermaid">
                     graph TB
-                        subgraph TrainingAgent["Model Training Agent - "]
-                            TAA[Model Training Agent<br/>YOLO + CNN Optimization]
+                        subgraph TrainingAgent["ModelTrainingAgent - Polyp Segmentation"]
+                            TAA[ModelTrainingAgent<br/>Polyp Segmentation Optimization]
                             MO[Model Optimization<br/>Hyperparameter tuning<br/>Performance enhancement]
                             PM[Performance Monitoring<br/>Training metrics<br/>Validation accuracy]
                             CV[Cross Validation<br/>Model validation<br/>Overfitting prevention]
@@ -353,8 +351,8 @@
                 <!-- Evaluation Agent -->
                 <div class="mermaid">
                     graph TB
-                        subgraph EvaluationAgent["Evaluation Agent - Clinical Validation"]
-                            EAA[Evaluation Agent<br/>Clinical Metrics & Validation]
+                        subgraph EvaluationAgent["EvaluationAgent - Kvasir-SEG Metrics"]
+                            EAA[EvaluationAgent<br/>Clinical Metrics & Validation]
                             MA[Metrics Analysis<br/>Dice coefficient, IoU<br/>Clinical accuracy]
                             CV[Clinical Validation<br/>Medical accuracy<br/>Clinical relevance]
                             QA[Quality Assurance<br/>Detection reliability<br/>Confidence validation]
@@ -371,6 +369,29 @@
                         %% Styling
                         classDef evaluationAgent fill:#dda0dd,stroke:#9370db,stroke-width:2px,color:#000
                         class EAA,MA,CV,QA evaluationAgent
+                </div>
+                
+                <!-- GastrointestinalPolypAIAgent -->
+                <div class="mermaid">
+                    graph TB
+                        subgraph GastrointestinalAgent["GastrointestinalPolypAIAgent - Clinical Analysis"]
+                            GA[GastrointestinalPolypAIAgent<br/>Clinical Analysis Engine]
+                            PC[Polyp Characterization<br/>Morphological Assessment]
+                            RS[Risk Stratification<br/>Adenoma Risk Analysis]
+                            EM[Endoscopic Management<br/>Treatment Recommendations]
+                        end
+                        
+                        %% GastrointestinalPolypAIAgent Flow
+                        GA --> PC
+                        GA --> RS
+                        GA --> EM
+                        
+                        PC --> RS
+                        RS --> EM
+                        
+                        %% Styling
+                        classDef gastrointestinalAgent fill:#98fb98,stroke:#32cd32,stroke-width:2px,color:#000
+                        class GA,PC,RS,EM gastrointestinalAgent
                 </div>
             </div>
 
@@ -590,7 +611,7 @@
                         IF["Image Formats<br/>JPG, PNG, JPEG"]
                         RE["Resolution<br/>640x640 optimized"]
                         
-                        MS["Multi-Agent<br/>3 specialized agents"]
+                        MS["Multi-Agent<br/>4 specialized agents"]
                         EA["Enhancement Accuracy<br/>Advanced endoscopic preprocessing"]
                         AG["Agent Intelligence<br/>LangChain + Groq LLM"]
                         QA["Quality Assurance<br/>Comprehensive validation"]
