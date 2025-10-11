@@ -158,84 +158,79 @@
                 <h2>🏗️ System Architecture</h2>
                 <div class="mermaid">
                     graph TB
-                        %% Step 1: Data Input
-                        DS["Kvasir-SEG Dataset<br/>Gastrointestinal Polyp Images<br/>2 Polyp Classes"]
-                        PR["Patient Records<br/>Medical History<br/>GI Symptoms"]
-                        CC["Clinical Context<br/>Endoscopic History<br/>Risk Factors"]
+                        %% IEEE Research Paper Style Architecture - Two Vertical Columns for A4
                         
-                        %% Step 2: Frontend Interface
-                        ST["Streamlit Web App<br/>Main Interface"]
-                        IU["Image Upload<br/>Drag & Drop Endoscopic Images"]
+                        %% Left Column - Input to Processing
+                        subgraph LeftColumn["Data Flow & Processing"]
+                            DS["Kvasir-SEG Dataset<br/>1,196 Images<br/>2 Classes"]
+                            PR["Patient Records<br/>Medical History"]
+                            ST["Streamlit Web App<br/>Main Interface"]
+                            IU["Image Upload<br/>Module"]
+                            ML["Model Loader<br/>YOLO11m + LLM"]
+                            IP["Image Preprocessor<br/>Enhancement"]
+                            YOLO["YOLO11m Model<br/>Object Detection"]
+                            LLM1["llama-3.1-8b-instant<br/>Fast Analysis"]
+                            LLM2["qwen/qwen3-32b<br/>Deep Analysis"]
+                        end
                         
-                        %% Step 3: Backend Processing
-                        ML["Model Loader<br/>YOLO11m + Groq LLM Loading"]
-                        IP["Image Preprocessor<br/>Endoscopic Enhancement"]
+                        %% Right Column - Agents to Output
+                        subgraph RightColumn["  "]
+                            AO["Agent Orchestrator<br/>Coordination"]
+                            MA["Data Preprocessing<br/>Agent"]
+                            TA["Model Training<br/>Agent"]
+                            EA["Evaluation<br/>Agent"]
+                            IE["Visualization Engine<br/>Region Detection"]
+                            XAI["Explainable AI<br/>Grad-CAM + SHAP"]
+                            RD["Results Display<br/>Classification"]
+                            QA["Quality Assessment<br/>Reliability"]
+                            PDF["PDF Report<br/>Documentation"]
+                        end
                         
-                        %% Step 4: AI Models
-                        YOLO_MODEL["YOLO11m Model<br/>Polyp Detection<br/>Real-time Object Detection"]
-                        GROQ_MODEL["Groq LLM Models<br/>llama-3.1-8b-instant + qwen/qwen3-32b<br/>AI Agent Intelligence"]
-                        
-                        %% Step 5: Multi-Agent System
-                        AO["Agent Orchestrator<br/>Multi-Agent Coordination"]
-                        MA["Data Preprocessing Agent<br/>Image Enhancement<br/>Quality Assessment"]
-                        TA["Model Training Agent<br/>Model Optimization<br/>Performance Monitoring"]
-                        EA["Evaluation Agent<br/>Metrics Analysis<br/>Clinical Validation"]
-                        
-                        %% Step 6: Image Enhancement & Detection
-                        IE["Visualization Engine<br/>Polyp Region Detection"]
-                        ED["Edge Detection<br/>Polyp Boundary Enhancement"]
-                        BF["Grad-CAM<br/>Heatmap Overlay"]
-                        CL["SHAP Analysis<br/>Feature Importance"]
-                        
-                        %% Step 7: Results & Reports
-                        RD["Results Display<br/>Polyp Type<br/>Confidence Score"]
-                        QA["Quality Assessment<br/>Detection Reliability"]
-                        MC["Model Validation<br/>Performance Metrics"]
-                        PDF["PDF Report<br/>Comprehensive Analysis"]
-                        
-                        %% Serial Flow - Main Process
-                        DS --> ST
+                        %% Main Flow - Left Column (Top to Bottom)
+                        DS --> PR
                         PR --> ST
-                        CC --> ST
                         ST --> IU
                         IU --> ML
                         ML --> IP
-                        IP --> YOLO_MODEL
-                        IP --> GROQ_MODEL
-                        YOLO_MODEL --> AO
-                        GROQ_MODEL --> AO
+                        IP --> YOLO
+                        IP --> LLM1
+                        IP --> LLM2
+                        
+                        %% Cross-Column Connections
+                        YOLO --> AO
+                        LLM1 --> AO
+                        LLM2 --> AO
+                        
+                        %% Right Column Flow (Top to Bottom)
                         AO --> MA
                         AO --> TA
                         AO --> EA
                         MA --> IE
                         TA --> IE
                         EA --> IE
-                        IE --> ED
-                        IE --> BF
-                        IE --> CL
-                        ED --> RD
-                        BF --> RD
-                        CL --> RD
+                        IE --> XAI
+                        XAI --> RD
                         RD --> QA
-                        RD --> MC
                         RD --> PDF
                         
-                        %% Styling
-                        classDef dataLayer fill:#f39c12,stroke:#e67e22,stroke-width:2px,color:#000
-                        classDef frontendLayer fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#000
-                        classDef backendLayer fill:#2ecc71,stroke:#27ae60,stroke-width:2px,color:#000
-                        classDef modelsLayer fill:#9b59b6,stroke:#8e44ad,stroke-width:2px,color:#000
-                        classDef agentsLayer fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#000
-                        classDef vizLayer fill:#1abc9c,stroke:#16a085,stroke-width:2px,color:#000
-                        classDef resultsLayer fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#000
+                        %% IEEE Style Styling - Clean and Professional
+                        classDef inputStyle fill:#f8f9fa,stroke:#212529,stroke-width:2px,color:#000,font-weight:bold
+                        classDef interfaceStyle fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000,font-weight:bold
+                        classDef processingStyle fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#000,font-weight:bold
+                        classDef aiStyle fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000,font-weight:bold
+                        classDef agentsStyle fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000,font-weight:bold
+                        classDef analysisStyle fill:#e0f2f1,stroke:#00796b,stroke-width:2px,color:#000,font-weight:bold
+                        classDef outputStyle fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000,font-weight:bold
+                        classDef subgraphStyle fill:#ffffff,stroke:#212529,stroke-width:3px,color:#000,font-weight:bold
                         
-                        class DS,PR,CC dataLayer
-                        class ST,IU frontendLayer
-                        class ML,IP backendLayer
-                        class YOLO_MODEL,GROQ_MODEL modelsLayer
-                        class AO,MA,TA,EA agentsLayer
-                        class IE,ED,BF,CL vizLayer
-                        class RD,QA,MC,PDF resultsLayer
+                        class DS,PR inputStyle
+                        class ST,IU interfaceStyle
+                        class ML,IP processingStyle
+                        class YOLO,LLM1,LLM2 aiStyle
+                        class AO,MA,TA,EA agentsStyle
+                        class IE,XAI analysisStyle
+                        class RD,QA,PDF outputStyle
+                        class LeftColumn,RightColumn subgraphStyle
                 </div>
             </div>
 
