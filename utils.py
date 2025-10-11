@@ -49,6 +49,8 @@ def detect_polyp_region(image, predicted_class):
             # Add "No Polyp Detected" text in green
             cv2.putText(original_img, "No Polyp Detected - Healthy GI Tract", 
                        (10, 40), cv2.FONT_HERSHEY_BOLD, 0.8, (0, 255, 0), 3)
+            cv2.putText(original_img, "Continue regular screening", 
+                       (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
             return Image.fromarray(original_img)
         
         # Convert to grayscale

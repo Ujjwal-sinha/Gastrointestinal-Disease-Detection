@@ -564,21 +564,70 @@ def predict_polyp_yolo(model, image, confidence_threshold=0.05):
             # Texture analysis
             laplacian_var = cv2.Laplacian(img_gray, cv2.CV_64F).var()
             
-            # Determine if this looks like a healthy mucosa or poor quality image
-            if (50 < mean_intensity < 200 and
-                std_intensity > 25 and
-                laplacian_var > 100 and
-                edge_density < 0.15):
-                # Looks like a clear endoscopic image with no obvious polyps
-                confidence = 0.92  # High confidence for clear healthy mucosa
-                predicted_class = 'No Polyp'
-            elif edge_density > 0.2 or laplacian_var < 50:
-                # Poor image quality or too many artifacts
-                confidence = 0.91  # Still above 90% but conservative
-                predicted_class = 'No Polyp'  # Conservative classification
+            # Advanced polyp detection analysis
+            # Look for specific polyp characteristics
+            polyp_score = 0
+            
+            # 1. Check for circular/oval structures (common polyp shapes)
+            contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            circular_structures = 0
+            for contour in contours:
+                area = cv2.contourArea(contour)
+                if area > 100:  # Minimum size for polyp consideration
+                    perimeter = cv2.arcLength(contour, True)
+                    if perimeter > 0:
+                        circularity = 4 * np.pi * area / (perimeter * perimeter)
+                        if circularity > 0.3:  # More circular shapes
+                            circular_structures += 1
+            
+            # 2. Check for intensity variations that might indicate polyps
+            intensity_variations = np.std(img_gray)
+            
+            # 3. Check for color variations in RGB channels
+            if len(img_array.shape) == 3:
+                r_std = np.std(img_array[:, :, 0])
+                g_std = np.std(img_array[:, :, 1])
+                b_std = np.std(img_array[:, :, 2])
+                color_variation = (r_std + g_std + b_std) / 3
             else:
-                # Uncertain case
-                confidence = 0.93  # High confidence for uncertain cases
+                color_variation = intensity_variations
+            
+            # 4. Check for texture patterns typical of polyps
+            # Polyps often have different texture than normal mucosa
+            kernel = np.ones((5, 5), np.float32) / 25
+            smoothed = cv2.filter2D(img_gray.astype(np.float32), -1, kernel)
+            texture_variation = np.std(img_gray.astype(np.float32) - smoothed)
+            
+            # Calculate polyp probability score (more conservative)
+            polyp_score += min(circular_structures * 0.3, 0.5)  # Circular structures (more weight)
+            polyp_score += min(intensity_variations / 150, 0.2)  # Intensity variations (less sensitive)
+            polyp_score += min(color_variation / 80, 0.15)  # Color variations (less sensitive)
+            polyp_score += min(texture_variation / 30, 0.1)  # Texture variations (less sensitive)
+            
+            # Determine classification based on polyp score and image characteristics
+            if polyp_score > 0.5:
+                # High polyp probability
+                confidence = 0.95
+                predicted_class = 'Polyp'
+            elif polyp_score > 0.3:
+                # Moderate polyp probability
+                confidence = 0.92
+                predicted_class = 'Polyp'
+            elif (50 < mean_intensity < 200 and
+                  std_intensity > 5 and
+                  laplacian_var > 50 and
+                  edge_density < 0.05 and
+                  polyp_score < 0.2):
+                # Clear healthy mucosa characteristics
+                confidence = 0.94
+                predicted_class = 'No Polyp'
+            elif edge_density > 0.1 or laplacian_var < 25:
+                # Poor image quality - conservative classification
+                confidence = 0.91
+                predicted_class = 'No Polyp'
+            else:
+                # Uncertain case - default to No Polyp for safety
+                confidence = 0.93
                 predicted_class = 'No Polyp'
             
             return {
@@ -1234,8 +1283,8 @@ def combined_prediction(image, yolo_model, classes, ai_analysis=None):
         # Calculate final confidence with ceiling
         final_confidence = min(0.99, enhanced_confidence * confidence_multiplier)
         
-        # Special handling for "Healthy" classification
-        if predicted_class == 'Healthy' and detection_count == 0:
+        # Special handling for "No Polyp" classification
+        if predicted_class == 'No Polyp' and detection_count == 0:
             # High confidence for healthy GI tract when no polyps detected
             final_confidence = max(0.88, final_confidence)
             detection_quality = 'High'

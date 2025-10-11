@@ -195,9 +195,9 @@ class PolypImageAnalysisTool(BaseTool):
     def _assess_risk(self, polyp: str, confidence: float) -> str:
         """Assess risk level based on polyp type"""
         polyp_lower = polyp.lower().replace(' ', '_')
-        if "polyp" in polyp_lower:
+        if "polyp" in polyp_lower and "no" not in polyp_lower:
             return "Moderate"  # Polyps can be precancerous
-        elif "no_polyp" in polyp_lower:
+        elif "no_polyp" in polyp_lower or "no polyp" in polyp_lower.lower():
             return "Low"
         else:
             return "Unknown"
@@ -531,14 +531,21 @@ def get_agent_recommendations(polyp: str, patient_data: Dict) -> Dict:
             "Lifestyle modifications for polyp prevention"
         ])
 
-    elif "no_polyp" in polyp_lower:
+    elif "no_polyp" in polyp_lower or "no polyp" in polyp_lower:
         recommendations["immediate_actions"].extend([
             "Continue regular screening schedule",
-            "Maintain healthy diet and lifestyle"
+            "Maintain healthy diet and lifestyle",
+            "No immediate medical intervention required"
         ])
         recommendations["short_term"].extend([
             "Routine check-ups",
-            "Monitor for any new symptoms"
+            "Monitor for any new symptoms",
+            "Continue preventive care"
+        ])
+        recommendations["long_term"].extend([
+            "Regular colonoscopy screening",
+            "Maintain healthy lifestyle",
+            "Continue preventive measures"
         ])
 
     # Universal monitoring recommendations
