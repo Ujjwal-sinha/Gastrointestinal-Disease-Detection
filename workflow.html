@@ -186,132 +186,26 @@
             <div class="diagram-section">
                 <h2 class="diagram-title">Phase 3: AI Agent Medical Analysis</h2>
                 <p class="diagram-description">
-                    AI-powered medical analysis using GastrointestinalPolypAIAgent with dual LLM models (llama-3.1-8b-instant + qwen/qwen3-32b) for comprehensive polyp assessment and treatment recommendations.
+                    AI-powered medical analysis using dual LLM models for comprehensive polyp assessment and treatment recommendations.
                 </p>
                 <div class="mermaid">
                     sequenceDiagram
                         participant ConfidenceScorer
-                        participant GastrointestinalPolypAgent
+                        participant AIAgent
                         participant LLM1["llama-3.1-8b-instant"]
                         participant LLM2["qwen/qwen3-32b"]
-                        participant TreatmentAdvisor
                         participant Report
 
-                        Note over ConfidenceScorer, Report: Phase 3: AI Medical Analysis with Dual LLM Models
+                        Note over ConfidenceScorer, Report: Phase 3: AI Medical Analysis
 
-                        ConfidenceScorer->>GastrointestinalPolypAgent: Classification Results
-                        GastrointestinalPolypAgent->>LLM1: Primary Analysis (Fast Response)
-                        GastrointestinalPolypAgent->>LLM2: Secondary Analysis (Deep Analysis)
-                        LLM1->>GastrointestinalPolypAgent: Quick Medical Assessment
-                        LLM2->>GastrointestinalPolypAgent: Comprehensive Clinical Analysis
-                        GastrointestinalPolypAgent->>TreatmentAdvisor: Combined Polyp Assessment
-                        TreatmentAdvisor->>TreatmentAdvisor: Generate Recommendations
-                        TreatmentAdvisor->>Report: Complete Analysis
+                        ConfidenceScorer->>AIAgent: Classification Results
+                        AIAgent->>LLM1: Fast Analysis
+                        AIAgent->>LLM2: Deep Analysis
+                        LLM1->>AIAgent: Quick Assessment
+                        LLM2->>AIAgent: Comprehensive Analysis
+                        AIAgent->>Report: Medical Recommendations
 
-                        Note over ConfidenceScorer, Report: Dual LLM analysis completed with enhanced accuracy
-                </div>
-            </div>
-
-            <!-- Dual LLM Model Architecture -->
-            <div class="diagram-section">
-                <h2 class="diagram-title">Dual LLM Model Architecture</h2>
-                <p class="diagram-description">
-                    Advanced dual-language model architecture combining llama-3.1-8b-instant for fast responses and qwen/qwen3-32b for comprehensive analysis, providing enhanced accuracy and reliability.
-                </p>
-                <div class="mermaid">
-                    graph TB
-                        subgraph LLMArchitecture["🤖 Dual LLM Model Architecture"]
-                            Input["Endoscopic Image + Classification Results"]
-                            
-                            subgraph PrimaryLLM["Primary LLM - llama-3.1-8b-instant"]
-                                LLM1["llama-3.1-8b-instant<br/>Fast Response Model"]
-                                Features1["• Quick Analysis<br/>• Real-time Processing<br/>• High Efficiency"]
-                            end
-                            
-                            subgraph SecondaryLLM["Secondary LLM - qwen/qwen3-32b"]
-                                LLM2["qwen/qwen3-32b<br/>Deep Analysis Model"]
-                                Features2["• Comprehensive Analysis<br/>• Advanced Reasoning<br/>• High Accuracy"]
-                            end
-                            
-                            subgraph Integration["Model Integration"]
-                                Combiner["Response Combiner<br/>Intelligent Fusion"]
-                                Validator["Cross-Validation<br/>Consistency Check"]
-                                Selector["Best Response Selector<br/>Quality Assessment"]
-                            end
-                            
-                            Output["Enhanced Medical Analysis<br/>High Confidence Results"]
-                        end
-                        
-                        Input --> LLM1
-                        Input --> LLM2
-                        LLM1 --> Features1
-                        LLM2 --> Features2
-                        Features1 --> Combiner
-                        Features2 --> Combiner
-                        Combiner --> Validator
-                        Validator --> Selector
-                        Selector --> Output
-                        
-                        %% Styling
-                        classDef primaryLLM fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#000
-                        classDef secondaryLLM fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#000
-                        classDef integration fill:#2ecc71,stroke:#27ae60,stroke-width:2px,color:#000
-                        classDef inputOutput fill:#f39c12,stroke:#e67e22,stroke-width:2px,color:#000
-                        
-                        class LLM1,Features1 primaryLLM
-                        class LLM2,Features2 secondaryLLM
-                        class Combiner,Validator,Selector integration
-                        class Input,Output inputOutput
-                </div>
-            </div>
-
-            <!-- Dual LLM Features -->
-            <div class="diagram-section">
-                <h2 class="diagram-title">Dual LLM Model Features</h2>
-                <p class="diagram-description">
-                    Comprehensive feature comparison and capabilities of the dual LLM architecture for enhanced gastrointestinal polyp analysis.
-                </p>
-                <div class="feature-list">
-                    <div class="feature-card">
-                        <h4>🚀 llama-3.1-8b-instant</h4>
-                        <ul>
-                            <li>Ultra-fast response time (&lt;2 seconds)</li>
-                            <li>Optimized for real-time analysis</li>
-                            <li>High efficiency processing</li>
-                            <li>Primary classification support</li>
-                            <li>Low latency requirements</li>
-                        </ul>
-                    </div>
-                    <div class="feature-card">
-                        <h4>🧠 qwen/qwen3-32b</h4>
-                        <ul>
-                            <li>Deep comprehensive analysis</li>
-                            <li>Advanced reasoning capabilities</li>
-                            <li>High accuracy medical insights</li>
-                            <li>Complex clinical scenarios</li>
-                            <li>Detailed treatment recommendations</li>
-                        </ul>
-                    </div>
-                    <div class="feature-card">
-                        <h4>🔄 Integration Benefits</h4>
-                        <ul>
-                            <li>Intelligent response fusion</li>
-                            <li>Cross-validation accuracy</li>
-                            <li>Fallback reliability</li>
-                            <li>Enhanced confidence scoring</li>
-                            <li>Comprehensive medical analysis</li>
-                        </ul>
-                    </div>
-                    <div class="feature-card">
-                        <h4>📊 Performance Metrics</h4>
-                        <ul>
-                            <li>99.5% overall accuracy</li>
-                            <li>Dual model validation</li>
-                            <li>Reduced false positives</li>
-                            <li>Enhanced clinical relevance</li>
-                            <li>Improved user confidence</li>
-                        </ul>
-                    </div>
+                        Note over ConfidenceScorer, Report: AI analysis completed
                 </div>
             </div>
 
