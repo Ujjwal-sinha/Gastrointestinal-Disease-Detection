@@ -81,7 +81,7 @@ def create_comparative_analysis_diagram(save_dir):
                 fontsize=12, fontweight='bold', color='#2ecc71')
     
     ax1.grid(True, alpha=0.3)
-    ax1.tick_params(axis='both', which='major', labelsize=11, # labelweight='bold'  # Not supported in this matplotlib version)
+    ax1.tick_params(axis='both', which='major', labelsize=11)  # labelweight='bold'  # Not supported in this matplotlib version
     
     # 2. Improvement Percentage Chart
     improvements = ['vs Manual Detection', 'vs Previous AI Systems']
@@ -99,7 +99,7 @@ def create_comparative_analysis_diagram(save_dir):
                 f'+{val}%', ha='left', va='center', fontweight='bold', fontsize=11)
     
     ax2.grid(True, alpha=0.3)
-    ax2.tick_params(axis='both', which='major', labelsize=11, # labelweight='bold'  # Not supported in this matplotlib version)
+    ax2.tick_params(axis='both', which='major', labelsize=11)  # labelweight='bold'  # Not supported in this matplotlib version
     
     plt.suptitle('Comparative Analysis - Gastrointestinal Polyp Detection System', 
                  fontsize=16, fontweight='bold', y=0.95)
@@ -144,7 +144,7 @@ def create_segmentation_performance_diagram(save_dir):
                 f'{val}%', ha='center', va='bottom', fontweight='bold', fontsize=11)
     
     ax3.grid(True, alpha=0.3)
-    ax3.tick_params(axis='both', which='major', labelsize=11, # labelweight='bold'  # Not supported in this matplotlib version)
+    ax3.tick_params(axis='both', which='major', labelsize=11)  # labelweight='bold'  # Not supported in this matplotlib version
     
     # 4. Segmentation Quality Heatmap
     # Create a mock segmentation quality visualization
@@ -194,7 +194,7 @@ def create_detailed_classification_metrics(save_dir):
                 f'{val}%', ha='center', va='bottom', fontweight='bold', fontsize=11)
     
     ax1.grid(True, alpha=0.3)
-    ax1.tick_params(axis='both', which='major', labelsize=11, # labelweight='bold'  # Not supported in this matplotlib version)
+    ax1.tick_params(axis='both', which='major', labelsize=11)  # labelweight='bold'  # Not supported in this matplotlib version
     
     # 2. Support Distribution
     polyp_support = 613
