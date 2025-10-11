@@ -256,7 +256,8 @@ class GastrointestinalPolypAIAgent:
     def _get_working_llm(self):
         """Get a working LLM instance with fallback models and retry logic."""
         models_to_try = [
-            "llama-3.1-8b-instant"
+            "llama-3.1-8b-instant",
+            "qwen/qwen3-32b"
         ]
         
         print(f"🔍 Testing {len(models_to_try)} Groq models...")
