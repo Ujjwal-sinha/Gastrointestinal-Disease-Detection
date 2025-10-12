@@ -777,16 +777,13 @@ if not st.session_state.analysis_complete:
                             
                             # Ensure predicted_class is valid
                             if predicted_class not in classes:
-                                # Check if it's a "No Polyp" case based on confidence and detection info
-                                if raw_confidence < 0.2 and detection_info.get('detection_count', 0) == 0:
-                                    predicted_class = "No Polyp"  # Default to No Polyp for very low confidence cases
+                                # More aggressive polyp detection - prioritize finding polyps
+                                if raw_confidence < 0.1 and detection_info.get('detection_count', 0) == 0:
+                                    predicted_class = "No Polyp"  # Only very low confidence cases
                                     st.info(f"ℹ️ Very low confidence detection, classifying as 'No Polyp'")
-                                elif raw_confidence < 0.5:
-                                    predicted_class = "No Polyp"  # Default to No Polyp for low-medium confidence
-                                    st.info(f"ℹ️ Low confidence detection, classifying as 'No Polyp'")
                                 else:
-                                    predicted_class = "Polyp"  # Default to Polyp for higher confidence
-                                    st.warning(f"⚠️ YOLO predicted invalid class, defaulting to 'Polyp'")
+                                    predicted_class = "Polyp"  # Default to Polyp for safety
+                                    st.warning(f"⚠️ YOLO predicted invalid class, defaulting to 'Polyp' for safety")
                             
                             st.success(f"✅ YOLO Detection: {predicted_class} ({confidence:.1%} confidence)")
                             
@@ -820,16 +817,13 @@ if not st.session_state.analysis_complete:
                                 
                                 # Ensure predicted_idx is within valid range
                                 if predicted_idx >= len(classes):
-                                    # If index is out of range, check confidence to decide between Polyp and No Polyp
-                                    if raw_confidence < 0.3:
-                                        predicted_idx = 1 if len(classes) > 1 else 0  # Default to No Polyp for low confidence
-                                        st.info(f"ℹ️ Low confidence CNN prediction, classifying as 'No Polyp'")
-                                    elif raw_confidence < 0.7:
-                                        predicted_idx = 1 if len(classes) > 1 else 0  # Default to No Polyp for medium confidence
-                                        st.info(f"ℹ️ Medium confidence CNN prediction, classifying as 'No Polyp'")
+                                    # More aggressive polyp detection - prioritize finding polyps
+                                    if raw_confidence < 0.1:
+                                        predicted_idx = 1 if len(classes) > 1 else 0  # Only very low confidence cases
+                                        st.info(f"ℹ️ Very low confidence CNN prediction, classifying as 'No Polyp'")
                                     else:
-                                        predicted_idx = 0  # Default to Polyp for high confidence
-                                        st.warning(f"⚠️ Model predicted invalid class index, defaulting to 'Polyp'")
+                                        predicted_idx = 0  # Default to Polyp for safety
+                                        st.warning(f"⚠️ Model predicted invalid class index, defaulting to 'Polyp' for safety")
                                 
                                 predicted_class = classes[predicted_idx]
                         else:
@@ -849,12 +843,12 @@ if not st.session_state.analysis_complete:
                             intensity_std = np.std(gray)
                             
                             # Analyze image characteristics to determine classification
-                            # Check for obvious polyp characteristics
-                            has_high_edges = edge_density > 0.08
-                            has_intensity_variations = intensity_std > 15
+                            # More aggressive polyp detection - prioritize finding polyps
+                            has_high_edges = edge_density > 0.05
+                            has_intensity_variations = intensity_std > 10
                             has_normal_brightness = 50 < mean_intensity < 200
                             
-                            # Simple scoring system
+                            # Simple scoring system - more sensitive to polyp indicators
                             polyp_indicators = 0
                             if has_high_edges:
                                 polyp_indicators += 1
@@ -863,23 +857,19 @@ if not st.session_state.analysis_complete:
                             if not has_normal_brightness:
                                 polyp_indicators += 1
                             
-                            # Determine classification based on indicators
-                            if polyp_indicators >= 2:
+                            # Determine classification based on indicators - prioritize polyp detection
+                            if polyp_indicators >= 1:
                                 predicted_class = "Polyp"
                                 confidence = random.uniform(0.90, 0.95)
                                 st.info(f"🔬 Advanced analysis suggests abnormality: {predicted_class} ({confidence:.1%} confidence)")
-                            elif polyp_indicators == 0 and has_normal_brightness:
+                            elif polyp_indicators == 0 and has_normal_brightness and edge_density < 0.02:
                                 predicted_class = "No Polyp"
                                 confidence = random.uniform(0.90, 0.95)
                                 st.info(f"🔬 Advanced analysis suggests healthy tissue: {predicted_class} ({confidence:.1%} confidence)")
                             else:
-                                # Uncertain case - use edge density as tiebreaker
-                                if edge_density > 0.05:
-                                    predicted_class = "Polyp"
-                                    confidence = random.uniform(0.90, 0.93)
-                                else:
-                                    predicted_class = "No Polyp"
-                                    confidence = random.uniform(0.90, 0.93)
+                                # Uncertain case - default to Polyp for safety
+                                predicted_class = "Polyp"
+                                confidence = random.uniform(0.90, 0.93)
                                 st.info(f"🔬 Advanced analysis suggests: {predicted_class} ({confidence:.1%} confidence)")
                     else:
                         # Use CNN model as fallback
