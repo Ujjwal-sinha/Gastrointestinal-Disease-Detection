@@ -605,30 +605,34 @@ def predict_polyp_yolo(model, image, confidence_threshold=0.05):
             polyp_score += min(texture_variation / 30, 0.1)  # Texture variations (less sensitive)
             
             # Determine classification based on polyp score and image characteristics
-            if polyp_score > 0.5:
+            if polyp_score > 0.4:
                 # High polyp probability
                 confidence = 0.95
                 predicted_class = 'Polyp'
-            elif polyp_score > 0.3:
+            elif polyp_score > 0.25:
                 # Moderate polyp probability
                 confidence = 0.92
                 predicted_class = 'Polyp'
             elif (50 < mean_intensity < 200 and
                   std_intensity > 5 and
                   laplacian_var > 50 and
-                  edge_density < 0.05 and
-                  polyp_score < 0.2):
+                  edge_density < 0.08 and
+                  polyp_score < 0.25):
                 # Clear healthy mucosa characteristics
                 confidence = 0.94
                 predicted_class = 'No Polyp'
-            elif edge_density > 0.1 or laplacian_var < 25:
+            elif edge_density > 0.15 or laplacian_var < 25:
                 # Poor image quality - conservative classification
                 confidence = 0.91
                 predicted_class = 'No Polyp'
             else:
-                # Uncertain case - default to No Polyp for safety
-                confidence = 0.93
-                predicted_class = 'No Polyp'
+                # Uncertain case - use polyp score to decide
+                if polyp_score > 0.15:
+                    predicted_class = 'Polyp'
+                    confidence = 0.90
+                else:
+                    predicted_class = 'No Polyp'
+                    confidence = 0.93
             
             return {
                 'predicted_class': predicted_class,
