@@ -54,55 +54,74 @@ def create_agent_performance_diagram(save_dir):
 
 def create_comparative_analysis_diagram(save_dir):
     """Create Comparative Analysis diagram showing system improvements"""
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 8))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 10))
     
-    # 1. Accuracy Comparison Bar Chart
-    methods = ['Manual\nDetection', 'Previous\nAI Systems', 'Our System\n(GastrointestinalPolypAI)']
-    accuracies = [87.5, 93.5, 99.5]  # Average of ranges
+    # 1. Accuracy Comparison Bar Chart - Made much clearer
+    methods = ['Manual Detection', 'Previous AI Systems', 'Our System\n(GastrointestinalPolypAI)']
+    accuracies = [87.5, 93.5, 99.5]
     colors = ['#e74c3c', '#f39c12', '#2ecc71']
     
-    bars = ax1.bar(methods, accuracies, color=colors, alpha=0.8, edgecolor='black', linewidth=2)
-    ax1.set_ylabel('Accuracy (%)', fontsize=12, fontweight='bold')
-    ax1.set_title('Detection Accuracy Comparison', fontsize=14, fontweight='bold', pad=20)
+    bars = ax1.bar(methods, accuracies, color=colors, alpha=0.9, edgecolor='black', linewidth=3)
+    ax1.set_ylabel('Detection Accuracy (%)', fontsize=14, fontweight='bold')
+    ax1.set_title('Our System vs Existing Methods', fontsize=16, fontweight='bold', pad=25)
     ax1.set_ylim(80, 100)
     
-    # Add value labels on bars
+    # Add large, clear value labels on bars
     for bar, acc in zip(bars, accuracies):
         height = bar.get_height()
-        ax1.text(bar.get_x() + bar.get_width()/2., height + 0.5,
-                f'{acc}%', ha='center', va='bottom', fontweight='bold', fontsize=11)
+        ax1.text(bar.get_x() + bar.get_width()/2., height + 1,
+                f'{acc}%', ha='center', va='bottom', fontweight='bold', fontsize=14, color='black')
     
-    # Add improvement arrows
-    ax1.annotate('+6%', xy=(1, 93.5), xytext=(1.5, 96),
-                arrowprops=dict(arrowstyle='->', color='#2ecc71', lw=2),
-                fontsize=12, fontweight='bold', color='#2ecc71')
-    ax1.annotate('+12%', xy=(0, 87.5), xytext=(1.5, 96),
-                arrowprops=dict(arrowstyle='->', color='#2ecc71', lw=2),
-                fontsize=12, fontweight='bold', color='#2ecc71')
+    # Add BIG, CLEAR improvement arrows and labels
+    # Arrow from Manual to Our System (12% improvement)
+    ax1.annotate('', xy=(2, 99.5), xytext=(0, 87.5),
+                arrowprops=dict(arrowstyle='<->', color='#2ecc71', lw=4))
+    ax1.text(1, 93.5, '12% BETTER\nthan Manual', ha='center', va='center', 
+             fontsize=14, fontweight='bold', color='#2ecc71',
+             bbox=dict(boxstyle="round,pad=0.5", facecolor='white', edgecolor='#2ecc71', linewidth=2))
+    
+    # Arrow from Previous AI to Our System (6% improvement)
+    ax1.annotate('', xy=(2, 99.5), xytext=(1, 93.5),
+                arrowprops=dict(arrowstyle='<->', color='#2ecc71', lw=4))
+    ax1.text(1.5, 96.5, '6% BETTER\nthan Previous AI', ha='center', va='center', 
+             fontsize=14, fontweight='bold', color='#2ecc71',
+             bbox=dict(boxstyle="round,pad=0.5", facecolor='white', edgecolor='#2ecc71', linewidth=2))
     
     ax1.grid(True, alpha=0.3)
-    ax1.tick_params(axis='both', which='major', labelsize=11)  # labelweight='bold'  # Not supported in this matplotlib version
+    ax1.tick_params(axis='both', which='major', labelsize=12)
     
-    # 2. Improvement Percentage Chart
+    # 2. Improvement Percentage Chart - Made much more prominent
     improvements = ['vs Manual Detection', 'vs Previous AI Systems']
-    improvement_values = [12.0, 6.0]  # 99.5 - 87.5 = 12, 99.5 - 93.5 = 6
+    improvement_values = [12.0, 6.0]
+    colors_improvement = ['#e67e22', '#f39c12']
     
-    bars2 = ax2.barh(improvements, improvement_values, color=['#e67e22', '#f39c12'], 
-                     alpha=0.8, edgecolor='black', linewidth=2)
-    ax2.set_xlabel('Improvement (%)', fontsize=12, fontweight='bold')
-    ax2.set_title('Performance Improvement Over Existing Methods', fontsize=14, fontweight='bold', pad=20)
+    bars2 = ax2.barh(improvements, improvement_values, color=colors_improvement, 
+                     alpha=0.9, edgecolor='black', linewidth=3, height=0.6)
+    ax2.set_xlabel('Improvement (%)', fontsize=14, fontweight='bold')
+    ax2.set_title('How Much Better is Our System?', fontsize=16, fontweight='bold', pad=25)
+    ax2.set_xlim(0, 15)
     
-    # Add value labels
+    # Add BIG, CLEAR value labels
     for bar, val in zip(bars2, improvement_values):
         width = bar.get_width()
-        ax2.text(width + 0.2, bar.get_y() + bar.get_height()/2,
-                f'+{val}%', ha='left', va='center', fontweight='bold', fontsize=11)
+        ax2.text(width + 0.5, bar.get_y() + bar.get_height()/2,
+                f'+{val}% IMPROVEMENT', ha='left', va='center', 
+                fontweight='bold', fontsize=16, color='black',
+                bbox=dict(boxstyle="round,pad=0.3", facecolor='yellow', alpha=0.8))
+    
+    # Add percentage labels at the end of bars
+    for bar, val in zip(bars2, improvement_values):
+        width = bar.get_width()
+        ax2.text(width/2, bar.get_y() + bar.get_height()/2,
+                f'{val}%', ha='center', va='center', 
+                fontweight='bold', fontsize=18, color='white')
     
     ax2.grid(True, alpha=0.3)
-    ax2.tick_params(axis='both', which='major', labelsize=11)  # labelweight='bold'  # Not supported in this matplotlib version
+    ax2.tick_params(axis='both', which='major', labelsize=12)
     
-    plt.suptitle('Comparative Analysis - Gastrointestinal Polyp Detection System', 
-                 fontsize=16, fontweight='bold', y=0.95)
+    # Add a big title that explains the key message
+    plt.suptitle('OUR SYSTEM IS SIGNIFICANTLY BETTER!\n12% Better than Manual Detection • 6% Better than Previous AI', 
+                 fontsize=18, fontweight='bold', y=0.95, color='#2ecc71')
     plt.tight_layout()
     plt.savefig(os.path.join(save_dir, 'comparative_analysis.png'), dpi=300, bbox_inches='tight')
     plt.close()
@@ -356,6 +375,57 @@ def create_comprehensive_performance_summary(save_dir):
     plt.savefig(os.path.join(save_dir, 'comprehensive_performance_summary.png'), dpi=300, bbox_inches='tight')
     plt.close()
 
+def create_simple_improvement_chart(save_dir):
+    """Create a super simple chart that clearly shows the improvements"""
+    fig, ax = plt.subplots(1, 1, figsize=(14, 8))
+    
+    # Simple bar chart with clear improvements
+    methods = ['Manual Detection', 'Previous AI Systems', 'Our System']
+    accuracies = [87.5, 93.5, 99.5]
+    colors = ['#e74c3c', '#f39c12', '#2ecc71']
+    
+    bars = ax.bar(methods, accuracies, color=colors, alpha=0.9, edgecolor='black', linewidth=3)
+    ax.set_ylabel('Detection Accuracy (%)', fontsize=16, fontweight='bold')
+    ax.set_title('Our Gastrointestinal Polyp Detection System Performance', fontsize=18, fontweight='bold', pad=30)
+    ax.set_ylim(80, 100)
+    
+    # Add large value labels
+    for bar, acc in zip(bars, accuracies):
+        height = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width()/2., height + 1,
+                f'{acc}%', ha='center', va='bottom', fontweight='bold', fontsize=16, color='black')
+    
+    # Add BIG improvement labels
+    # 12% improvement from Manual
+    ax.annotate('', xy=(2, 99.5), xytext=(0, 87.5),
+                arrowprops=dict(arrowstyle='<->', color='#2ecc71', lw=6))
+    ax.text(1, 93.5, '12% BETTER\nthan Manual Detection', ha='center', va='center', 
+             fontsize=16, fontweight='bold', color='#2ecc71',
+             bbox=dict(boxstyle="round,pad=0.8", facecolor='white', edgecolor='#2ecc71', linewidth=3))
+    
+    # 6% improvement from Previous AI
+    ax.annotate('', xy=(2, 99.5), xytext=(1, 93.5),
+                arrowprops=dict(arrowstyle='<->', color='#2ecc71', lw=6))
+    ax.text(1.5, 96.5, '6% BETTER\nthan Previous AI', ha='center', va='center', 
+             fontsize=16, fontweight='bold', color='#2ecc71',
+             bbox=dict(boxstyle="round,pad=0.8", facecolor='white', edgecolor='#2ecc71', linewidth=3))
+    
+    # Add improvement boxes at the bottom
+    ax.text(0.5, 85, '12% IMPROVEMENT\nover Manual Detection', ha='center', va='center', 
+             fontsize=14, fontweight='bold', color='white',
+             bbox=dict(boxstyle="round,pad=0.5", facecolor='#e67e22', alpha=0.9))
+    
+    ax.text(1.5, 85, '6% IMPROVEMENT\nover Previous AI', ha='center', va='center', 
+             fontsize=14, fontweight='bold', color='white',
+             bbox=dict(boxstyle="round,pad=0.5", facecolor='#f39c12', alpha=0.9))
+    
+    ax.grid(True, alpha=0.3)
+    ax.tick_params(axis='both', which='major', labelsize=14)
+    
+    plt.tight_layout()
+    plt.savefig(os.path.join(save_dir, 'simple_improvement_chart.png'), dpi=300, bbox_inches='tight')
+    plt.close()
+
 def main():
     """Generate all performance visualization diagrams"""
     # Create output directory
@@ -364,23 +434,27 @@ def main():
     
     print("Generating AI Agent Performance and Comparative Analysis Visualizations...")
     
-    print("1. Creating AI Agent Performance diagram...")
+    print("1. Creating Simple Improvement Chart (EASIEST TO UNDERSTAND)...")
+    create_simple_improvement_chart(save_dir)
+    
+    print("2. Creating AI Agent Performance diagram...")
     create_agent_performance_diagram(save_dir)
     
-    print("2. Creating Comparative Analysis diagram...")
+    print("3. Creating Comparative Analysis diagram...")
     create_comparative_analysis_diagram(save_dir)
     
-    print("3. Creating Segmentation Performance diagram...")
+    print("4. Creating Segmentation Performance diagram...")
     create_segmentation_performance_diagram(save_dir)
     
-    print("4. Creating Detailed Classification Metrics diagram...")
+    print("5. Creating Detailed Classification Metrics diagram...")
     create_detailed_classification_metrics(save_dir)
     
-    print("5. Creating Comprehensive Performance Summary...")
+    print("6. Creating Comprehensive Performance Summary...")
     create_comprehensive_performance_summary(save_dir)
     
     print(f"\nAll performance visualization diagrams have been saved to: {save_dir}/")
     print("\nGenerated Files:")
+    print("- simple_improvement_chart.png (EASIEST TO UNDERSTAND)")
     print("- ai_agent_performance.png")
     print("- comparative_analysis.png") 
     print("- segmentation_performance.png")
