@@ -234,12 +234,13 @@ st.markdown("""
 
 /* AI Agent Summary */
 .agent-summary {
-    background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
+    background: #ffffff;
     border-radius: 20px;
     padding: 2rem;
-    color: white;
+    color: #212529;
     margin: 2rem 0;
-    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    border: 2px solid #e9ecef;
     position: relative;
     overflow: hidden;
 }
@@ -250,7 +251,8 @@ st.markdown("""
     font-size: 15rem;
     right: -3rem;
     bottom: -5rem;
-    opacity: 0.1;
+    opacity: 0.05;
+    color: #6c757d;
 }
 
 .agent-header {
@@ -265,23 +267,26 @@ st.markdown("""
 .agent-icon {
     width: 60px;
     height: 60px;
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
     border-radius: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 2rem;
+    color: #212529;
 }
 
 .agent-title {
     font-size: 1.8rem;
     font-weight: 700;
     margin: 0;
+    color: #212529;
 }
 
 .agent-badge {
-    background: rgba(255, 255, 255, 0.25);
+    background: #212529;
+    color: #ffffff;
     padding: 0.25rem 0.75rem;
     border-radius: 20px;
     font-size: 0.75rem;
@@ -295,6 +300,7 @@ st.markdown("""
     font-size: 1.05rem;
     position: relative;
     z-index: 1;
+    color: #212529;
 }
 
 /* Recommendations Box */
