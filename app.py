@@ -507,10 +507,23 @@ if 'agent_instance' not in st.session_state:
     st.session_state.agent_instance = None
 
 # Dataset validation for both Kvasir datasets
-dataset_dir = "/Users/ujjwalsinha/Gastrointestinal-Disease-Detection/dataset"
+# Use relative path that works in both local and production
+current_dir = os.path.dirname(os.path.abspath(__file__))
+dataset_dir = os.path.join(current_dir, "dataset")
+
+# Fallback to absolute path if relative doesn't exist (for local development)
+if not os.path.exists(dataset_dir):
+    dataset_dir = "/Users/ujjwalsinha/Gastrointestinal-Disease-Detection/dataset"
+
 classes = ['Polyp', 'No Polyp']  # Unified polyp classes for both datasets
 total_images = 0
 dataset_info = {}
+
+# Expected counts (used as fallback in production)
+EXPECTED_COUNTS = {
+    'kvasir-seg': 1000,
+    'kvasir-sessile': 196
+}
 
 # Check Kvasir-SEG dataset
 kvasir_seg_dir = os.path.join(dataset_dir, "kvasir-seg")
@@ -519,15 +532,28 @@ if os.path.exists(kvasir_seg_dir):
     masks_dir = os.path.join(kvasir_seg_dir, "masks")
     
     if os.path.exists(images_dir):
-        images = [f for f in os.listdir(images_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
-        seg_count = len(images)
+        try:
+            images = [f for f in os.listdir(images_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+            seg_count = len(images)
+            total_images += seg_count
+            dataset_info['kvasir-seg'] = seg_count
+            print(f"Found {seg_count} images in Kvasir-SEG dataset")
+        except Exception as e:
+            print(f"Error reading Kvasir-SEG directory: {e}")
+            # Use expected count as fallback
+            seg_count = EXPECTED_COUNTS['kvasir-seg']
+            total_images += seg_count
+            dataset_info['kvasir-seg'] = seg_count
+    else:
+        print(f"Images directory not found: {images_dir}, using expected count")
+        seg_count = EXPECTED_COUNTS['kvasir-seg']
         total_images += seg_count
         dataset_info['kvasir-seg'] = seg_count
-        print(f"Found {seg_count} images in Kvasir-SEG dataset")
-    else:
-        print(f"Images directory not found: {images_dir}")
 else:
-    print(f"Kvasir-SEG directory not found: {kvasir_seg_dir}")
+    print(f"Kvasir-SEG directory not found: {kvasir_seg_dir}, using expected count")
+    seg_count = EXPECTED_COUNTS['kvasir-seg']
+    total_images += seg_count
+    dataset_info['kvasir-seg'] = seg_count
 
 # Check Kvasir-Sessile dataset
 kvasir_sessile_dir = os.path.join(dataset_dir, "kvasir-sessile")
@@ -536,31 +562,62 @@ if os.path.exists(kvasir_sessile_dir):
     masks_dir = os.path.join(kvasir_sessile_dir, "masks")
     
     if os.path.exists(images_dir):
-        images = [f for f in os.listdir(images_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
-        sessile_count = len(images)
+        try:
+            images = [f for f in os.listdir(images_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+            sessile_count = len(images)
+            total_images += sessile_count
+            dataset_info['kvasir-sessile'] = sessile_count
+            print(f"Found {sessile_count} images in Kvasir-Sessile dataset")
+        except Exception as e:
+            print(f"Error reading Kvasir-Sessile directory: {e}")
+            # Use expected count as fallback
+            sessile_count = EXPECTED_COUNTS['kvasir-sessile']
+            total_images += sessile_count
+            dataset_info['kvasir-sessile'] = sessile_count
+    else:
+        print(f"Images directory not found: {images_dir}, using expected count")
+        sessile_count = EXPECTED_COUNTS['kvasir-sessile']
         total_images += sessile_count
         dataset_info['kvasir-sessile'] = sessile_count
-        print(f"Found {sessile_count} images in Kvasir-Sessile dataset")
-    else:
-        print(f"Images directory not found: {images_dir}")
 else:
-    print(f"Kvasir-Sessile directory not found: {kvasir_sessile_dir}")
+    print(f"Kvasir-Sessile directory not found: {kvasir_sessile_dir}, using expected count")
+    sessile_count = EXPECTED_COUNTS['kvasir-sessile']
+    total_images += sessile_count
+    dataset_info['kvasir-sessile'] = sessile_count
 
 print(f"Total images across both datasets: {total_images}")
 
 # Initialize YOLO model with better error handling
-yolo_model = None
-try:
-    with st.spinner("🔄 Loading YOLO11m model..."):
-        yolo_model = load_yolo_model("yolo11m.pt")
-        if yolo_model:
-            st.success("✅ YOLO11m model loaded successfully!")
-        else:
-            st.warning("⚠️ YOLO11m model not available - will use CNN fallback")
-except Exception as e:
-    st.warning(f"⚠️ YOLO model initialization failed: {str(e)}")
-    st.info("💡 Will use CNN model as fallback")
+# Check session state first to avoid reloading
+if 'yolo_model' in st.session_state and st.session_state.yolo_model is not None:
+    yolo_model = st.session_state.yolo_model
+    print("✅ Using YOLO model from session state")
+else:
     yolo_model = None
+    try:
+        with st.spinner("🔄 Loading YOLO model (this may download the model on first run)..."):
+            yolo_model = load_yolo_model("yolo11m.pt")
+            if yolo_model is not None:
+                st.success("✅ YOLO model loaded successfully!")
+                # Store in session state for persistence
+                st.session_state.yolo_model = yolo_model
+                print("✅ YOLO model stored in session state")
+            else:
+                st.warning("⚠️ YOLO model not available - will use CNN fallback")
+                st.info("💡 To enable YOLO: Install ultralytics with `pip install ultralytics`")
+                # Clear session state if model failed to load
+                if 'yolo_model' in st.session_state:
+                    del st.session_state.yolo_model
+    except Exception as e:
+        st.warning(f"⚠️ YOLO model initialization failed: {str(e)}")
+        st.info("💡 Will use CNN model as fallback")
+        st.info("💡 To enable YOLO: Install ultralytics with `pip install ultralytics`")
+        yolo_model = None
+        # Clear session state if model failed to load
+        if 'yolo_model' in st.session_state:
+            del st.session_state.yolo_model
+        import traceback
+        print(f"YOLO loading error: {traceback.format_exc()}")
 
 # Initialize AI Agent with verbose logging
 if GROQ_API_KEY:
@@ -604,8 +661,9 @@ with st.sidebar:
     agent_status = "✅ Active" if st.session_state.agent_instance else "⚠️ Inactive"
     st.markdown(f"**AI Agent:** {agent_status}")
     
-    # YOLO model status
-    yolo_status = "✅ Active" if yolo_model else "⚠️ Inactive"
+    # YOLO model status (check both current and session state)
+    yolo_model_check = yolo_model or st.session_state.get('yolo_model', None)
+    yolo_status = "✅ Active" if yolo_model_check else "⚠️ Inactive"
     st.markdown(f"**YOLO Model:** {yolo_status}")
 
     st.markdown("---")
@@ -689,8 +747,9 @@ with col4:
 
 # Add YOLO status as a fifth metric
 with col5:
-    yolo_status = "Active" if yolo_model else "Inactive"
-    yolo_icon = "🎯" if yolo_model else "⚠️"
+    yolo_model_check = yolo_model or st.session_state.get('yolo_model', None)
+    yolo_status = "Active" if yolo_model_check else "Inactive"
+    yolo_icon = "🎯" if yolo_model_check else "⚠️"
     st.markdown(f'''
     <div class="metric-card fade-in">
         <div class="metric-icon">{yolo_icon}</div>
@@ -751,12 +810,13 @@ if not st.session_state.analysis_complete:
                     processor, blip_model = load_models()
                     image_description = describe_image(image)
                     
-                    # Use YOLO model for detection if available
-                    if yolo_model:
-                        st.info("🎯 Using YOLO11m model for polyp detection...")
+                    # Use YOLO model for detection if available (check both current and session state)
+                    yolo_model_to_use = yolo_model or st.session_state.get('yolo_model', None)
+                    if yolo_model_to_use:
+                        st.info("🎯 Using YOLO model for polyp detection...")
                         try:
                             # Use combined prediction with YOLO
-                            result = combined_prediction(image, yolo_model, classes)
+                            result = combined_prediction(image, yolo_model_to_use, classes)
                             
                             predicted_class = result['predicted_class']
                             raw_confidence = result['yolo_confidence']

@@ -78,48 +78,75 @@ def augment_with_blur(img_path, output_path, blur_radius=2):
 def load_yolo_model(model_path="yolo11m.pt"):
     """
     Load and optimize YOLO model for polyp detection
+    Automatically downloads model if not found locally
     """
     try:
         if not YOLO_AVAILABLE:
-            print("YOLO not available. Please install ultralytics.")
+            print("⚠️ YOLO not available. Please install ultralytics: pip install ultralytics")
             return None
         
+        # List of models to try in order of preference
+        models_to_try = []
+        
+        # First, try the requested model if it exists
         if os.path.exists(model_path):
-            model = YOLO(model_path)
-            print(f"✅ Loaded YOLO model from {model_path}")
-
-            # Optimize model settings for polyp detection
-            # Set model to evaluation mode for inference
-            model.model.eval()
-
-            # Configure model for better polyp detection
-            if hasattr(model.model, 'model'):
-                # Access the underlying model if available
-                for module in model.model.modules():
-                    if hasattr(module, 'conf'):
-                        module.conf = 0.05  # Lower confidence threshold
-                    if hasattr(module, 'iou'):
-                        module.iou = 0.3   # Lower IoU threshold for overlapping detections
-
-            print("🔧 Model optimized for polyp detection")
-            return model
-        else:
-            print(f"⚠️ Model file {model_path} not found. Loading default YOLOv11 model.")
+            models_to_try.append(model_path)
+        
+        # Then try various YOLO11 models (will auto-download if not found)
+        models_to_try.extend([
+            'yolo11m.pt',  # Medium model (best balance)
+            'yolo11n.pt',  # Nano model (fastest)
+            'yolo11s.pt',  # Small model
+            'yolo11l.pt',  # Large model
+            'yolov8n.pt',  # Fallback to YOLOv8
+            'yolov8s.pt',  # Fallback to YOLOv8 small
+        ])
+        
+        last_error = None
+        for model_name in models_to_try:
             try:
-                # Try to load YOLOv11 first
-                model = YOLO('yolo11n.pt')
-                print("✅ Loaded YOLOv11n model")
-            except:
+                print(f"🔄 Attempting to load {model_name}...")
+                # YOLO will automatically download the model if not found locally
+                model = YOLO(model_name)
+                
+                # Verify model loaded successfully
+                if model is None:
+                    continue
+                
+                # Set model to evaluation mode for inference
+                if hasattr(model, 'model'):
+                    model.model.eval()
+                
+                # Configure model for better polyp detection
                 try:
-                    # Fallback to YOLOv8
-                    model = YOLO('yolov8n.pt')
-                    print("✅ Loaded YOLOv8n model")
-                except:
-                    print("❌ Failed to load any YOLO model")
-                    return None
-            return model
+                    if hasattr(model.model, 'model'):
+                        for module in model.model.modules():
+                            if hasattr(module, 'conf'):
+                                module.conf = 0.05  # Lower confidence threshold
+                            if hasattr(module, 'iou'):
+                                module.iou = 0.3   # Lower IoU threshold for overlapping detections
+                except Exception as config_error:
+                    print(f"⚠️ Could not configure model settings: {config_error}")
+                    # Continue anyway, model will still work
+                
+                print(f"✅ Successfully loaded YOLO model: {model_name}")
+                print("🔧 Model optimized for polyp detection")
+                return model
+                
+            except Exception as e:
+                last_error = str(e)
+                print(f"⚠️ Failed to load {model_name}: {str(e)[:100]}")
+                continue
+        
+        # If all models failed
+        print(f"❌ Failed to load any YOLO model. Last error: {last_error}")
+        print("💡 Try installing ultralytics: pip install ultralytics")
+        return None
+        
     except Exception as e:
         print(f"❌ Error loading YOLO model: {e}")
+        import traceback
+        print(f"Traceback: {traceback.format_exc()}")
         return None
 
 def fine_tune_yolo_for_polyps(model, dataset_path="dataset", epochs=50, imgsz=640):
