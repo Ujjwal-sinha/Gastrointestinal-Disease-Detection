@@ -1,0 +1,23 @@
+Algorithm: Gastrointestinal Disease Detection with Multi-Agent Intelligence
+
+1) Dataset and orchestrator: D={(x_i,y_i)}_{i=1}^N, y_i∈{0,1}. Split 70/15/15 by patient; seeded π(s); lock D_test. Agents: A_p,A_t,A_e,A_c. Router ρ(state,m_k)→{A_p,A_t,A_e,A_c}.
+
+2) Preprocessing & QA by A_p: Validate ∈{JPG,JPEG,PNG}. Quality: q_blur=Var(∇²x), q_illum=(1/HW)Σx_{uv}. Enhance: x'=CLAHE(x), x''=BF(x'), E={Canny,Sobel,Laplacian}. Resize/pad 640×640; normalize x̂=(x̃−μ)/σ. Gate: s(x)=w₁·1[q_blur≥τ_b]+w₂·1[q_illum∈[τ_ℓ^-,τ_ℓ^+]]; accept if ≥τ_q.
+
+3) Augmentation (train): Spatial F_h(p=0.5), rotation θ~U[−15°,15°]. Photometric: x↦αx+β, γ~U[0.8,1.2]. x̂_aug=T_p(T_s(x̂)).
+
+4) Model config: YOLO11m, C={No-Polyp,Polyp}. τ_c=0.5, τ_IoU∈[0.4,0.7]. Device d∈{GPU,CPU,MPS}; seeds set; Xavier/Kaiming init.
+
+5) Training & validation by A_t: L_cls=−Σy_c logσ(ℓ_c), L_obj=BCE(o,o*), L_box=1−CIoU(b,b*); L=λ₁L_box+λ₂L_obj+λ₃L_cls. AdamW: θ_{t+1}=θ_t−η_t·(m̂_t/(√v̂_t+ε))−η_t·λ_w·θ_t. LR: warmup then cosine decay. ≤90 epochs, B∈{16,32}, patience p=10. Acc_val=(1/M)Σ1[ŷ_i=y_i]. Best: 99.47% @86; train≈99.8%, val loss≈0.02.
+
+6) Evaluation by A_e: Prec=TP/(TP+FP), Rec=TP/(TP+FN), F1=2(Prec·Rec)/(Prec+Rec), Acc=(TP+TN)/(TP+TN+FP+FN). Masks: Dice=2|S∩Ŝ|/(|S|+|Ŝ|), IoU=|S∩Ŝ|/|S∪Ŝ|. ECE=Σ_m(|B_m|/N)|acc(B_m)−conf(B_m)|, p̄≥0.7.
+
+7) Inference: x→x̂; YOLO11m(x̂)→{(b_j,p_j,c_j)}; NMS (keep p_j≥τ_c, suppress IoU>τ_IoU). Output: ŷ=argmax_c p(c|x), confidence p, boxes B*.
+
+8) Clinical analysis by A_c (dual-LLM: llama-3.1-8b-instant, qwen3-32b): z=(B*,p,metadata). s_m=f_m(B*,E), size_score=g(|B*|). Risk R=α₁·size_score+α₂·s_m+α₃·p̄. Ensemble: r*=argmax_r Σ_k w_k·1[r^(k)=r]. Output: management plan, narrative.
+
+9) Explainability: Grad-CAM CAM_c=ReLU(Σ_k α_k^cA^k), α_k^c=(1/Z)Σ_{u,v}∂y^c/∂A^k_{uv}. Optional: SHAP, LIME. Overlays: B*, confidences, edges E.
+
+10) Reporting & interface: PDF (results, metrics, recommendations, metadata). Streamlit (class, confidence, annotations, upload, PDF download).
+
+Validation: 99.47% @86; train≈99.8%, val loss≈0.02. YOLO11m 640×640; splits 837/179/180.

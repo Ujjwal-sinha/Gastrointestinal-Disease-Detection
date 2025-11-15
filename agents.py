@@ -12,11 +12,39 @@ import streamlit as st
 import time
 import random
 
-# LangChain imports
-from langchain.agents import initialize_agent
-from langchain.tools import BaseTool
-from langchain_groq import ChatGroq
-from langchain.memory import ConversationBufferMemory
+# LangChain imports with fallback handling
+try:
+    from langchain.agents import initialize_agent
+except ImportError:
+    try:
+        from langchain.agent import initialize_agent
+    except ImportError:
+        try:
+            from langchain.agents.agent import initialize_agent
+        except ImportError:
+            initialize_agent = None
+
+try:
+    from langchain.tools import BaseTool
+except ImportError:
+    try:
+        from langchain_core.tools import BaseTool
+    except ImportError:
+        BaseTool = None
+
+try:
+    from langchain_groq import ChatGroq
+except ImportError:
+    ChatGroq = None
+
+try:
+    from langchain.memory import ConversationBufferMemory
+except ImportError:
+    try:
+        from langchain_core.memory import ConversationBufferMemory
+    except ImportError:
+        ConversationBufferMemory = None
+
 from langchain_core.messages import HumanMessage, AIMessage
 from langchain_core.prompts import PromptTemplate
 
@@ -70,6 +98,16 @@ POLYP_KNOWLEDGE = {
         "description": "Polyps are abnormal growths in the gastrointestinal tract that can be precursors to colorectal cancer."
     }
 }
+
+# Create a simple tool class if BaseTool is not available
+if BaseTool is None:
+    class BaseTool:
+        name: str = ""
+        description: str = ""
+        def _run(self, query: str) -> str:
+            return ""
+        async def _arun(self, query: str) -> str:
+            return ""
 
 class PolypImageAnalysisTool(BaseTool):
     name: str = "polyp_image_analyzer"
@@ -219,12 +257,16 @@ class GastrointestinalPolypAIAgent:
             raise Exception(f"LLM initialization failed: {str(e)}")
         
         try:
-            print("🧠 Creating memory buffer...")
-            self.memory = ConversationBufferMemory(memory_key="chat_history")
-            print("✅ Memory buffer created")
+            if ConversationBufferMemory is not None:
+                print("🧠 Creating memory buffer...")
+                self.memory = ConversationBufferMemory(memory_key="chat_history")
+                print("✅ Memory buffer created")
+            else:
+                print("⚠️ ConversationBufferMemory not available, using None")
+                self.memory = None
         except Exception as e:
-            print(f"❌ Failed to create memory: {str(e)}")
-            raise Exception(f"Memory creation failed: {str(e)}")
+            print(f"⚠️ Failed to create memory: {str(e)}, using None")
+            self.memory = None
         
         # Initialize enhanced tools
         try:
@@ -238,23 +280,35 @@ class GastrointestinalPolypAIAgent:
             raise Exception(f"Tools initialization failed: {str(e)}")
         
         # Initialize agent with enhanced capabilities
-        try:
-            print("🚀 Initializing agent...")
-            self.agent = initialize_agent(
-                tools=self.tools,
-                llm=self.llm,
-                agent="conversational-react-description",
-                memory=self.memory,
-                verbose=self.verbose,
-                handle_parsing_errors=True
-            )
-            print("✅ Agent initialized successfully!")
-        except Exception as e:
-            print(f"❌ Failed to initialize agent: {str(e)}")
-            raise Exception(f"Agent initialization failed: {str(e)}")
+        self.agent = None
+        if initialize_agent is not None:
+            try:
+                print("🚀 Initializing agent...")
+                agent_kwargs = {
+                    "tools": self.tools,
+                    "llm": self.llm,
+                    "agent": "conversational-react-description",
+                    "verbose": self.verbose,
+                    "handle_parsing_errors": True
+                }
+                if self.memory is not None:
+                    agent_kwargs["memory"] = self.memory
+                
+                self.agent = initialize_agent(**agent_kwargs)
+                print("✅ Agent initialized successfully!")
+            except Exception as e:
+                print(f"⚠️ Agent initialization failed: {str(e)}")
+                print("💡 Will use direct LLM approach instead")
+                self.agent = None
+        else:
+            print("⚠️ initialize_agent not available, using direct LLM approach")
+            self.agent = None
     
     def _get_working_llm(self):
         """Get a working LLM instance with fallback models and retry logic."""
+        if ChatGroq is None:
+            raise Exception("ChatGroq is not available. Please install langchain-groq package.")
+        
         models_to_try = [
             "llama-3.1-8b-instant",
             "qwen/qwen3-32b"
@@ -395,10 +449,23 @@ class GastrointestinalPolypAIAgent:
         """
         
         try:
-            print("🤖 Running agent with prompt...")
-            response = self.agent.run(prompt)
-            print("✅ Agent analysis completed successfully!")
-            print("=" * 60)
+            if self.agent is not None:
+                print("🤖 Running agent with prompt...")
+                response = self.agent.run(prompt)
+                print("✅ Agent analysis completed successfully!")
+                print("=" * 60)
+            else:
+                print("🤖 Using direct LLM approach...")
+                # Use LLM directly if agent is not available
+                response = self.llm.invoke(prompt)
+                if hasattr(response, 'content'):
+                    response = response.content
+                elif isinstance(response, str):
+                    response = response
+                else:
+                    response = str(response)
+                print("✅ LLM analysis completed successfully!")
+                print("=" * 60)
 
             return {
                 "analysis": response,
@@ -407,7 +474,7 @@ class GastrointestinalPolypAIAgent:
                 "agent_version": "2.0_enhanced"
             }
         except Exception as e:
-            print(f"❌ Agent analysis failed: {str(e)}")
+            print(f"❌ Analysis failed: {str(e)}")
             print("🔄 Using fallback analysis...")
             print("=" * 60)
             return {
