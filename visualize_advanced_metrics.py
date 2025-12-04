@@ -248,38 +248,57 @@ def plot_advanced_metrics(save_dir):
     fig, axes = plt.subplots(2, 2, figsize=(15, 12))
     
     # Precision
-    axes[0, 0].bar(class_names, metrics_data['Precision'])
-    axes[0, 0].set_title('Precision by Class', fontweight='bold')
+    bars1 = axes[0, 0].bar(class_names, metrics_data['Precision'], color='#2ecc71')
+    axes[0, 0].set_title('Precision by Class (Val Acc: 99.47% @ Epoch 86)', fontweight='bold')
     axes[0, 0].set_xlabel('Class', fontweight='bold')
     axes[0, 0].set_ylabel('Precision', fontweight='bold')
     axes[0, 0].tick_params(axis='x', rotation=45)
+    for bar, val in zip(bars1, metrics_data['Precision']):
+        height = bar.get_height()
+        axes[0, 0].text(bar.get_x() + bar.get_width()/2., height,
+                       f'{val:.3f}', ha='center', va='bottom', fontweight='bold', fontsize=10)
     
     # Recall
-    axes[0, 1].bar(class_names, metrics_data['Recall'])
-    axes[0, 1].set_title('Recall by Class', fontweight='bold')
+    bars2 = axes[0, 1].bar(class_names, metrics_data['Recall'], color='#3498db')
+    axes[0, 1].set_title('Recall by Class (Val Acc: 99.47% @ Epoch 86)', fontweight='bold')
     axes[0, 1].set_xlabel('Class', fontweight='bold')
     axes[0, 1].set_ylabel('Recall', fontweight='bold')
     axes[0, 1].tick_params(axis='x', rotation=45)
+    for bar, val in zip(bars2, metrics_data['Recall']):
+        height = bar.get_height()
+        axes[0, 1].text(bar.get_x() + bar.get_width()/2., height,
+                       f'{val:.3f}', ha='center', va='bottom', fontweight='bold', fontsize=10)
     
     # F1-Score
-    axes[1, 0].bar(class_names, metrics_data['F1-Score'])
-    axes[1, 0].set_title('F1-Score by Class', fontweight='bold')
+    bars3 = axes[1, 0].bar(class_names, metrics_data['F1-Score'], color='#e74c3c')
+    axes[1, 0].set_title('F1-Score by Class (Val Acc: 99.47% @ Epoch 86)', fontweight='bold')
     axes[1, 0].set_xlabel('Class', fontweight='bold')
     axes[1, 0].set_ylabel('F1-Score', fontweight='bold')
     axes[1, 0].tick_params(axis='x', rotation=45)
+    for bar, val in zip(bars3, metrics_data['F1-Score']):
+        height = bar.get_height()
+        axes[1, 0].text(bar.get_x() + bar.get_width()/2., height,
+                       f'{val:.3f}', ha='center', va='bottom', fontweight='bold', fontsize=10)
     
     # Combined Metrics
     x = np.arange(len(class_names))
     width = 0.25
-    axes[1, 1].bar(x - width, metrics_data['Precision'], width, label='Precision')
-    axes[1, 1].bar(x, metrics_data['Recall'], width, label='Recall')
-    axes[1, 1].bar(x + width, metrics_data['F1-Score'], width, label='F1-Score')
+    bars1_comb = axes[1, 1].bar(x - width, metrics_data['Precision'], width, label='Precision', color='#2ecc71')
+    bars2_comb = axes[1, 1].bar(x, metrics_data['Recall'], width, label='Recall', color='#3498db')
+    bars3_comb = axes[1, 1].bar(x + width, metrics_data['F1-Score'], width, label='F1-Score', color='#e74c3c')
     axes[1, 1].set_xticks(x)
     axes[1, 1].set_xticklabels(class_names, rotation=45)
-    axes[1, 1].set_title('Combined Metrics by Class', fontweight='bold')
+    axes[1, 1].set_title('Combined Metrics by Class (Val Acc: 99.47% @ Epoch 86)', fontweight='bold')
     axes[1, 1].set_xlabel('Class', fontweight='bold')
     axes[1, 1].set_ylabel('Score', fontweight='bold')
     axes[1, 1].legend(prop={'weight': 'bold'})
+    for bars, values in [(bars1_comb, metrics_data['Precision']), 
+                        (bars2_comb, metrics_data['Recall']), 
+                        (bars3_comb, metrics_data['F1-Score'])]:
+        for bar, val in zip(bars, values):
+            height = bar.get_height()
+            axes[1, 1].text(bar.get_x() + bar.get_width()/2., height,
+                           f'{val:.3f}', ha='center', va='bottom', fontweight='bold', fontsize=9)
     
     plt.tight_layout()
     plt.savefig(f'{save_dir}/class_performance_metrics.png', dpi=300, bbox_inches='tight')
@@ -290,22 +309,37 @@ def plot_advanced_metrics(save_dir):
     # Sample Distribution
     plt.figure(figsize=(12, 6))
     sample_counts = np.bincount(y_true)
-    plt.bar(class_names, sample_counts)
-    plt.title('Sample Distribution Across Classes', fontweight='bold')
+    bars = plt.bar(class_names, sample_counts, color=['#e74c3c', '#3498db'])
+    plt.title('Sample Distribution Across Classes (Val Acc: 99.47% @ Epoch 86)', fontweight='bold', fontsize=12)
     plt.xlabel('Class', fontweight='bold')
     plt.ylabel('Number of Samples', fontweight='bold')
     plt.xticks(rotation=45)
+    for bar, count in zip(bars, sample_counts):
+        height = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width()/2., height,
+                f'{count}', ha='center', va='bottom', fontweight='bold', fontsize=12)
+    plt.grid(True, alpha=0.3, axis='y')
     plt.tight_layout()
     plt.savefig(f'{save_dir}/sample_distribution.png', dpi=300, bbox_inches='tight')
     plt.close()
     
     # GPU Memory Usage
     plt.figure(figsize=(12, 6))
-    plt.plot(history['epoch'], history['gpu_memory'], linewidth=2)
-    plt.title('GPU Memory Usage During Training', fontweight='bold')
+    plt.plot(history['epoch'], history['gpu_memory'], linewidth=2, marker='o', markersize=3, color='#9b59b6')
+    plt.title('GPU Memory Usage During Training (Val Acc: 99.47% @ Epoch 86)', fontweight='bold', fontsize=12)
     plt.xlabel('Epoch', fontweight='bold')
     plt.ylabel('Memory Usage (GB)', fontweight='bold')
-    plt.grid(True)
+    plt.grid(True, alpha=0.3)
+    # Add value annotations at key epochs
+    for epoch in key_epochs:
+        if epoch <= len(history['epoch']):
+            idx = epoch - 1
+            mem = history['gpu_memory'][idx]
+            plt.annotate(f'{mem:.2f}GB', 
+                        xy=(epoch, mem),
+                        xytext=(0, 5), textcoords='offset points',
+                        fontsize=8, fontweight='bold',
+                        ha='center', va='bottom')
     plt.tight_layout()
     plt.savefig(f'{save_dir}/gpu_memory_usage.png', dpi=300, bbox_inches='tight')
     plt.close()
@@ -322,11 +356,17 @@ def plot_advanced_metrics(save_dir):
     plt.figure(figsize=(12, 8))
     sns.heatmap(error_matrix, annot=True, fmt='.0f', cmap='Reds',
                 xticklabels=class_names, yticklabels=class_names,
-                annot_kws={'weight': 'bold', 'size': 12})
-    plt.title('Gastrointestinal Polyp Detection Error Distribution Matrix (99.47% Accuracy)', fontweight='bold')
+                annot_kws={'weight': 'bold', 'size': 14}, cbar_kws={'label': 'Error Count'})
+    plt.title('Gastrointestinal Polyp Detection Error Distribution Matrix (Val Acc: 99.47% @ Epoch 86)', 
+             fontweight='bold', fontsize=13)
     plt.xlabel('Predicted Class', fontweight='bold')
     plt.ylabel('True Class', fontweight='bold')
     plt.xticks(rotation=45)
+    # Add total error count annotation
+    total_errors = int(np.sum(error_matrix))
+    plt.text(0.5, -0.15, f'Total Errors: {total_errors} (Accuracy: 99.47% @ Epoch 86)', 
+            transform=plt.gca().transAxes, ha='center', fontweight='bold', fontsize=11,
+            bbox=dict(boxstyle='round,pad=0.5', facecolor='yellow', alpha=0.7))
     plt.tight_layout()
     plt.savefig(f'{save_dir}/error_distribution.png', dpi=300, bbox_inches='tight')
     plt.close()
@@ -347,11 +387,34 @@ def plot_advanced_metrics(save_dir):
     
     for metric_name, values in metrics.items():
         plt.figure(figsize=(12, 6))
-        plt.bar(class_names, values)
-        plt.title(f'{metric_name.replace("_", " ").title()} by Class', fontweight='bold')
+        bars = plt.bar(class_names, values, color=['#e74c3c', '#3498db'])
+        plt.title(f'{metric_name.replace("_", " ").title()} by Class (Val Acc: 99.47% @ Epoch 86)', 
+                 fontweight='bold', fontsize=12)
         plt.xlabel('Class', fontweight='bold')
         plt.ylabel('Value', fontweight='bold')
         plt.xticks(rotation=45)
+        # Add value labels on bars
+        for bar, val in zip(bars, values):
+            height = bar.get_height()
+            if metric_name in ['confidence_scores', 'model_complexity', 'detection_threshold', 'prediction_stability']:
+                plt.text(bar.get_x() + bar.get_width()/2., height,
+                        f'{val:.3f}', ha='center', va='bottom', fontweight='bold', fontsize=10)
+            elif metric_name in ['inference_time', 'processing_time']:
+                plt.text(bar.get_x() + bar.get_width()/2., height,
+                        f'{val:.3f}s', ha='center', va='bottom', fontweight='bold', fontsize=10)
+            elif metric_name in ['false_positives', 'false_negatives']:
+                plt.text(bar.get_x() + bar.get_width()/2., height,
+                        f'{int(val)}', ha='center', va='bottom', fontweight='bold', fontsize=10)
+            elif metric_name in ['memory_usage']:
+                plt.text(bar.get_x() + bar.get_width()/2., height,
+                        f'{val:.2f}GB', ha='center', va='bottom', fontweight='bold', fontsize=10)
+            elif metric_name in ['error_rate']:
+                plt.text(bar.get_x() + bar.get_width()/2., height,
+                        f'{val:.4f}', ha='center', va='bottom', fontweight='bold', fontsize=10)
+            else:
+                plt.text(bar.get_x() + bar.get_width()/2., height,
+                        f'{val:.2f}', ha='center', va='bottom', fontweight='bold', fontsize=10)
+        plt.grid(True, alpha=0.3, axis='y')
         plt.tight_layout()
         plt.savefig(f'{save_dir}/{metric_name}.png', dpi=300, bbox_inches='tight')
         plt.close()
@@ -372,11 +435,28 @@ def plot_advanced_metrics(save_dir):
     
     for metric_name, values in time_series.items():
         plt.figure(figsize=(12, 6))
-        plt.plot(range(1, 87), values, linewidth=2)
-        plt.title(f'{metric_name.replace("_", " ").title()} Over Training', fontweight='bold')
+        plt.plot(range(1, 87), values, linewidth=2, marker='o', markersize=2)
+        plt.title(f'{metric_name.replace("_", " ").title()} Over Training (Val Acc: 99.47% @ Epoch 86)', 
+                 fontweight='bold', fontsize=12)
         plt.xlabel('Epoch', fontweight='bold')
         plt.ylabel('Value', fontweight='bold')
-        plt.grid(True)
+        plt.grid(True, alpha=0.3)
+        # Add value annotations at key epochs
+        for epoch in key_epochs:
+            if epoch <= len(values):
+                val = values[epoch - 1]
+                plt.annotate(f'{val:.3f}', 
+                            xy=(epoch, val),
+                            xytext=(0, 5), textcoords='offset points',
+                            fontsize=8, fontweight='bold',
+                            ha='center', va='bottom')
+        # Highlight epoch 86
+        plt.axvline(x=86, color='red', linestyle='--', alpha=0.5, linewidth=1)
+        plt.annotate('Epoch 86\n99.47%', 
+                    xy=(86, values[85]),
+                    xytext=(10, 10), textcoords='offset points',
+                    bbox=dict(boxstyle='round,pad=0.3', fc='yellow', alpha=0.7),
+                    fontweight='bold', fontsize=9)
         plt.tight_layout()
         plt.savefig(f'{save_dir}/{metric_name}.png', dpi=300, bbox_inches='tight')
         plt.close()
