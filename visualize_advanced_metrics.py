@@ -198,19 +198,41 @@ def plot_advanced_metrics(save_dir):
                         ha='center', va='top', color='blue')
     
     # Learning Rate
-    ax3.plot(history['epoch'], history['learning_rate'], 'g-', linewidth=2)
-    ax3.set_title('Learning Rate Schedule', fontweight='bold')
+    ax3.plot(history['epoch'], history['learning_rate'], 'g-', linewidth=2, marker='o', markersize=3)
+    ax3.set_title('Learning Rate Schedule', fontweight='bold', fontsize=12)
     ax3.set_xlabel('Epoch', fontweight='bold')
     ax3.set_ylabel('Learning Rate', fontweight='bold')
     ax3.set_yscale('log')
-    ax3.grid(True)
+    ax3.grid(True, alpha=0.3)
+    
+    # Add value annotations at key epochs
+    for epoch in [1, 25, 50, 75, 86]:
+        if epoch <= len(history['epoch']):
+            idx = epoch - 1
+            lr = history['learning_rate'][idx]
+            ax3.annotate(f'{lr:.2e}', 
+                        xy=(epoch, lr),
+                        xytext=(0, 5), textcoords='offset points',
+                        fontsize=8, fontweight='bold',
+                        ha='center', va='bottom', rotation=45)
     
     # Batch Processing Time
-    ax4.plot(history['epoch'], history['batch_time'], 'c-', linewidth=2)
-    ax4.set_title('Batch Processing Time', fontweight='bold')
+    ax4.plot(history['epoch'], history['batch_time'], 'c-', linewidth=2, marker='o', markersize=3)
+    ax4.set_title('Batch Processing Time', fontweight='bold', fontsize=12)
     ax4.set_xlabel('Epoch', fontweight='bold')
     ax4.set_ylabel('Time (seconds)', fontweight='bold')
-    ax4.grid(True)
+    ax4.grid(True, alpha=0.3)
+    
+    # Add value annotations at key epochs
+    for epoch in key_epochs:
+        if epoch <= len(history['epoch']):
+            idx = epoch - 1
+            batch_time = history['batch_time'][idx]
+            ax4.annotate(f'{batch_time:.2f}s', 
+                        xy=(epoch, batch_time),
+                        xytext=(0, 5), textcoords='offset points',
+                        fontsize=8, fontweight='bold',
+                        ha='center', va='bottom')
     
     plt.tight_layout()
     plt.savefig(f'{save_dir}/training_progress.png', dpi=300, bbox_inches='tight')
