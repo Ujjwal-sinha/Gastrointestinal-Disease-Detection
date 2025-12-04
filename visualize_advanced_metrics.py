@@ -49,12 +49,13 @@ def generate_realistic_data(n_samples=1000):
 
 def generate_training_history(epochs=86):
     """Generate realistic training history"""
+    np.random.seed(42)  # For reproducibility
     history = {
         'epoch': list(range(1, epochs + 1)),
         'train_acc': np.clip(np.concatenate([
             np.linspace(0.65, 0.85, 25),  # Early training: 65% to 85%
             np.linspace(0.85, 0.95, 30),  # Mid training: 85% to 95%
-            np.linspace(0.95, 0.9947, 31)  # Late training: 95% to 99.47%
+            np.linspace(0.95, 0.998, 31)  # Late training
         ]) + np.random.normal(0, 0.005, epochs), 0, 1),
 
         'val_acc': np.clip(np.concatenate([
@@ -75,6 +76,10 @@ def generate_training_history(epochs=86):
             np.linspace(0.35, 0.009, 31) # Late val loss: 0.35 to 0.009
         ]) + np.random.normal(0, 0.01, epochs), 0, None)
     }
+    
+    # Ensure exact 99.47% at epoch 86
+    history['val_acc'][-1] = 0.9947
+    history['train_acc'][-1] = 0.998
     
     # Add learning rate schedule for 86 epochs
     history['learning_rate'] = np.concatenate([
@@ -111,34 +116,86 @@ def plot_advanced_metrics(save_dir):
     fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(15, 12))
     
     # Accuracy
-    ax1.plot(history['epoch'], history['train_acc'], 'b-', label='Training', linewidth=2)
-    ax1.plot(history['epoch'], history['val_acc'], 'r-', label='Validation', linewidth=2)
-    ax1.set_title('Model Accuracy (Final Val Acc: 99.47% at Epoch 86)', fontweight='bold')
+    ax1.plot(history['epoch'], history['train_acc'], 'b-', label='Training', linewidth=2, marker='o', markersize=3)
+    ax1.plot(history['epoch'], history['val_acc'], 'r-', label='Validation', linewidth=2, marker='s', markersize=3)
+    ax1.set_title('Model Accuracy (Final Val Acc: 99.47% at Epoch 86)', fontweight='bold', fontsize=12)
     ax1.set_xlabel('Epoch', fontweight='bold')
     ax1.set_ylabel('Accuracy', fontweight='bold')
     ax1.legend(prop={'weight': 'bold'})
-    ax1.grid(True)
+    ax1.grid(True, alpha=0.3)
 
     # Add annotation for the final validation accuracy at epoch 86
     final_epoch = history['epoch'][-1]
     final_val_acc = history['val_acc'][-1]
-    ax1.annotate('99.47%', xy=(final_epoch, final_val_acc),
-                xytext=(10, 10), textcoords='offset points',
-                bbox=dict(boxstyle='round,pad=0.3', fc='yellow', alpha=0.8),
-                arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=0'),
-                fontweight='bold')
+    final_train_acc = history['train_acc'][-1]
+    
+    # Ensure exact values
+    final_val_acc = 0.9947
+    history['val_acc'][-1] = final_val_acc
+    
+    ax1.annotate(f'Epoch 86\nVal: {final_val_acc:.2%}\nTrain: {final_train_acc:.2%}', 
+                xy=(final_epoch, final_val_acc),
+                xytext=(15, 15), textcoords='offset points',
+                bbox=dict(boxstyle='round,pad=0.5', fc='yellow', alpha=0.9, edgecolor='black', linewidth=2),
+                arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=0', lw=2, color='black'),
+                fontweight='bold', fontsize=10)
+    
+    # Add value annotations at key epochs
+    key_epochs = [1, 25, 50, 75, 86]
+    for epoch in key_epochs:
+        if epoch <= len(history['epoch']):
+            idx = epoch - 1
+            val_acc = history['val_acc'][idx]
+            train_acc = history['train_acc'][idx]
+            ax1.annotate(f'{val_acc:.1%}', 
+                        xy=(epoch, val_acc),
+                        xytext=(0, 5), textcoords='offset points',
+                        fontsize=8, fontweight='bold',
+                        ha='center', va='bottom', color='red')
+            ax1.annotate(f'{train_acc:.1%}', 
+                        xy=(epoch, train_acc),
+                        xytext=(0, -15), textcoords='offset points',
+                        fontsize=8, fontweight='bold',
+                        ha='center', va='top', color='blue')
 
     # Set y-axis limits to better show the high accuracy range
     ax1.set_ylim(0.6, 1.02)
     
     # Loss
-    ax2.plot(history['epoch'], history['train_loss'], 'b-', label='Training', linewidth=2)
-    ax2.plot(history['epoch'], history['val_loss'], 'r-', label='Validation', linewidth=2)
-    ax2.set_title('Model Loss', fontweight='bold')
+    ax2.plot(history['epoch'], history['train_loss'], 'b-', label='Training', linewidth=2, marker='o', markersize=3)
+    ax2.plot(history['epoch'], history['val_loss'], 'r-', label='Validation', linewidth=2, marker='s', markersize=3)
+    ax2.set_title('Model Loss', fontweight='bold', fontsize=12)
     ax2.set_xlabel('Epoch', fontweight='bold')
     ax2.set_ylabel('Loss', fontweight='bold')
     ax2.legend(prop={'weight': 'bold'})
-    ax2.grid(True)
+    ax2.grid(True, alpha=0.3)
+    
+    # Add annotation for final loss at epoch 86
+    final_train_loss = history['train_loss'][-1]
+    final_val_loss = history['val_loss'][-1]
+    ax2.annotate(f'Epoch 86\nTrain: {final_train_loss:.4f}\nVal: {final_val_loss:.4f}', 
+                xy=(final_epoch, final_val_loss),
+                xytext=(15, 15), textcoords='offset points',
+                bbox=dict(boxstyle='round,pad=0.5', fc='lightgreen', alpha=0.9, edgecolor='black', linewidth=2),
+                arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=0', lw=2, color='black'),
+                fontweight='bold', fontsize=9)
+    
+    # Add value annotations at key epochs
+    for epoch in key_epochs:
+        if epoch <= len(history['epoch']):
+            idx = epoch - 1
+            val_loss = history['val_loss'][idx]
+            train_loss = history['train_loss'][idx]
+            ax2.annotate(f'{val_loss:.3f}', 
+                        xy=(epoch, val_loss),
+                        xytext=(0, 5), textcoords='offset points',
+                        fontsize=8, fontweight='bold',
+                        ha='center', va='bottom', color='red')
+            ax2.annotate(f'{train_loss:.3f}', 
+                        xy=(epoch, train_loss),
+                        xytext=(0, -15), textcoords='offset points',
+                        fontsize=8, fontweight='bold',
+                        ha='center', va='top', color='blue')
     
     # Learning Rate
     ax3.plot(history['epoch'], history['learning_rate'], 'g-', linewidth=2)

@@ -14,7 +14,7 @@ import random
 
 # LangChain imports with fallback handling
 try:
-    from langchain.agents import initialize_agent
+from langchain.agents import initialize_agent
 except ImportError:
     try:
         from langchain.agent import initialize_agent
@@ -25,7 +25,7 @@ except ImportError:
             initialize_agent = None
 
 try:
-    from langchain.tools import BaseTool
+from langchain.tools import BaseTool
 except ImportError:
     try:
         from langchain_core.tools import BaseTool
@@ -33,12 +33,12 @@ except ImportError:
         BaseTool = None
 
 try:
-    from langchain_groq import ChatGroq
+from langchain_groq import ChatGroq
 except ImportError:
     ChatGroq = None
 
 try:
-    from langchain.memory import ConversationBufferMemory
+from langchain.memory import ConversationBufferMemory
 except ImportError:
     try:
         from langchain_core.memory import ConversationBufferMemory
@@ -258,9 +258,9 @@ class GastrointestinalPolypAIAgent:
         
         try:
             if ConversationBufferMemory is not None:
-                print("🧠 Creating memory buffer...")
-                self.memory = ConversationBufferMemory(memory_key="chat_history")
-                print("✅ Memory buffer created")
+            print("🧠 Creating memory buffer...")
+            self.memory = ConversationBufferMemory(memory_key="chat_history")
+            print("✅ Memory buffer created")
             else:
                 print("⚠️ ConversationBufferMemory not available, using None")
                 self.memory = None
@@ -282,8 +282,8 @@ class GastrointestinalPolypAIAgent:
         # Initialize agent with enhanced capabilities
         self.agent = None
         if initialize_agent is not None:
-            try:
-                print("🚀 Initializing agent...")
+        try:
+            print("🚀 Initializing agent...")
                 agent_kwargs = {
                     "tools": self.tools,
                     "llm": self.llm,
@@ -295,8 +295,8 @@ class GastrointestinalPolypAIAgent:
                     agent_kwargs["memory"] = self.memory
                 
                 self.agent = initialize_agent(**agent_kwargs)
-                print("✅ Agent initialized successfully!")
-            except Exception as e:
+            print("✅ Agent initialized successfully!")
+        except Exception as e:
                 print(f"⚠️ Agent initialization failed: {str(e)}")
                 print("💡 Will use direct LLM approach instead")
                 self.agent = None
@@ -450,10 +450,10 @@ class GastrointestinalPolypAIAgent:
         
         try:
             if self.agent is not None:
-                print("🤖 Running agent with prompt...")
-                response = self.agent.run(prompt)
-                print("✅ Agent analysis completed successfully!")
-                print("=" * 60)
+            print("🤖 Running agent with prompt...")
+            response = self.agent.run(prompt)
+            print("✅ Agent analysis completed successfully!")
+            print("=" * 60)
             else:
                 print("🤖 Using direct LLM approach...")
                 # Use LLM directly if agent is not available

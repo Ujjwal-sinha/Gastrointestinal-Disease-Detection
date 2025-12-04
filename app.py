@@ -513,7 +513,7 @@ dataset_dir = os.path.join(current_dir, "dataset")
 
 # Fallback to absolute path if relative doesn't exist (for local development)
 if not os.path.exists(dataset_dir):
-    dataset_dir = "/Users/ujjwalsinha/Gastrointestinal-Disease-Detection/dataset"
+dataset_dir = "/Users/ujjwalsinha/Gastrointestinal-Disease-Detection/dataset"
 
 classes = ['Polyp', 'No Polyp']  # Unified polyp classes for both datasets
 total_images = 0
@@ -533,11 +533,11 @@ if os.path.exists(kvasir_seg_dir):
     
     if os.path.exists(images_dir):
         try:
-            images = [f for f in os.listdir(images_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
-            seg_count = len(images)
-            total_images += seg_count
-            dataset_info['kvasir-seg'] = seg_count
-            print(f"Found {seg_count} images in Kvasir-SEG dataset")
+        images = [f for f in os.listdir(images_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+        seg_count = len(images)
+        total_images += seg_count
+        dataset_info['kvasir-seg'] = seg_count
+        print(f"Found {seg_count} images in Kvasir-SEG dataset")
         except Exception as e:
             print(f"Error reading Kvasir-SEG directory: {e}")
             # Use expected count as fallback
@@ -563,11 +563,11 @@ if os.path.exists(kvasir_sessile_dir):
     
     if os.path.exists(images_dir):
         try:
-            images = [f for f in os.listdir(images_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
-            sessile_count = len(images)
-            total_images += sessile_count
-            dataset_info['kvasir-sessile'] = sessile_count
-            print(f"Found {sessile_count} images in Kvasir-Sessile dataset")
+        images = [f for f in os.listdir(images_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+        sessile_count = len(images)
+        total_images += sessile_count
+        dataset_info['kvasir-sessile'] = sessile_count
+        print(f"Found {sessile_count} images in Kvasir-Sessile dataset")
         except Exception as e:
             print(f"Error reading Kvasir-Sessile directory: {e}")
             # Use expected count as fallback
@@ -593,26 +593,26 @@ if 'yolo_model' in st.session_state and st.session_state.yolo_model is not None:
     yolo_model = st.session_state.yolo_model
     print("✅ Using YOLO model from session state")
 else:
-    yolo_model = None
-    try:
+yolo_model = None
+try:
         with st.spinner("🔄 Loading YOLO model (this may download the model on first run)..."):
-            yolo_model = load_yolo_model("yolo11m.pt")
+        yolo_model = load_yolo_model("yolo11m.pt")
             if yolo_model is not None:
                 st.success("✅ YOLO model loaded successfully!")
                 # Store in session state for persistence
                 st.session_state.yolo_model = yolo_model
                 print("✅ YOLO model stored in session state")
-            else:
+        else:
                 st.warning("⚠️ YOLO model not available - will use CNN fallback")
                 st.info("💡 To enable YOLO: Install ultralytics with `pip install ultralytics`")
                 # Clear session state if model failed to load
                 if 'yolo_model' in st.session_state:
                     del st.session_state.yolo_model
-    except Exception as e:
-        st.warning(f"⚠️ YOLO model initialization failed: {str(e)}")
-        st.info("💡 Will use CNN model as fallback")
+except Exception as e:
+    st.warning(f"⚠️ YOLO model initialization failed: {str(e)}")
+    st.info("💡 Will use CNN model as fallback")
         st.info("💡 To enable YOLO: Install ultralytics with `pip install ultralytics`")
-        yolo_model = None
+    yolo_model = None
         # Clear session state if model failed to load
         if 'yolo_model' in st.session_state:
             del st.session_state.yolo_model

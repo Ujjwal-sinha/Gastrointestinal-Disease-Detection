@@ -113,25 +113,25 @@ def load_yolo_model(model_path="yolo11m.pt"):
                 if model is None:
                     continue
                 
-                # Set model to evaluation mode for inference
+            # Set model to evaluation mode for inference
                 if hasattr(model, 'model'):
-                    model.model.eval()
-                
-                # Configure model for better polyp detection
+            model.model.eval()
+
+            # Configure model for better polyp detection
                 try:
-                    if hasattr(model.model, 'model'):
-                        for module in model.model.modules():
-                            if hasattr(module, 'conf'):
-                                module.conf = 0.05  # Lower confidence threshold
-                            if hasattr(module, 'iou'):
-                                module.iou = 0.3   # Lower IoU threshold for overlapping detections
+            if hasattr(model.model, 'model'):
+                for module in model.model.modules():
+                    if hasattr(module, 'conf'):
+                        module.conf = 0.05  # Lower confidence threshold
+                    if hasattr(module, 'iou'):
+                        module.iou = 0.3   # Lower IoU threshold for overlapping detections
                 except Exception as config_error:
                     print(f"⚠️ Could not configure model settings: {config_error}")
                     # Continue anyway, model will still work
-                
+
                 print(f"✅ Successfully loaded YOLO model: {model_name}")
-                print("🔧 Model optimized for polyp detection")
-                return model
+            print("🔧 Model optimized for polyp detection")
+            return model
                 
             except Exception as e:
                 last_error = str(e)
@@ -141,7 +141,7 @@ def load_yolo_model(model_path="yolo11m.pt"):
         # If all models failed
         print(f"❌ Failed to load any YOLO model. Last error: {last_error}")
         print("💡 Try installing ultralytics: pip install ultralytics")
-        return None
+                    return None
         
     except Exception as e:
         print(f"❌ Error loading YOLO model: {e}")
