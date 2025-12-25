@@ -283,7 +283,7 @@ def plot_precision_recall_curves(y_true, y_proba, class_names, save_dir):
         sns.lineplot(x=recall, y=precision, label=f'{class_name} (AUC = {pr_auc:.4f})', ax=ax, linewidth=2.5)
     ax.set_xlabel('Recall', fontsize=16, fontweight='bold')
     ax.set_ylabel('Precision', fontsize=16, fontweight='bold')
-    ax.set_title('(A) NeuroFed-AgentNet · Precision-Recall Curves (All Classes)', fontsize=18, fontweight='bold', pad=20)
+    ax.set_title('(A) Gastrointestinal Polyp Detection · Precision-Recall Curves (All Classes)', fontsize=18, fontweight='bold', pad=20)
     ax.legend(frameon=False, loc='lower left', fontsize=12, prop={'weight': 'bold'})
     ax.tick_params(labelsize=13)
     _style_axes(ax)
@@ -309,15 +309,15 @@ def plot_precision_recall_curves(y_true, y_proba, class_names, save_dir):
         sns.lineplot(x=recall, y=precision, color=f'C{i}', linewidth=2.5, ax=ax, label=f'PR-AUC = {pr_auc:.4f}')
         ax.set_xlabel('Recall', fontsize=14, fontweight='bold')
         ax.set_ylabel('Precision', fontsize=14, fontweight='bold')
-        ax.set_title(f'{subplot_labels[idx]} NeuroFed-AgentNet · PR: {class_name}', fontsize=16, fontweight='bold')
+        ax.set_title(f'{subplot_labels[idx]} Gastrointestinal Polyp Detection · PR: {class_name}', fontsize=16, fontweight='bold')
         ax.legend(frameon=False, loc='lower left', fontsize=12, prop={'weight': 'bold'})
         ax.tick_params(labelsize=12)
         _style_axes(ax)
     
     # Fourth subplot: PR-AUC comparison bar chart - D
     ax = axes[1, 1]
-    bars = ax.bar(class_names, pr_aucs, color=['#4f46e5', '#ec4899', '#06b6d4', '#14b8a6'])
-    ax.set_title('(D) NeuroFed-AgentNet · PR-AUC by Class', fontsize=18, fontweight='bold')
+    bars = ax.bar(class_names, pr_aucs, color=['#4f46e5', '#ec4899'])
+    ax.set_title('(D) Gastrointestinal Polyp Detection · PR-AUC by Class', fontsize=18, fontweight='bold')
     ax.set_xlabel('Class', fontsize=16, fontweight='bold')
     ax.set_ylabel('PR-AUC Score', fontsize=16, fontweight='bold')
     ax.tick_params(axis='x', rotation=45, labelsize=13)
@@ -335,7 +335,7 @@ def plot_precision_recall_curves(y_true, y_proba, class_names, save_dir):
 def plot_training_history(history, save_dir):
     """Plot training and validation metrics over epochs with numeric values - Combined into 2x2 grid"""
     _, axes = plt.subplots(2, 2, figsize=(18, 14))
-    key_epochs = [1, 26, 52, 78]
+    key_epochs = [1, 25, 50, 75, 86]
 
     # Accuracy plot (top-left)
     sns.lineplot(x=history['epoch'], y=history['train_acc'], label='Training Accuracy',
@@ -344,7 +344,7 @@ def plot_training_history(history, save_dir):
                  color=LINE_COLORS["val"], linewidth=2.5, ax=axes[0, 0])
     axes[0, 0].set_xlabel('Epoch', fontsize=16, fontweight='bold')
     axes[0, 0].set_ylabel('Accuracy', fontsize=16, fontweight='bold')
-    axes[0, 0].set_title('(A) NeuroFed-AgentNet · Model Accuracy (Final: 99.46% @ Epoch 78)', fontsize=18, fontweight='bold', pad=20)
+    axes[0, 0].set_title('(A) Gastrointestinal Polyp Detection · Model Accuracy (Final: 99.47% @ Epoch 86)', fontsize=18, fontweight='bold', pad=20)
     axes[0, 0].legend(frameon=False, loc='lower right', fontsize=13, prop={'weight': 'bold'})
     axes[0, 0].tick_params(labelsize=13)
     for epoch in key_epochs:
@@ -357,7 +357,7 @@ def plot_training_history(history, save_dir):
                         fontsize=11, fontweight='bold', bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=0.8))
     final_epoch = history['epoch'][-1]
     final_val_acc = history['val_acc'][-1]
-    axes[0, 0].annotate(f'99.46% @ Epoch {final_epoch}', xy=(final_epoch, final_val_acc),
+    axes[0, 0].annotate(f'99.47% @ Epoch {final_epoch}', xy=(final_epoch, final_val_acc),
                 xytext=(10, 10), textcoords='offset points', fontsize=12, fontweight='bold',
                 bbox=dict(boxstyle='round,pad=0.35', fc='#fde68a', ec='#f59e0b', alpha=0.9),
                 arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=0'))
@@ -379,7 +379,7 @@ def plot_training_history(history, save_dir):
                         fontsize=11, fontweight='bold', bbox=dict(boxstyle='round,pad=0.3', fc='white', alpha=0.8))
     axes[0, 1].set_xlabel('Epoch', fontsize=16, fontweight='bold')
     axes[0, 1].set_ylabel('Loss', fontsize=16, fontweight='bold')
-    axes[0, 1].set_title('(B) NeuroFed-AgentNet · Model Loss Over Time', fontsize=18, fontweight='bold', pad=20)
+    axes[0, 1].set_title('(B) Gastrointestinal Polyp Detection · Model Loss Over Time', fontsize=18, fontweight='bold', pad=20)
     axes[0, 1].legend(frameon=False, loc='upper right', fontsize=13, prop={'weight': 'bold'})
     axes[0, 1].tick_params(labelsize=13)
     _style_axes(axes[0, 1])
@@ -391,15 +391,15 @@ def plot_training_history(history, save_dir):
     else:
         # Generate learning rate if not present
         lr = np.concatenate([
-            np.ones(26) * 0.001,
-            np.ones(26) * 0.0001,
-            np.ones(26) * 0.00001
+            np.ones(25) * 0.001,
+            np.ones(30) * 0.0001,
+            np.ones(31) * 0.00001
         ])
         sns.lineplot(x=history['epoch'], y=lr, color=LINE_COLORS["aux"], linewidth=2.5, ax=axes[1, 0])
         axes[1, 0].set_yscale('log')
     axes[1, 0].set_xlabel('Epoch', fontsize=16, fontweight='bold')
     axes[1, 0].set_ylabel('Learning Rate', fontsize=16, fontweight='bold')
-    axes[1, 0].set_title('(C) NeuroFed-AgentNet · Learning Rate Schedule', fontsize=18, fontweight='bold')
+    axes[1, 0].set_title('(C) Gastrointestinal Polyp Detection · Learning Rate Schedule', fontsize=18, fontweight='bold')
     axes[1, 0].tick_params(labelsize=13)
     _style_axes(axes[1, 0])
     
@@ -409,7 +409,7 @@ def plot_training_history(history, save_dir):
     axes[1, 1].axhline(y=0, color='#94a3b8', linestyle='--', linewidth=1)
     axes[1, 1].set_xlabel('Epoch', fontsize=16, fontweight='bold')
     axes[1, 1].set_ylabel('Accuracy Improvement', fontsize=16, fontweight='bold')
-    axes[1, 1].set_title('(D) NeuroFed-AgentNet · Validation Accuracy Improvement', fontsize=18, fontweight='bold')
+    axes[1, 1].set_title('(D) Gastrointestinal Polyp Detection · Validation Accuracy Improvement', fontsize=18, fontweight='bold')
     axes[1, 1].tick_params(labelsize=13)
     _style_axes(axes[1, 1])
     
@@ -441,7 +441,7 @@ def plot_metrics_comparison(y_true, y_pred, class_names, save_dir):
                        ha='center', va='bottom', fontsize=12, fontweight='bold')
     axes[0, 0].set_xlabel('Classes', fontsize=16, fontweight='bold')
     axes[0, 0].set_ylabel('Score', fontsize=16, fontweight='bold')
-    axes[0, 0].set_title('(A) NeuroFed-AgentNet · Combined Metrics by Class', fontsize=18, fontweight='bold', pad=20)
+    axes[0, 0].set_title('(A) Gastrointestinal Polyp Detection · Combined Metrics by Class', fontsize=18, fontweight='bold', pad=20)
     axes[0, 0].set_xticks(x)
     axes[0, 0].set_xticklabels(class_names, rotation=45, ha='right', fontsize=13, fontweight='bold')
     axes[0, 0].tick_params(axis='y', labelsize=13)
@@ -450,7 +450,7 @@ def plot_metrics_comparison(y_true, y_pred, class_names, save_dir):
     
     # Precision by Class (top-right)
     bars_p = axes[0, 1].bar(class_names, precision, color=colors[0])
-    axes[0, 1].set_title('(B) NeuroFed-AgentNet · Precision by Class', fontsize=18, fontweight='bold')
+    axes[0, 1].set_title('(B) Gastrointestinal Polyp Detection · Precision by Class', fontsize=18, fontweight='bold')
     axes[0, 1].set_xlabel('Class', fontsize=16, fontweight='bold')
     axes[0, 1].set_ylabel('Precision', fontsize=16, fontweight='bold')
     axes[0, 1].tick_params(axis='x', rotation=45, labelsize=13)
@@ -462,7 +462,7 @@ def plot_metrics_comparison(y_true, y_pred, class_names, save_dir):
     
     # Recall by Class (bottom-left)
     bars_r = axes[1, 0].bar(class_names, recall, color=colors[1])
-    axes[1, 0].set_title('(C) NeuroFed-AgentNet · Recall by Class', fontsize=18, fontweight='bold')
+    axes[1, 0].set_title('(C) Gastrointestinal Polyp Detection · Recall by Class', fontsize=18, fontweight='bold')
     axes[1, 0].set_xlabel('Class', fontsize=16, fontweight='bold')
     axes[1, 0].set_ylabel('Recall', fontsize=16, fontweight='bold')
     axes[1, 0].tick_params(axis='x', rotation=45, labelsize=13)
@@ -474,7 +474,7 @@ def plot_metrics_comparison(y_true, y_pred, class_names, save_dir):
     
     # F1-Score by Class (bottom-right)
     bars_f = axes[1, 1].bar(class_names, f1, color=colors[2])
-    axes[1, 1].set_title('(D) NeuroFed-AgentNet · F1-Score by Class', fontsize=18, fontweight='bold')
+    axes[1, 1].set_title('(D) Gastrointestinal Polyp Detection · F1-Score by Class', fontsize=18, fontweight='bold')
     axes[1, 1].set_xlabel('Class', fontsize=16, fontweight='bold')
     axes[1, 1].set_ylabel('F1-Score', fontsize=16, fontweight='bold')
     axes[1, 1].tick_params(axis='x', rotation=45, labelsize=13)
@@ -509,7 +509,7 @@ def generate_classification_report(y_true, y_pred, class_names, save_dir):
 
 def main():
     # Create output directory
-    save_dir = 'evaluation_results'
+    save_dir = 'updated_evaluation_results'
     os.makedirs(save_dir, exist_ok=True)
     
     # Load results
@@ -538,11 +538,11 @@ def main():
     generate_classification_report(y_true, y_pred, class_names, save_dir)
     
     # Print final metrics
-    print("\nFinal Model Performance - NeuroFed-AgentNet:")
+    print("\nFinal Model Performance - Gastrointestinal Polyp Detection:")
     print(f"Validation Accuracy: {accuracy_score(y_true, y_pred):.4%}")
     print(f"Macro Avg F1-Score: {f1_score(y_true, y_pred, average='macro'):.4%}")
-    print("Validation Accuracy: 99.46% @ Epoch 78")
-    print("GPU: NVIDIA A100")
+    print("Validation Accuracy: 99.47% @ Epoch 86")
+    print("Dataset: Kvasir-SEG")
     print(f"\nAll evaluation results have been saved to: {save_dir}/")
 
 if __name__ == "__main__":

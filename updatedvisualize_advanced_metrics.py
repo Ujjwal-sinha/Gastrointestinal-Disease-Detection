@@ -258,7 +258,7 @@ def plot_advanced_metrics(save_dir):
     axes[0, 1].set_ylabel('Recall', fontsize=16, fontweight='bold')
     axes[0, 1].tick_params(axis='x', rotation=45, labelsize=13)
     axes[0, 1].tick_params(axis='y', labelsize=13)
-    for i, (bar, val) in enumerate(zip(bars2.patches, metrics_data['Recall'])):
+    for bar, val in zip(bars2.patches, metrics_data['Recall']):
         axes[0, 1].annotate(f'{val:.4f}', xy=(bar.get_x() + bar.get_width()/2, bar.get_height()),
                            xytext=(0, 3), textcoords='offset points', ha='center', va='bottom', fontsize=12, fontweight='bold')
     
@@ -269,7 +269,7 @@ def plot_advanced_metrics(save_dir):
     axes[1, 0].set_ylabel('F1-Score', fontsize=16, fontweight='bold')
     axes[1, 0].tick_params(axis='x', rotation=45, labelsize=13)
     axes[1, 0].tick_params(axis='y', labelsize=13)
-    for i, (bar, val) in enumerate(zip(bars3.patches, metrics_data['F1-Score'])):
+    for bar, val in zip(bars3.patches, metrics_data['F1-Score']):
         axes[1, 0].annotate(f'{val:.4f}', xy=(bar.get_x() + bar.get_width()/2, bar.get_height()),
                            xytext=(0, 3), textcoords='offset points', ha='center', va='bottom', fontsize=12, fontweight='bold')
     
@@ -302,7 +302,7 @@ def plot_advanced_metrics(save_dir):
     # 3. Additional Analysis Plots - Combined into 2x2 grid
     
     # Sample Distribution, GPU Memory, Error Distribution, and Accuracy Summary
-    fig, axes = plt.subplots(2, 2, figsize=(18, 14))
+    _, axes = plt.subplots(2, 2, figsize=(18, 14))
     
     # Sample Distribution (top-left)
     sample_counts = np.bincount(y_true)
