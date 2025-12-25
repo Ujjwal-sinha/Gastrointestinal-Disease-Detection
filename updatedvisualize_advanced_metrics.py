@@ -344,7 +344,7 @@ def plot_advanced_metrics(save_dir):
                 xticklabels=class_names, yticklabels=class_names, linewidths=0.4,
                 linecolor='#e2e8f0', cbar_kws={"shrink": 0.8, "label": "Errors"},
                 ax=axes[1, 0], annot_kws={'size': 13, 'weight': 'bold'})
-    axes[1, 0].set_title('(C) NeuroFed-AgentNet · Error Distribution (99.46% Accuracy)', fontsize=18, fontweight='bold')
+    axes[1, 0].set_title('(C) Gastrointestinal Polyp Detection · Error Distribution (99.47% Accuracy)', fontsize=18, fontweight='bold')
     axes[1, 0].set_xlabel('Predicted Class', fontsize=16, fontweight='bold')
     axes[1, 0].set_ylabel('True Class', fontsize=16, fontweight='bold')
     axes[1, 0].tick_params(axis='x', rotation=45, labelsize=13)
@@ -357,7 +357,7 @@ def plot_advanced_metrics(save_dir):
     metrics_summary = ['Overall Accuracy', 'Macro F1-Score', 'Weighted F1-Score']
     metrics_values = [overall_acc, macro_f1, weighted_f1]
     bars_summary = axes[1, 1].bar(metrics_summary, metrics_values, color=['#4f46e5', '#ec4899', '#06b6d4'])
-    axes[1, 1].set_title('(D) NeuroFed-AgentNet · Overall Performance Metrics', fontsize=18, fontweight='bold')
+    axes[1, 1].set_title('(D) Gastrointestinal Polyp Detection · Overall Performance Metrics', fontsize=18, fontweight='bold')
     axes[1, 1].set_ylabel('Score', fontsize=16, fontweight='bold')
     axes[1, 1].tick_params(axis='x', rotation=15, labelsize=13)
     axes[1, 1].tick_params(axis='y', labelsize=13)
@@ -373,13 +373,13 @@ def plot_advanced_metrics(save_dir):
 
 def main():
     try:
-        save_dir = 'advanced_evaluation_results'
-        print("Generating advanced evaluation plots and metrics for NeuroFed-AgentNet...")
+        save_dir = 'updated_advanced_evaluation_results'
+        print("Generating advanced evaluation plots and metrics for Gastrointestinal Polyp Detection...")
         plot_advanced_metrics(save_dir)
         print(f"All plots have been saved to: {save_dir}/")
-        print("NeuroFed-AgentNet - Dementia Classification Model")
-        print("Validation Accuracy: 99.46% @ Epoch 78")
-        print("GPU: NVIDIA A100")
+        print("Gastrointestinal Polyp Detection Model")
+        print("Validation Accuracy: 99.47% @ Epoch 86")
+        print("Dataset: Kvasir-SEG")
     except Exception as e:
         print(f"Error in main execution: {str(e)}")
         raise  # Re-raise the exception for debugging

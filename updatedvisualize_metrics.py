@@ -1,6 +1,6 @@
 """
-Generate Evaluation Metrics and Visualization for NeuroFed-AgentNet
-Dementia Classification Model - Uses pre-trained model predictions to create comprehensive evaluation plots
+Generate Evaluation Metrics and Visualization for Gastrointestinal Polyp Detection Model
+Uses pre-trained model predictions to create comprehensive evaluation plots
 """
 
 import os
