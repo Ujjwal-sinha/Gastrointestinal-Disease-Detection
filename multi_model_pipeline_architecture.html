@@ -329,6 +329,229 @@
                 </div>
             </div>
 
+            <!-- Block 1: Data Input & Preprocessing - Detailed -->
+            <div class="section">
+                <h2>📦 BLOCK 1: Data Input & Preprocessing - Detailed Diagram</h2>
+                <div class="mermaid">
+                    flowchart TB
+                        Start1([Start Block 1]) --> Upload
+                        
+                        Upload["Upload Endoscopic Image<br/>JPG/JPEG/PNG Format<br/>Kvasir-SEG/Kvasir-Sessile<br/>Variable Resolution"]
+                        
+                        QualityQC["Quality Control<br/>Image Quality Assessment<br/>Blur Detection: Var(∇²x)<br/>Illumination Check<br/>Format Validation<br/>Data Type Validation"]
+                        
+                        Preprocess["Preprocessing Pipeline<br/>CLAHE Enhancement<br/>Bias Field Correction<br/>Resize to 640×640<br/>Normalization: x̂=(x̃−μ)/σ<br/>Edge Detection: Canny/Sobel/Laplacian"]
+                        
+                        Preprocessed["Preprocessed Data<br/>Ready for Detection<br/>640×640 Normalized Image<br/>Quality Score ≥ τ_q<br/>Enhanced Features"]
+                        
+                        Upload --> QualityQC
+                        QualityQC --> Preprocess
+                        Preprocess --> Preprocessed
+                        Preprocessed --> End1([End Block 1 to Block 2])
+                        
+                        %% Styling
+                        classDef input fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+                        classDef qc fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+                        classDef prep fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
+                        classDef output fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
+                        classDef startEnd fill:#2ecc71,stroke:#27ae60,stroke-width:3px,color:#000
+                        
+                        class Upload input
+                        class QualityQC qc
+                        class Preprocess prep
+                        class Preprocessed output
+                        class Start1,End1 startEnd
+                </div>
+            </div>
+
+            <!-- Block 2: Multi-Model Detection - Detailed -->
+            <div class="section">
+                <h2>📦 BLOCK 2: Multi-Model Detection - Detailed Diagram</h2>
+                <div class="mermaid">
+                    flowchart TB
+                        Start2([Start Block 2]) --> Preprocessed2
+                        Preprocessed2["Preprocessed Data<br/>from Block 1"] --> YOLO_Detect
+                        Preprocessed2 --> CNN_Classify
+                        Preprocessed2 --> BLIP_Desc
+                        
+                        YOLO_Detect["YOLO11m Detection<br/>Object Detection Model<br/>Bounding Box Detection<br/>Confidence Scores<br/>Multi-scale Detection<br/>NMS: IoU > τ_IoU<br/>Output: {(b_j,p_j,c_j)}"]
+                        
+                        CNN_Classify["CNN Classification<br/>ResNet-based Architecture<br/>224×224 Input<br/>Feature Extraction<br/>Class Probabilities<br/>Output: P(Polyp), P(No Polyp)"]
+                        
+                        BLIP_Desc["BLIP-2 Description<br/>Image Captioning<br/>Visual Feature Extraction<br/>Text Generation<br/>Output: Image Description"]
+                        
+                        Detected["Detection Results<br/>YOLO: Bounding Boxes + Confidence<br/>CNN: Class Probabilities<br/>BLIP-2: Text Description<br/>Ready for Agent Analysis"]
+                        
+                        YOLO_Detect --> Detected
+                        CNN_Classify --> Detected
+                        BLIP_Desc --> Detected
+                        Detected --> End2([End Block 2 to Block 3])
+                        
+                        %% Styling
+                        classDef yolo fill:#2ecc71,stroke:#27ae60,stroke-width:2px,color:#000
+                        classDef cnn fill:#9b59b6,stroke:#8e44ad,stroke-width:2px,color:#000
+                        classDef blip fill:#e67e22,stroke:#d35400,stroke-width:2px,color:#000
+                        classDef output fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
+                        classDef startEnd fill:#2ecc71,stroke:#27ae60,stroke-width:3px,color:#000
+                        
+                        class YOLO_Detect yolo
+                        class CNN_Classify cnn
+                        class BLIP_Desc blip
+                        class Preprocessed2,Detected output
+                        class Start2,End2 startEnd
+                </div>
+            </div>
+
+            <!-- Block 3: Multi-Agent Analysis - Detailed -->
+            <div class="section">
+                <h2>📦 BLOCK 3: Multi-Agent Analysis - Detailed Diagram</h2>
+                <div class="mermaid">
+                    flowchart TB
+                        Start3([Start Block 3]) --> Detected3
+                        Detected3["Detection Results<br/>from Block 2"] --> Agent1
+                        
+                        Agent1["Agent 1: DataPreprocessing<br/>Input: Endoscopic Images<br/>Dataset Validation<br/>Kvasir-SEG Compatibility<br/>Quality Enhancement<br/>Context Provision<br/>Output: Validated Data"]
+                        
+                        Agent2["Agent 2: ModelTraining<br/>Input: Validated Data<br/>Training Optimization<br/>50 Epochs, Early Stopping<br/>Performance Monitoring<br/>Cross-validation<br/>Output: Trained Model"]
+                        
+                        Agent3["Agent 3: Evaluation<br/>Input: Trained Model<br/>Dice/IoU Metrics<br/>Accuracy Calculation<br/>Benchmarking<br/>Output: Evaluation Metrics"]
+                        
+                        Agent4["Agent 4: GastrointestinalPolypAI<br/>Input: Detection + Evaluation<br/>Clinical Analysis<br/>Treatment Recommendations<br/>Risk Stratification<br/>Output: Clinical Report"]
+                        
+                        AgentOutputs["Agent Outputs<br/>A1: Validated Preprocessed Data<br/>A2: Trained Model<br/>A3: Evaluation Metrics<br/>A4: Clinical Analysis<br/>Multi-Agent Integration"]
+                        
+                        Detected3 --> Agent1
+                        Agent1 --> Agent2
+                        Agent2 --> Agent3
+                        Agent3 --> Agent4
+                        Agent1 --> AgentOutputs
+                        Agent2 --> AgentOutputs
+                        Agent3 --> AgentOutputs
+                        Agent4 --> AgentOutputs
+                        AgentOutputs --> End3([End Block 3 to Block 4])
+                        
+                        %% Styling
+                        classDef agent1 fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#000
+                        classDef agent2 fill:#f39c12,stroke:#e67e22,stroke-width:2px,color:#000
+                        classDef agent3 fill:#9b59b6,stroke:#8e44ad,stroke-width:2px,color:#000
+                        classDef agent4 fill:#1abc9c,stroke:#16a085,stroke-width:2px,color:#000
+                        classDef output fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
+                        classDef startEnd fill:#2ecc71,stroke:#27ae60,stroke-width:3px,color:#000
+                        
+                        class Agent1 agent1
+                        class Agent2 agent2
+                        class Agent3 agent3
+                        class Agent4 agent4
+                        class Detected3,AgentOutputs output
+                        class Start3,End3 startEnd
+                </div>
+            </div>
+
+            <!-- Block 4: Dual LLM Architecture - Detailed -->
+            <div class="section">
+                <h2>📦 BLOCK 4: Dual LLM Architecture - Detailed Diagram</h2>
+                <div class="mermaid">
+                    flowchart TB
+                        Start4([Start Block 4]) --> Input4
+                        Input4["Input from Block 3<br/>Image Description<br/>Detection Results<br/>Patient Data<br/>Agent Analysis"] --> LLM1
+                        Input4 --> LLM2
+                        
+                        LLM1["LLM 1: llama-3.1-8b-instant<br/>Fast Response Model<br/>Response Time: &lt;2 seconds<br/>Use Case: Real-time Analysis<br/>Optimization: High Efficiency<br/>Output: Initial Assessment"]
+                        
+                        LLM2["LLM 2: qwen3-32b<br/>Deep Analysis Model<br/>Response Time: 3-5 seconds<br/>Use Case: Comprehensive Evaluation<br/>Capabilities: Advanced Reasoning<br/>Output: Detailed Analysis"]
+                        
+                        Ensemble["Ensemble Fusion<br/>Weighted Combination<br/>Consistency Validation<br/>Cross-Model Agreement<br/>Response Time Analysis<br/>Confidence Scoring"]
+                        
+                        LLM_Output["LLM Output<br/>Clinical Analysis<br/>Treatment Recommendations<br/>Risk Assessment<br/>Management Plan<br/>Evidence-Based Guidelines"]
+                        
+                        Input4 --> LLM1
+                        Input4 --> LLM2
+                        LLM1 --> Ensemble
+                        LLM2 --> Ensemble
+                        Ensemble --> LLM_Output
+                        LLM_Output --> End4([End Block 4 to Block 5])
+                        
+                        %% Styling
+                        classDef llm1 fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+                        classDef llm2 fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000
+                        classDef ensemble fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
+                        classDef output fill:#e0f2f1,stroke:#00695c,stroke-width:2px,color:#000
+                        classDef startEnd fill:#2ecc71,stroke:#27ae60,stroke-width:3px,color:#000
+                        
+                        class LLM1 llm1
+                        class LLM2 llm2
+                        class Ensemble ensemble
+                        class Input4,LLM_Output output
+                        class Start4,End4 startEnd
+                </div>
+            </div>
+
+            <!-- Block 5: Multi-Modal Fusion & Classification - Detailed -->
+            <div class="section">
+                <h2>📦 BLOCK 5: Multi-Modal Fusion & Classification - Detailed Diagram</h2>
+                <div class="mermaid">
+                    flowchart TB
+                        Start5([Start Block 5]) --> Inputs5
+                        Inputs5["Inputs from Previous Blocks<br/>YOLO: Bounding Boxes + Confidence<br/>CNN: Class Probabilities<br/>LLM: Clinical Analysis<br/>Agent: Evaluation Metrics"] --> Fusion
+                        
+                        Fusion["Multi-Modal Fusion<br/>Early Fusion: Input Level<br/>Late Fusion: Prediction Level<br/>Cross-Modal Attention<br/>Weighted Ensemble<br/>Confidence Aggregation<br/>P = softmax(W[YOLO + CNN + LLM])"]
+                        
+                        Classification["Polyp Classification<br/>Global Pooling<br/>FC Layer: embed_dim → 256<br/>Dropout: p=0.5<br/>FC Layer: 256 → 2 Classes"]
+                        
+                        Prediction["Polyp Prediction<br/>Class Probabilities<br/>P(Polyp), P(No Polyp)<br/>Predicted Class: argmax(P)<br/>Confidence Score: max(P)"]
+                        
+                        Fusion --> Classification
+                        Classification --> Prediction
+                        Prediction --> End5([End Block 5 to Block 6])
+                        
+                        %% Styling
+                        classDef fusion fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000
+                        classDef classify fill:#e1bee7,stroke:#8e24aa,stroke-width:2px,color:#000
+                        classDef predict fill:#c5e1a5,stroke:#558b2f,stroke-width:2px,color:#000
+                        classDef output fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
+                        classDef startEnd fill:#2ecc71,stroke:#27ae60,stroke-width:3px,color:#000
+                        
+                        class Fusion fusion
+                        class Classification classify
+                        class Prediction predict
+                        class Inputs5 output
+                        class Start5,End5 startEnd
+                </div>
+            </div>
+
+            <!-- Block 6: Explainability & Output - Detailed -->
+            <div class="section">
+                <h2>📦 BLOCK 6: Explainability & Output - Detailed Diagram</h2>
+                <div class="mermaid">
+                    flowchart TB
+                        Start6([Start Block 6]) --> Prediction6
+                        Prediction6["Prediction from Block 5<br/>Class: Polyp / No Polyp<br/>Confidence Score<br/>Probabilities"] --> Explainability
+                        
+                        Explainability["Explainability Generation<br/>Grad-CAM: 3D Attention Maps<br/>CAM_c=ReLU(Σ_k α_k^cA^k)<br/>SHAP: ROI Importance Plots<br/>LIME: Feature Importance & Agent Trees<br/>Edge Detection: Polyp Boundaries"]
+                        
+                        ReportGen["Report Generation<br/>PDF Report: Professional Format<br/>Narrative Text: Clinical Interpretation<br/>Visualizations: All Explainability Plots<br/>Agent Analysis: Individual Outputs<br/>Treatment Recommendations"]
+                        
+                        Display["Display & Export<br/>Interactive Dashboard: Streamlit Interface<br/>Real-time Visualization<br/>Export Options: PDF, CSV, Images<br/>Clinical Decision Support"]
+                        
+                        Explainability --> ReportGen
+                        ReportGen --> Display
+                        Display --> End6([End Block 6])
+                        
+                        %% Styling
+                        classDef explain fill:#ffcdd2,stroke:#c62828,stroke-width:2px,color:#000
+                        classDef report fill:#b3e5fc,stroke:#0277bd,stroke-width:2px,color:#000
+                        classDef display fill:#e0f2f1,stroke:#00695c,stroke-width:2px,color:#000
+                        classDef output fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
+                        classDef startEnd fill:#2ecc71,stroke:#27ae60,stroke-width:3px,color:#000
+                        
+                        class Explainability explain
+                        class ReportGen report
+                        class Display display
+                        class Prediction6 output
+                        class Start6,End6 startEnd
+                </div>
+            </div>
+
             <!-- Multi-Agent Architecture -->
             <div class="section">
                 <h2>🤖 Multi-Agent System Architecture</h2>
