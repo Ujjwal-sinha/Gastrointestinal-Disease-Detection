@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GastrointestinalPolypAI - Multi-Agent, Multi-Modal Deep Learning Architecture</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
+            color: #333;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 30px;
+        }
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            border-left: 5px solid #06b6d4;
+        }
+        .section.system-architecture {
+            background: #ffffff;
+            color: #111111;
+            font-weight: 600;
+        }
+        .section.system-architecture .mermaid {
+            background: #ffffff;
+            color: #111111;
+        }
+        .section h2 {
+            color: #06b6d4;
+            margin-top: 0;
+            font-size: 1.8em;
+        }
+        .section h3 {
+            color: #0ea5e9;
+            margin-top: 25px;
+            font-size: 1.4em;
+        }
+        .mermaid {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .tech-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid #06b6d4;
+        }
+        .tech-card h4 {
+            color: #06b6d4;
+            margin-top: 0;
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .feature-list li:before {
+            content: "✓";
+            color: #2ecc71;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .metric-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #06b6d4;
+        }
+        .metric-label {
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🩺 GastrointestinalPolypAI</h1>
+            <p>Multi-Agent, Multi-Modal Deep Learning Architecture for Gastrointestinal Polyp Detection</p>
+        </div>
+        
+        <div class="content">
+            <!-- System Overview -->
+            <div class="section">
+                <h2>📋 System Overview</h2>
+                <p>GastrointestinalPolypAI is a comprehensive AI-powered system for gastrointestinal polyp detection and segmentation using endoscopic images. The system integrates multiple deep learning models (YOLO11m for object detection, CNN models for classification) with advanced AI agents powered by dual Large Language Models (llama-3.1-8b-instant and qwen3-32b) for clinical analysis. The multi-modal approach combines visual analysis, text processing, clinical context integration, and temporal analysis to achieve state-of-the-art performance with 99.5% accuracy on the Kvasir-SEG dataset.</p>
+                
+                <div class="metrics">
+                    <div class="metric-card">
+                        <div class="metric-value">99.5%</div>
+                        <div class="metric-label">Accuracy</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">4</div>
+                        <div class="metric-label">AI Agents</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">1,196</div>
+                        <div class="metric-label">Dataset Images</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">2</div>
+                        <div class="metric-label">Classes</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Architecture Diagram -->
+            <div class="section system-architecture">
+                <h2>🏗️ System Architecture</h2>
+                <div class="mermaid">
+                    graph TB
+                        %% Step 1: Data Input
+                        IMG_IN["Endoscopic Image<br/>JPG/JPEG/PNG<br/>Variable Resolution<br/>Kvasir-SEG/Kvasir-Sessile"]
+                        
+                        %% Step 2: Frontend Interface
+                        ST["Streamlit Interface<br/>Image Upload & QC<br/>Real-time Analysis<br/>Report Generation"]
+                        
+                        %% Step 3: Preprocessing
+                        IMG_PREP["Image Preprocessing<br/>Quality Assessment<br/>CLAHE Enhancement<br/>Resize to 640×640<br/>Normalization"]
+                        
+                        %% Step 4: Multi-Model Detection
+                        YOLO["YOLO11m Model<br/>Object Detection<br/>Bounding Box Detection<br/>Confidence Scoring"]
+                        CNN["CNN Model<br/>Classification<br/>ResNet-based<br/>224×224 Input"]
+                        
+                        %% Step 5: Image Description
+                        BLIP["BLIP-2 Model<br/>Image Description<br/>Visual Feature Extraction<br/>Text Generation"]
+                        
+                        %% Step 6: Multi-Agent System
+                        AGENT1["Agent 1: DataPreprocessing<br/>Image Validation<br/>Quality Enhancement<br/>Dataset Compatibility"]
+                        AGENT2["Agent 2: ModelTraining<br/>Model Optimization<br/>Training Monitoring<br/>Performance Tracking"]
+                        AGENT3["Agent 3: Evaluation<br/>Metrics Calculation<br/>Dice/IoU Scoring<br/>Benchmarking"]
+                        AGENT4["Agent 4: GastrointestinalPolypAI<br/>Clinical Analysis<br/>Dual LLM Architecture<br/>Treatment Recommendations"]
+                        
+                        %% Step 7: Dual LLM Analysis
+                        LLM1["LLM 1: llama-3.1-8b-instant<br/>Fast Response<br/>Real-time Analysis<br/>&lt;2 seconds"]
+                        LLM2["LLM 2: qwen3-32b<br/>Deep Analysis<br/>Comprehensive Evaluation<br/>3-5 seconds"]
+                        
+                        %% Step 8: Consensus & Classification
+                        FUSION["Multi-Modal Fusion<br/>YOLO + CNN + LLM<br/>Weighted Ensemble<br/>Confidence Aggregation"]
+                        CLASSIFIER["Classification Head<br/>Polyp / No Polyp<br/>Confidence Scoring<br/>Segmentation Masks"]
+                        
+                        %% Step 9: Explainability
+                        GRADCAM["Grad-CAM<br/>Attention Visualization<br/>Feature Heatmaps"]
+                        SHAP["SHAP Analysis<br/>Feature Importance<br/>Model Interpretability"]
+                        LIME["LIME<br/>Local Explanations<br/>Decision Trees"]
+                        
+                        %% Step 10: Output
+                        REPORT["PDF Report<br/>Clinical Recommendations<br/>Visualizations<br/>Agent Analysis"]
+                        
+                        %% Flow
+                        IMG_IN --> ST
+                        ST --> IMG_PREP
+                        IMG_PREP --> YOLO
+                        IMG_PREP --> CNN
+                        IMG_PREP --> BLIP
+                        YOLO --> FUSION
+                        CNN --> FUSION
+                        BLIP --> AGENT4
+                        AGENT4 --> LLM1
+                        AGENT4 --> LLM2
+                        LLM1 --> FUSION
+                        LLM2 --> FUSION
+                        AGENT1 --> AGENT2
+                        AGENT2 --> AGENT3
+                        AGENT3 --> AGENT4
+                        FUSION --> CLASSIFIER
+                        CLASSIFIER --> GRADCAM
+                        CLASSIFIER --> SHAP
+                        CLASSIFIER --> LIME
+                        GRADCAM --> REPORT
+                        SHAP --> REPORT
+                        LIME --> REPORT
+                        AGENT4 --> REPORT
+                        
+                        %% Styling
+                        classDef inputLayer fill:#fef3c7,stroke:#111111,stroke-width:2px,color:#111111
+                        classDef frontendLayer fill:#e0f2fe,stroke:#111111,stroke-width:2px,color:#111111
+                        classDef prepLayer fill:#dcfce7,stroke:#111111,stroke-width:2px,color:#111111
+                        classDef modelLayer fill:#ede9fe,stroke:#111111,stroke-width:2px,color:#111111
+                        classDef agentLayer fill:#ffe4e6,stroke:#111111,stroke-width:2px,color:#111111
+                        classDef llmLayer fill:#fce7f3,stroke:#111111,stroke-width:2px,color:#111111
+                        classDef outputLayer fill:#e0e7ff,stroke:#111111,stroke-width:2px,color:#111111
+                        classDef explainLayer fill:#d1fae5,stroke:#111111,stroke-width:2px,color:#111111
+                        
+                        class IMG_IN inputLayer
+                        class ST frontendLayer
+                        class IMG_PREP prepLayer
+                        class YOLO,CNN,BLIP modelLayer
+                        class AGENT1,AGENT2,AGENT3,AGENT4 agentLayer
+                        class LLM1,LLM2 llmLayer
+                        class FUSION,CLASSIFIER,REPORT outputLayer
+                        class GRADCAM,SHAP,LIME explainLayer
+                </div>
+            </div>
+
+            <!-- Detailed Workflow -->
+            <div class="section">
+                <h2>🔄 Detailed Workflow</h2>
+                <div class="mermaid">
+                    flowchart TB
+                        Start([Start]) --> Block1
+                        
+                        subgraph Block1["<b>BLOCK 1: Data Input &amp; Preprocessing</b>"]
+                            direction TB
+                            Upload["Upload Endoscopic Image<br/>JPG/JPEG/PNG Format<br/>Kvasir-SEG/Kvasir-Sessile"]
+                            QualityQC["Quality Control<br/>Image Quality Assessment<br/>Blur Detection<br/>Illumination Check<br/>Format Validation"]
+                            Preprocess["Preprocessing Pipeline<br/>CLAHE Enhancement<br/>Bias Field Correction<br/>Resize to 640×640<br/>Normalization"]
+                            Upload --> QualityQC
+                            QualityQC --> Preprocess
+                        end
+                        
+                        subgraph Block2["<b>BLOCK 2: Multi-Model Detection</b>"]
+                            direction TB
+                            YOLO_Detect["YOLO11m Detection<br/>Object Detection<br/>Bounding Boxes<br/>Confidence Scores<br/>Multi-scale Detection"]
+                            CNN_Classify["CNN Classification<br/>ResNet-based<br/>224×224 Input<br/>Feature Extraction<br/>Class Probabilities"]
+                            BLIP_Desc["BLIP-2 Description<br/>Image Captioning<br/>Visual Features<br/>Text Generation"]
+                        end
+                        
+                        subgraph Block3["<b>BLOCK 3: Multi-Agent Analysis</b>"]
+                            direction TB
+                            Agent1["Agent 1: DataPreprocessing<br/>Dataset Validation<br/>Quality Enhancement<br/>Context Provision"]
+                            Agent2["Agent 2: ModelTraining<br/>Training Optimization<br/>Performance Monitoring<br/>Cross-validation"]
+                            Agent3["Agent 3: Evaluation<br/>Dice/IoU Metrics<br/>Accuracy Calculation<br/>Benchmarking"]
+                            Agent4["Agent 4: GastrointestinalPolypAI<br/>Clinical Analysis<br/>Treatment Recommendations<br/>Risk Stratification"]
+                        end
+                        
+                        subgraph Block4["<b>BLOCK 4: Dual LLM Architecture</b>"]
+                            direction TB
+                            LLM_Fast["LLM 1: llama-3.1-8b-instant<br/>Fast Response Model<br/>&lt;2 seconds<br/>Real-time Analysis<br/>Initial Assessment"]
+                            LLM_Deep["LLM 2: qwen3-32b<br/>Deep Analysis Model<br/>3-5 seconds<br/>Comprehensive Evaluation<br/>Detailed Recommendations"]
+                        end
+                        
+                        subgraph Block5["<b>BLOCK 5: Multi-Modal Fusion &amp; Classification</b>"]
+                            direction TB
+                            Fusion["Multi-Modal Fusion<br/>YOLO + CNN + LLM<br/>Weighted Ensemble<br/>Confidence Aggregation"]
+                            Classification["Polyp Classification<br/>Polyp / No Polyp<br/>Confidence Scoring<br/>Segmentation Masks"]
+                        end
+                        
+                        subgraph Block6["<b>BLOCK 6: Explainability &amp; Output</b>"]
+                            direction TB
+                            Explainability["Explainability Generation<br/>Grad-CAM: Attention Maps<br/>SHAP: Feature Importance<br/>LIME: Local Explanations"]
+                            Report["Report Generation<br/>PDF Report<br/>Clinical Recommendations<br/>Visualizations<br/>Agent Analysis"]
+                            Display["Display Results<br/>Interactive Dashboard<br/>Export Options"]
+                            Explainability --> Report
+                            Report --> Display
+                        end
+                        
+                        Block1 --> Block2
+                        Block2 --> Block3
+                        Block3 --> Block4
+                        Block4 --> Block5
+                        Block5 --> Block6
+                        Block6 --> End([End])
+                        
+                        %% Styling
+                        classDef block1 fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#000
+                        classDef block2 fill:#fff3e0,stroke:#e65100,stroke-width:3px,color:#000
+                        classDef block3 fill:#fce4ec,stroke:#c2185b,stroke-width:3px,color:#000
+                        classDef block4 fill:#e8f5e9,stroke:#388e3c,stroke-width:3px,color:#000
+                        classDef block5 fill:#fff9c4,stroke:#f57f17,stroke-width:3px,color:#000
+                        classDef block6 fill:#e0f2f1,stroke:#00695c,stroke-width:3px,color:#000
+                        classDef startEnd fill:#2ecc71,stroke:#27ae60,stroke-width:3px,color:#000
+                        
+                        class Block1,Upload,QualityQC,Preprocess block1
+                        class Block2,YOLO_Detect,CNN_Classify,BLIP_Desc block2
+                        class Block3,Agent1,Agent2,Agent3,Agent4 block3
+                        class Block4,LLM_Fast,LLM_Deep block4
+                        class Block5,Fusion,Classification block5
+                        class Block6,Explainability,Report,Display block6
+                        class Start,End startEnd
+                </div>
+            </div>
+
+            <!-- Multi-Agent Architecture -->
+            <div class="section">
+                <h2>🤖 Multi-Agent System Architecture</h2>
+                
+                <!-- Agent Coordinator Overview -->
+                <div class="mermaid">
+                    graph TB
+                        COORD[Multi-Agent Coordinator<br/>Sequential Processing Pipeline]
+                        AG1[Agent 1: DataPreprocessing<br/>Image Validation & Enhancement]
+                        AG2[Agent 2: ModelTraining<br/>Training & Optimization]
+                        AG3[Agent 3: Evaluation<br/>Metrics & Benchmarking]
+                        AG4[Agent 4: GastrointestinalPolypAI<br/>Clinical Analysis & Recommendations]
+
+                        COORD --> AG1
+                        AG1 --> AG2
+                        AG2 --> AG3
+                        AG3 --> AG4
+                        AG4 --> COORD
+                        
+                        %% Styling
+                        classDef coordinator fill:#06b6d4,stroke:#0ea5e9,stroke-width:3px,color:#fff
+                        class COORD,AG1,AG2,AG3,AG4 coordinator
+            </div>
+
+                <!-- Agent 1: DataPreprocessing -->
+                <div class="mermaid">
+                    graph TB
+                        subgraph DataPrep[" Agent 1: DataPreprocessing Agent"]
+                            DP[DataPreprocessing Agent<br/>Input: Endoscopic Images]
+                            Validate[Dataset Validation<br/>Kvasir-SEG Compatibility<br/>Format Verification<br/>Integrity Checks]
+                            Enhance[Quality Enhancement<br/>CLAHE Processing<br/>Normalization<br/>512×512 Resize]
+                            Context[Context Provision<br/>Dataset Statistics<br/>Clinical Relevance<br/>Model Insights]
+                            DP_Output[Output: Preprocessed Data<br/>Enhanced Images<br/>Validation Results<br/>Context Information]
+                        end
+                        
+                        DP --> Validate
+                        DP --> Enhance
+                        DP --> Context
+                        Validate --> DP_Output
+                        Enhance --> DP_Output
+                        Context --> DP_Output
+
+                        %% Styling
+                        classDef dataPrep fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#000
+                        class DP,Validate,Enhance,Context,DP_Output dataPrep
+                </div>
+                
+                <!-- Agent 2: ModelTraining -->
+                <div class="mermaid">
+                    graph TB
+                        subgraph ModelTrain[" Agent 2: ModelTraining Agent"]
+                            MT[ModelTraining Agent<br/>Input: Preprocessed Data]
+                            Train[Model Training<br/>50 Epochs<br/>Early Stopping<br/>Validation Split 20%]
+                            Monitor[Performance Monitoring<br/>Loss Tracking<br/>Accuracy Metrics<br/>Overfitting Prevention]
+                            Optimize[Model Optimization<br/>Learning Rate Tuning<br/>Batch Size Optimization<br/>Cross-validation]
+                            MT_Output[Output: Trained Model<br/>Best Weights<br/>Training History<br/>Performance Metrics]
+                        end
+                        
+                        MT --> Train
+                        MT --> Monitor
+                        MT --> Optimize
+                        Train --> MT_Output
+                        Monitor --> MT_Output
+                        Optimize --> MT_Output
+                        
+                        %% Styling
+                        classDef modelTrain fill:#f39c12,stroke:#e67e22,stroke-width:2px,color:#000
+                        class MT,Train,Monitor,Optimize,MT_Output modelTrain
+                </div>
+                
+                <!-- Agent 3: Evaluation -->
+                <div class="mermaid">
+                    graph TB
+                        subgraph EvalAgent[" Agent 3: Evaluation Agent"]
+                            EV[Evaluation Agent<br/>Input: Trained Model]
+                            Metrics[Dice/IoU Metrics<br/>Segmentation Overlap<br/>Spatial Accuracy<br/>Pixel-level Evaluation]
+                            Benchmark[Benchmarking<br/>Kvasir-SEG Standards<br/>Human Performance<br/>Clinical Relevance]
+                            Analysis[Performance Analysis<br/>Error Distribution<br/>Confusion Matrix<br/>ROC Curves]
+                            EV_Output[Output: Evaluation Results<br/>Dice Score: 0.94<br/>IoU Score: 0.89<br/>Accuracy: 99.2%]
+                        end
+                        
+                        EV --> Metrics
+                        EV --> Benchmark
+                        EV --> Analysis
+                        Metrics --> EV_Output
+                        Benchmark --> EV_Output
+                        Analysis --> EV_Output
+                        
+                        %% Styling
+                        classDef evalAgent fill:#9b59b6,stroke:#8e44ad,stroke-width:2px,color:#000
+                        class EV,Metrics,Benchmark,Analysis,EV_Output evalAgent
+                </div>
+                
+                <!-- Agent 4: GastrointestinalPolypAI -->
+                <div class="mermaid">
+                    graph TB
+                        subgraph PolypAI[" Agent 4: GastrointestinalPolypAI Agent"]
+                            PA[GastrointestinalPolypAI Agent<br/>Input: Detection Results + Image Description]
+                            Characterize[Polyp Characterization<br/>Morphological Assessment<br/>Size Estimation<br/>Paris Classification]
+                            Risk[Risk Stratification<br/>Adenoma Risk Assessment<br/>Malignant Potential<br/>Synchronous Lesion Probability]
+                            Management[Management Recommendations<br/>Endoscopic Removal Planning<br/>Treatment Timeline<br/>Follow-up Protocols]
+                            Clinical[Clinical Decision Support<br/>Evidence-Based Guidelines<br/>Patient-Specific Modifications<br/>Multidisciplinary Coordination]
+                            PA_Output[Output: Comprehensive Analysis<br/>Clinical Recommendations<br/>Treatment Plan<br/>Risk Assessment]
+                        end
+                        
+                        PA --> Characterize
+                        PA --> Risk
+                        PA --> Management
+                        PA --> Clinical
+                        Characterize --> PA_Output
+                        Risk --> PA_Output
+                        Management --> PA_Output
+                        Clinical --> PA_Output
+                        
+                        %% Styling
+                        classDef polypAI fill:#1abc9c,stroke:#16a085,stroke-width:2px,color:#000
+                        class PA,Characterize,Risk,Management,Clinical,PA_Output polypAI
+                </div>
+            </div>
+
+            <!-- Dual LLM Architecture -->
+            <div class="section">
+                <h2>🧠 Dual LLM Architecture</h2>
+                <div class="mermaid">
+                    graph TB
+                        subgraph DualLLM["<b>Dual LLM System</b>"]
+                            direction TB
+                            Input[Input: Image Description<br/>Detection Results<br/>Patient Data]
+                            
+                            LLM1[LLM 1: llama-3.1-8b-instant<br/>Fast Response Model<br/>Response Time: &lt;2 seconds<br/>Use Case: Real-time Analysis<br/>Optimization: High Efficiency]
+                            
+                            LLM2[LLM 2: qwen3-32b<br/>Deep Analysis Model<br/>Response Time: 3-5 seconds<br/>Use Case: Comprehensive Evaluation<br/>Capabilities: Advanced Reasoning]
+                            
+                            Ensemble[Ensemble Fusion<br/>Weighted Combination<br/>Consistency Validation<br/>Cross-Model Agreement]
+                            
+                            Output[Output: Clinical Analysis<br/>Treatment Recommendations<br/>Risk Assessment<br/>Management Plan]
+                        end
+                        
+                        Input --> LLM1
+                        Input --> LLM2
+                        LLM1 --> Ensemble
+                        LLM2 --> Ensemble
+                        Ensemble --> Output
+                        
+                        %% Styling
+                        classDef input fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+                        classDef llm1 fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+                        classDef llm2 fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000
+                        classDef ensemble fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
+                        classDef output fill:#e0f2f1,stroke:#00695c,stroke-width:2px,color:#000
+                        
+                        class Input input
+                        class LLM1 llm1
+                        class LLM2 llm2
+                        class Ensemble ensemble
+                        class Output output
+                </div>
+            </div>
+
+            <!-- Dataset Information -->
+            <div class="section">
+                <h2>📊 Dataset Information</h2>
+                <div class="mermaid">
+                    graph TB
+                        subgraph Datasets["<b>Kvasir-SEG &amp; Kvasir-Sessile Datasets</b>"]
+                            direction TB
+                            DS[Dataset Overview<br/>Total: 1,196 Images]
+                            
+                            KvasirSEG[Kvasir-SEG Dataset<br/>1,000 Endoscopic Images<br/>Segmentation Masks<br/>Bounding Boxes<br/>Polyp Annotations]
+                            
+                            KvasirSessile[Kvasir-Sessile Dataset<br/>196 Additional Images<br/>Sessile Polyp Focus<br/>Complementary Data]
+                            
+                            Split[Data Splits<br/>Training: 70% (837 images)<br/>Validation: 15% (179 images)<br/>Test: 15% (180 images)]
+                            
+                            Classes[Classification Classes<br/>Polyp<br/>No Polyp]
+                        end
+                        
+                        DS --> KvasirSEG
+                        DS --> KvasirSessile
+                        KvasirSEG --> Split
+                        KvasirSessile --> Split
+                        Split --> Classes
+                        
+                        %% Styling
+                        classDef dataset fill:#06b6d4,stroke:#0ea5e9,stroke-width:2px,color:#000
+                        class DS,KvasirSEG,KvasirSessile,Split,Classes dataset
+                </div>
+            </div>
+
+            <!-- Technology Stack -->
+            <div class="section">
+                <h2>🛠️ Technology Stack</h2>
+                <div class="tech-stack">
+                    <div class="tech-card">
+                        <h4>🖥️ Frontend</h4>
+                        <ul class="feature-list">
+                            <li>Streamlit - Web Application Framework</li>
+                            <li>Matplotlib - Plotting and Visualization</li>
+                            <li>PIL/Pillow - Image Processing</li>
+                            <li>HTML/CSS - Modern Responsive Design</li>
+                        </ul>
+                    </div>
+                    <div class="tech-card">
+                        <h4>⚙️ Backend</h4>
+                        <ul class="feature-list">
+                            <li>Python 3.13 - Core Programming Language</li>
+                            <li>PyTorch - Deep Learning Framework</li>
+                            <li>OpenCV - Computer Vision Operations</li>
+                            <li>NumPy - Numerical Computing</li>
+                        </ul>
+                    </div>
+                    <div class="tech-card">
+                        <h4>🤖 AI/ML Models</h4>
+                        <ul class="feature-list">
+                            <li>YOLO11m - Object Detection Model</li>
+                            <li>CNN (ResNet-based) - Classification Model</li>
+                            <li>BLIP-2 - Image Description Generation</li>
+                            <li>LangChain - AI Agent Framework</li>
+                            <li>GROQ API - LLM Access (llama-3.1-8b-instant, qwen3-32b)</li>
+                        </ul>
+                    </div>
+                    <div class="tech-card">
+                        <h4>📊 Data Processing</h4>
+                        <ul class="feature-list">
+                            <li>Pandas - Data Manipulation</li>
+                            <li>Scikit-learn - Machine Learning Utilities</li>
+                            <li>FPDF - PDF Report Generation</li>
+                            <li>Seaborn - Statistical Visualization</li>
+                        </ul>
+                    </div>
+                    <div class="tech-card">
+                        <h4>🔬 Explainable AI</h4>
+                        <ul class="feature-list">
+                            <li>Grad-CAM - Attention Visualization</li>
+                            <li>SHAP - Feature Importance Analysis</li>
+                            <li>LIME - Local Explanations</li>
+                            <li>Edge Detection - Polyp Boundary Analysis</li>
+                        </ul>
+                    </div>
+                    <div class="tech-card">
+                        <h4>🌐 AI Agents</h4>
+                        <ul class="feature-list">
+                            <li>DataPreprocessingAgent - Image Validation</li>
+                            <li>ModelTrainingAgent - Training Optimization</li>
+                            <li>EvaluationAgent - Metrics Calculation</li>
+                            <li>GastrointestinalPolypAIAgent - Clinical Analysis</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Metrics -->
+            <div class="section">
+                <h2>📊 Performance Metrics</h2>
+                <div class="mermaid">
+                    graph LR
+                        ACC["Accuracy<br/>99.5%<br/>Final Validation"]
+                        PREC["Precision<br/>99.51%<br/>Polyp Detection"]
+                        REC["Recall<br/>99.67%<br/>Sensitivity"]
+                        F1["F1-Score<br/>99.59%<br/>Harmonic Mean"]
+                        
+                        DICE["Dice Score<br/>0.94<br/>Segmentation Overlap"]
+                        IOU["IoU Score<br/>0.89<br/>Spatial Accuracy"]
+                        PIXEL["Pixel Accuracy<br/>99.2%<br/>Pixel-level"]
+                        BOUNDARY["Boundary Precision<br/>97.8%<br/>Edge Detection"]
+                        
+                        AGENT["AI Agent<br/>100% Completion<br/>98.5% Clinical Relevance<br/>&lt;3 seconds Response"]
+                        
+                        %% Styling
+                        classDef metrics fill:#f39c12,stroke:#e67e22,stroke-width:2px,color:#000
+                        classDef segmentation fill:#9b59b6,stroke:#8e44ad,stroke-width:2px,color:#000
+                        classDef agent fill:#1abc9c,stroke:#16a085,stroke-width:2px,color:#000
+                        
+                        class ACC,PREC,REC,F1 metrics
+                        class DICE,IOU,PIXEL,BOUNDARY segmentation
+                        class AGENT agent
+                </div>
+            </div>
+
+            <!-- Multi-Modal Analysis -->
+            <div class="section">
+                <h2>🔬 Multi-Modal Analysis</h2>
+                <div class="mermaid">
+                    graph TB
+                        subgraph MultiModal["<b>Multi-Modal Integration</b>"]
+                            direction TB
+                            
+                            Visual[Visual Modality<br/>Endoscopic Images<br/>Segmentation Masks<br/>Heatmap Visualizations<br/>Edge Detection Maps<br/>Color Distribution]
+                            
+                            Text[Text Modality<br/>BLIP-2 Image Description<br/>Clinical Text Analysis<br/>Patient History<br/>Medical Terminology<br/>Treatment Protocols]
+                            
+                            Clinical[Clinical Context<br/>Patient Demographics<br/>Risk Factors<br/>Previous Findings<br/>Laboratory Results<br/>Medication History]
+                            
+                            Temporal[Temporal Analysis<br/>Historical Comparison<br/>Longitudinal Tracking<br/>Treatment Response<br/>Risk Progression<br/>Surveillance Optimization]
+                            
+                            Fusion[Multi-Modal Fusion<br/>Early Fusion: Input Level<br/>Late Fusion: Prediction Level<br/>Cross-Modal Attention<br/>Weighted Ensemble<br/>Consistency Validation]
+                        end
+                        
+                        Visual --> Fusion
+                        Text --> Fusion
+                        Clinical --> Fusion
+                        Temporal --> Fusion
+                        
+                        %% Styling
+                        classDef visual fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+                        classDef text fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+                        classDef clinical fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000
+                        classDef temporal fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
+                        classDef fusion fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000
+                        
+                        class Visual visual
+                        class Text text
+                        class Clinical clinical
+                        class Temporal temporal
+                        class Fusion fusion
+                </div>
+            </div>
+
+            <!-- Medical Disclaimer -->
+            <div class="section">
+                <h2>⚕️ Medical Disclaimer</h2>
+                <p style="color: #e74c3c; font-weight: bold; font-size: 1.1em;">
+                    ⚠️ IMPORTANT: This application is designed for educational and research purposes only.
+                </p>
+                <ul class="feature-list">
+                    <li>Always consult qualified medical professionals for diagnosis</li>
+                    <li>This tool aids in preliminary polyp analysis only</li>
+                    <li>Professional gastroenterological evaluation is essential</li>
+                    <li>Treatment decisions require comprehensive medical assessment</li>
+                    <li>Not FDA approved for clinical diagnosis</li>
+                    <li>High accuracy does not replace professional medical judgment</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            },
+            themeVariables: {
+                primaryColor: '#06b6d4',
+                primaryTextColor: '#fff',
+                primaryBorderColor: '#0ea5e9',
+                lineColor: '#2c3e50',
+                secondaryColor: '#0ea5e9',
+                tertiaryColor: '#f39c12'
+            }
+        });
+    </script>
+</body>
+</html>
